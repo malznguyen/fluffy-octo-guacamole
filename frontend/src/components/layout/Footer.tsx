@@ -6,7 +6,7 @@ export function Footer() {
     return (
         <footer className="bg-gray-900 text-white">
             {/* Newsletter Section */}
-            <div className="bg-gradient-to-r from-purple-600 to-pink-500 py-12">
+            <div className="bg-gray-800 py-12">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                         <div>
@@ -37,10 +37,9 @@ export function Footer() {
             {/* Main Footer */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-                    {/* Brand */}
                     <div>
                         <Link href="/" className="inline-block">
-                            <span className="text-3xl font-black bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
+                            <span className="text-3xl font-black text-white">
                                 FASH.ON
                             </span>
                         </Link>
