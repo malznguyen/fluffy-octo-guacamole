@@ -147,3 +147,99 @@ Constraints followed:
 - Soft delete on Payment entity
 - No third-party gateway integration (VNPay/Momo) - simplified for school project
 
+## 2026-01-29 (Phase 6.1: Customer Frontend Desktop UI)
+
+Phase 6.1: Completed customer frontend pages (Home, Shop, Product, Cart, Checkout, Orders) with 100% Vietnamese UI, Be Vietnam Pro font, Lucide icons, no mobile yet.
+
+### Setup & Configuration
+- Installed dependencies: @tanstack/react-query, react-hook-form, zod, sonner, @hookform/resolvers, next-themes
+- Installed shadcn components: button, card, input, select, badge, separator, skeleton, dialog, table, form, sonner, radio-group, label, textarea, scroll-area, sheet
+- Configured Be Vietnam Pro font (Google Fonts) with Vietnamese subset support
+- Created QueryProvider for TanStack Query with default staleTime and error handling
+- Created ToastProvider with Sonner for notifications (no alert()/confirm())
+- Created AuthContext for authentication state management
+- Created types for API: Product, Category, Cart, Order, User, PaymentMethod, OrderStatus
+
+### API Hooks (TanStack Query)
+- useProducts, useProduct, useTopSellingProducts - Product fetching with filters
+- useCategories, useCategoryTree - Category fetching
+- useCart, useAddToCart, useUpdateCartItem, useRemoveCartItem - Cart operations
+- useOrders, useOrder, useCreateOrder, useCancelOrder - Order operations
+
+### Components
+- Header: Navigation with cart badge, user info, mobile menu
+- Footer: Brand info, quick links, customer service, contact details
+
+### Pages Implemented
+
+#### Home Page (/)
+- Hero section: "Thờ Trang Củ Bạn - Phong Cách Không Giới Hạn"
+- Best Sellers section with product grid (4-5 columns)
+- Featured Categories section
+- Features: Free shipping, Easy returns, 24/7 support
+- Vietnamese UI throughout
+
+#### Shop Page (/shop)
+- Wide layout with 4-5 column product grid
+- Filter sidebar: Category selection, Price range (min/max)
+- Sort dropdown: Mới nhất, Giá tăng dần, Giá giảm dần, Bán chạy
+- Quick View dialog with variant selection and add to cart
+- Pagination support
+
+#### Product Detail Page (/product/[slug])
+- Two-column layout: Image gallery + Product info
+- Variant selection (size, color) with price adjustments
+- Quantity selector with +/- buttons
+- Large "Thêm Vào Giỏ Hàng" button with ShoppingCart icon
+- Star rating display (Lucide icons)
+- Reviews section with Vietnamese comments
+- Back to shop navigation
+
+#### Cart Page (/cart)
+- Wide table with: Image, Product name (with size/color), Unit price, Quantity, Subtotal, Remove button
+- Quantity adjustment with +/- buttons
+- Remove item with Trash2 icon
+- Order summary card with total amount
+- "Tiến Hành Thanh Toán" button linking to checkout
+- Empty cart state with call-to-action
+
+#### Checkout Page (/checkout)
+- Form with React Hook Form + Zod validation
+- Shipping info: Họ và tên, Số điện thoại, Địa chỉ, Ghi chú
+- Payment method: COD (Thanh toán khi nhận hàng) or Bank Transfer
+- Order summary sidebar with item list and totals
+- "Đặt Hàng" button with validation
+- Toast notification on success/error
+
+#### Orders Page (/orders)
+- Table view: Order code, Date, Total, Status, Actions
+- Status badges with colors:
+  - Chờ xác nhận (yellow)
+  - Đã xác nhận (blue)
+  - Đang giao (purple)
+  - Hoàn thành (green)
+  - Đã hủy (red)
+- Order detail dialog with full information
+- Cancel order button (for PENDING orders only)
+- Empty state with CTA
+
+### Design Compliance
+- 100% Vietnamese UI (no English text in user-facing elements)
+- Be Vietnam Pro font for all text
+- Lucide React icons only (ShoppingCart, Trash2, Eye, Star, Truck, CreditCard, etc.)
+- No emojis in UI
+- Skeleton loading states
+- Toast notifications (Sonner)
+- Form validation with Vietnamese error messages
+
+### Technical Stack
+- Next.js 16 with App Router
+- TypeScript
+- Tailwind CSS 4
+- shadcn/ui components
+- TanStack Query for data fetching
+- React Hook Form + Zod for form validation
+- Axios with JWT interceptor
+
+Note: Desktop-only implementation. Mobile responsive design is Phase 6.2.
+
