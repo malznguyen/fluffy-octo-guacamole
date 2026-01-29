@@ -1,59 +1,20 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Cart } from '@/types';
-import apiClient from '@/lib/axios';
+"use client";
 
-interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  message?: string;
-}
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { cartApi } from "@/lib/api/services";
+import { Cart } from "@/lib/api/types";
+import { toast } from "sonner";
 
-// Query keys
 export const cartKeys = {
-  all: ['cart'] as const,
-  detail: () => [...cartKeys.all, 'detail'] as const,
+  all: ["cart"] as const,
+  detail: () => [...cartKeys.all] as const,
 };
 
-// API functions
-const fetchCart = async (): Promise<Cart> => {
-  const response = await apiClient.get<ApiResponse<Cart>>('/api/v1/cart');
-  return response.data.data;
-};
-
-const addToCart = async (data: { 
-  productId: number; 
-  variantId: number; 
-  quantity: number 
-}): Promise<Cart> => {
-  const response = await apiClient.post<ApiResponse<Cart>>('/api/v1/cart/items', data);
-  return response.data.data;
-};
-
-const updateCartItem = async ({
-  itemId,
-  quantity,
-}: {
-  itemId: number;
-  quantity: number;
-}): Promise<Cart> => {
-  const response = await apiClient.put<ApiResponse<Cart>>(`/api/v1/cart/items/${itemId}`, { quantity });
-  return response.data.data;
-};
-
-const removeCartItem = async (itemId: number): Promise<Cart> => {
-  const response = await apiClient.delete<ApiResponse<Cart>>(`/api/v1/cart/items/${itemId}`);
-  return response.data.data;
-};
-
-const clearCart = async (): Promise<void> => {
-  await apiClient.delete('/api/v1/cart');
-};
-
-// Hooks
 export function useCart() {
-  return useQuery({
+  return useQuery<Cart, Error>({
     queryKey: cartKeys.detail(),
-    queryFn: fetchCart,
+    queryFn: cartApi.getCart,
+    staleTime: 0,
   });
 }
 
@@ -61,9 +22,21 @@ export function useAddToCart() {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: addToCart,
+    mutationFn: (data: {
+      productId: number;
+      variantId?: number;
+      quantity: number;
+    }) => cartApi.addItem(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: cartKeys.detail() });
+      queryClient.invalidateQueries({ queryKey: cartKeys.all });
+      toast.success("Đã thêm vào giỏ hàng", {
+        description: "Sản phẩm đã được thêm vào giỏ hàng của bạn.",
+      });
+    },
+    onError: () => {
+      toast.error("Không thể thêm vào giỏ hàng", {
+        description: "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng.",
+      });
     },
   });
 }
@@ -72,9 +45,13 @@ export function useUpdateCartItem() {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: updateCartItem,
+    mutationFn: ({ itemId, quantity }: { itemId: number; quantity: number }) =>
+      cartApi.updateItem(itemId, quantity),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: cartKeys.detail() });
+      queryClient.invalidateQueries({ queryKey: cartKeys.all });
+    },
+    onError: () => {
+      toast.error("Không thể cập nhật giỏ hàng");
     },
   });
 }
@@ -83,20 +60,13 @@ export function useRemoveCartItem() {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: removeCartItem,
+    mutationFn: (itemId: number) => cartApi.removeItem(itemId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: cartKeys.detail() });
+      queryClient.invalidateQueries({ queryKey: cartKeys.all });
+      toast.success("Đã xóa sản phẩm khỏi giỏ hàng");
     },
-  });
-}
-
-export function useClearCart() {
-  const queryClient = useQueryClient();
-  
-  return useMutation({
-    mutationFn: clearCart,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: cartKeys.detail() });
+    onError: () => {
+      toast.error("Không thể xóa sản phẩm");
     },
   });
 }

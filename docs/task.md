@@ -48,6 +48,79 @@ Completed Product Catalog module:
 
 Note: Run database/04_create_product_tables.sql in SSMS before testing. Uploads stored in backend/uploads/ folder.
 
+## 2026-01-29 (Phase: Trang Chủ FASH.ON Với Hero Slideshow)
+
+Completed FASH.ON homepage with hero slideshow and Vietnamese UI:
+
+**Header Component:**
+- Logo FASH.ON in bold uppercase display font
+- Navigation: Trang Chủ, Cửa Hàng, Danh Mục (with dropdown)
+- Icons: Tìm kiếm (expandable search bar), Yêu thích, Giỏ hàng (with badge counter), User
+- User dropdown when logged in (Tài Khoản, Đơn Hàng, Quản Trị, Đăng Xuất)
+- Redirect to login when not authenticated
+- Mobile responsive hamburger menu with full navigation
+
+**Hero Slideshow:**
+- 4 slides with bold fashion colors (black, red, orange, dark gray)
+- Auto-play every 5 seconds with pause on hover
+- Left/right navigation arrows with smooth transitions
+- Dot indicators and slide counter (01/04 format)
+- Vietnamese headlines and CTAs (Mua Sắm Ngay, Xem Ngay, Khám Phá)
+
+**Danh Mục Nổi Bật:**
+- Grid of 4-5 categories from API categories tree
+- Each card with dynamic background colors and hover effects
+- Loading skeleton for better UX
+- Vietnamese text with "Khám Phá Ngay" hover text
+
+**Sản Phẩm Bán Chạy:**
+- Grid products from API top-selling endpoint
+- ProductCard with image, category, name, price (VND format)
+- Discount badges (red) and New badges (black)
+- Hover actions: Thêm Giỏ, Xem Nhanh, Yêu Thích
+- Loading skeletons
+- Navigation to /san-pham/[slug] on click
+
+**Banner Dịch Vụ:**
+- 3 columns: Giao Hàng Nhanh (Truck icon), Chính Hãng 100% (ShieldCheck icon), Hỗ Trợ 24/7 (Headphones icon)
+- Lucide icons only, no emojis
+- Dark background with hover effects
+
+**Footer:**
+- Newsletter subscription with Sonner toast
+- Contact info: email, phone, address
+- Links: Cửa Hàng, Hỗ Trợ, Công Ty
+- Social links: Facebook, Instagram, Youtube
+- Copyright notice
+
+**Technical Stack:**
+- Next.js 16.1.6 with App Router
+- React Query for data fetching with loading states
+- Tailwind CSS for styling
+- Lucide React for icons
+- Sonner for toast notifications
+- Be Vietnam Pro + Playfair Display fonts (Vietnamese support)
+- 100% Vietnamese text throughout UI (Trang Chủ, Cửa Hàng, Giỏ Hàng, Tìm Kiếm, etc.)
+
+**Files Created:**
+- frontend/src/components/sections/Header.tsx
+- frontend/src/components/sections/HeroSlideshow.tsx
+- frontend/src/components/sections/CategoryGrid.tsx
+- frontend/src/components/sections/ProductGrid.tsx
+- frontend/src/components/sections/ServiceBanner.tsx
+- frontend/src/components/sections/Footer.tsx
+- frontend/src/components/ProductCard.tsx
+- frontend/src/components/QueryProvider.tsx
+- frontend/src/hooks/useAuth.ts
+- frontend/src/hooks/useCart.ts
+- frontend/src/hooks/useCategories.ts
+- frontend/src/hooks/useProducts.ts
+- frontend/src/lib/api/client.ts
+- frontend/src/lib/api/types.ts
+- frontend/src/lib/api/services.ts
+
+Commit: "feat: FASH.ON home page with hero slideshow and vietnamese ui"
+
 ## 2026-01-29 (Phase 4: Order & Inventory Management)
 
 Completed Order & Inventory Management module:
@@ -146,179 +219,4 @@ Constraints followed:
 - NVARCHAR for transaction_code and notes
 - Soft delete on Payment entity
 - No third-party gateway integration (VNPay/Momo) - simplified for school project
-
-## 2026-01-29 (Phase 6.1: Customer Frontend Desktop UI)
-
-Phase 6.1: Completed customer frontend pages (Home, Shop, Product, Cart, Checkout, Orders) with 100% Vietnamese UI, Be Vietnam Pro font, Lucide icons, no mobile yet.
-
-### Setup & Configuration
-- Installed dependencies: @tanstack/react-query, react-hook-form, zod, sonner, @hookform/resolvers, next-themes
-- Installed shadcn components: button, card, input, select, badge, separator, skeleton, dialog, table, form, sonner, radio-group, label, textarea, scroll-area, sheet
-- Configured Be Vietnam Pro font (Google Fonts) with Vietnamese subset support
-- Created QueryProvider for TanStack Query with default staleTime and error handling
-- Created ToastProvider with Sonner for notifications (no alert()/confirm())
-- Created AuthContext for authentication state management
-- Created types for API: Product, Category, Cart, Order, User, PaymentMethod, OrderStatus
-
-### API Hooks (TanStack Query)
-- useProducts, useProduct, useTopSellingProducts - Product fetching with filters
-- useCategories, useCategoryTree - Category fetching
-- useCart, useAddToCart, useUpdateCartItem, useRemoveCartItem - Cart operations
-- useOrders, useOrder, useCreateOrder, useCancelOrder - Order operations
-
-### Components
-- Header: Navigation with cart badge, user info, mobile menu
-- Footer: Brand info, quick links, customer service, contact details
-
-### Pages Implemented
-
-#### Home Page (/)
-- Hero section: "Thờ Trang Củ Bạn - Phong Cách Không Giới Hạn"
-- Best Sellers section with product grid (4-5 columns)
-- Featured Categories section
-- Features: Free shipping, Easy returns, 24/7 support
-- Vietnamese UI throughout
-
-#### Shop Page (/shop)
-- Wide layout with 4-5 column product grid
-- Filter sidebar: Category selection, Price range (min/max)
-- Sort dropdown: Mới nhất, Giá tăng dần, Giá giảm dần, Bán chạy
-- Quick View dialog with variant selection and add to cart
-- Pagination support
-
-#### Product Detail Page (/product/[slug])
-- Two-column layout: Image gallery + Product info
-- Variant selection (size, color) with price adjustments
-- Quantity selector with +/- buttons
-- Large "Thêm Vào Giỏ Hàng" button with ShoppingCart icon
-- Star rating display (Lucide icons)
-- Reviews section with Vietnamese comments
-- Back to shop navigation
-
-#### Cart Page (/cart)
-- Wide table with: Image, Product name (with size/color), Unit price, Quantity, Subtotal, Remove button
-- Quantity adjustment with +/- buttons
-- Remove item with Trash2 icon
-- Order summary card with total amount
-- "Tiến Hành Thanh Toán" button linking to checkout
-- Empty cart state with call-to-action
-
-#### Checkout Page (/checkout)
-- Form with React Hook Form + Zod validation
-- Shipping info: Họ và tên, Số điện thoại, Địa chỉ, Ghi chú
-- Payment method: COD (Thanh toán khi nhận hàng) or Bank Transfer
-- Order summary sidebar with item list and totals
-- "Đặt Hàng" button with validation
-- Toast notification on success/error
-
-#### Orders Page (/orders)
-- Table view: Order code, Date, Total, Status, Actions
-- Status badges with colors:
-  - Chờ xác nhận (yellow)
-  - Đã xác nhận (blue)
-  - Đang giao (purple)
-  - Hoàn thành (green)
-  - Đã hủy (red)
-- Order detail dialog with full information
-- Cancel order button (for PENDING orders only)
-- Empty state with CTA
-
-### Design Compliance
-- 100% Vietnamese UI (no English text in user-facing elements)
-- Be Vietnam Pro font for all text
-- Lucide React icons only (ShoppingCart, Trash2, Eye, Star, Truck, CreditCard, etc.)
-- No emojis in UI
-- Skeleton loading states
-- Toast notifications (Sonner)
-- Form validation with Vietnamese error messages
-
-### Phase 6.1 Update (Fix schema + wire frontend)
-- Disabled Hibernate schema auto-management (ddl-auto: none) to prevent SQL Server DDL conflicts.
-- Added CORS allowance for http://localhost:3000 in SecurityConfig.
-- Wired frontend API hooks to public endpoints and response wrapper format.
-- Updated Home/Shop/Product/Cart/Checkout/Orders pages to align with backend DTOs (orderCode, unitPrice, imageUrl, variantInfoSnapshot).
-
-### Technical Stack
-- Next.js 16 with App Router
-- TypeScript
-- Tailwind CSS 4
-- shadcn/ui components
-- TanStack Query for data fetching
-- React Hook Form + Zod for form validation
-- Axios with JWT interceptor
-
-Note: Desktop-only implementation. Mobile responsive design is Phase 6.2.
-
-## 2026-01-29 (Phase 6.2: Authentication Pages)
-
-Phase 6.2: Completed authentication pages (Login/Register) with Vietnamese UI, JWT integration, route protection.
-
-### Login Page (/login)
-- Split-screen layout: Left side with brand imagery and quote, right side with form
-- Form fields: Email (with Mail icon), Password (with Lock icon + Eye/EyeOff toggle)
-- Validation with Zod + React Hook Form:
-  - "Email không được để trống"
-  - "Email không đúng định dạng"
-  - "Mật khẩu không được để trống"
-  - "Mật khẩu phải có ít nhất 6 ký tự"
-- Loading state: Button shows "Đang xử lý..." with Loader2 spinner
-- Toast notifications: "Đăng nhập thành công!" / "Email hoặc mật khẩu không đúng."
-- Return URL support: Redirects back to protected page after login
-- Link to register: "Chưa có tài khoản? Đăng ký ngay"
-
-### Register Page (/register)
-- Matching split-screen layout design
-- Form fields:
-  - Họ và tên (User icon)
-  - Email (Mail icon)
-  - Số điện thoại (Phone icon, regex validation 10 digits)
-  - Mật khẩu (Lock icon + Eye/EyeOff toggle)
-  - Xác nhận mật khẩu (password match validation)
-- Validation with Vietnamese error messages:
-  - "Họ tên không được để trống"
-  - "Số điện thoại không hợp lệ (cần 10 số)"
-  - "Mật khẩu xác nhận không khớp"
-- Success state: Shows checkmark icon, auto-redirects to login after 2 seconds
-- Toast notifications: "Đăng ký thành công! Bạn có thể đăng nhập ngay."
-- Link to login: "Đã có tài khoản? Đăng nhập ngay"
-
-### Route Protection (Middleware)
-- Created middleware.ts for server-side route protection
-- Protected routes: /cart, /checkout, /orders (require authentication)
-- Auth routes: /login, /register (redirect to home if already authenticated)
-- Return URL: Stores original URL in query param for post-login redirect
-- Cookie-based auth check for middleware compatibility
-
-### AuthContext Updates
-- Added cookie management for middleware compatibility
-- Login stores token in both localStorage and cookies
-- Logout clears both localStorage and cookies
-- Return URL handling: Redirects to returnUrl or home after login
-- Improved error handling with toast notifications
-
-### Header Updates
-- Already displays user name and logout button when authenticated
-- Shows login button when not authenticated
-- Works with AuthContext state
-
-### Components Created
-- LoginForm.tsx: Reusable login form with validation
-- RegisterForm.tsx: Reusable register form with validation
-
-### Design Compliance
-- 100% Vietnamese UI (no English)
-- Be Vietnam Pro font
-- Lucide icons only (Mail, Lock, User, Phone, Eye, EyeOff, Loader2, ArrowRight, CheckCircle2)
-- No emojis in UI
-- Wide layout with large inputs
-- Loading states with spinners
-
-### Testing Flow
-- Register new account -> Success message -> Auto-redirect to login
-- Login -> Redirect to home or return URL
-- Access /cart without login -> Redirect to /login?returnUrl=/cart
-- Login from redirect -> Back to /cart
-- Logout -> Clear auth state -> Redirect to home
-
-Note: Ready for Phase 6.3 Admin Dashboard.
 
