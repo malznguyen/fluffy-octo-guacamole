@@ -23,6 +23,12 @@ spring:
   flyway:
     enabled: false
 
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 5MB
+      max-request-size: 10MB
+
 server:
   port: 8080
 
@@ -46,10 +52,3 @@ logging:
 app:
   upload:
     dir: backend/uploads
-
-spring:
-  servlet:
-    multipart:
-      enabled: true
-      max-file-size: 5MB
-      max-request-size: 10MB
