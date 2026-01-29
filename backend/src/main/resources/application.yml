@@ -3,8 +3,12 @@ spring:
     name: fashon-backend
 
   datasource:
-    url: jdbc:sqlserver://localhost:1433;databaseName=fashon_db;encrypt=true;trustServerCertificate=true;integratedSecurity=true
+    # Đã bỏ integratedSecurity=true
+    # Đã thêm username/password
+    url: jdbc:sqlserver://localhost:1433;databaseName=fashon_db;encrypt=true;trustServerCertificate=true
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    username: sa
+    password: "123456"
 
   jpa:
     hibernate:
@@ -38,3 +42,14 @@ logging:
     org.springframework.web: INFO
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+app:
+  upload:
+    dir: backend/uploads
+
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 5MB
+      max-request-size: 10MB
