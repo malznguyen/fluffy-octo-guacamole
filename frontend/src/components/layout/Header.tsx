@@ -1,189 +1,154 @@
 'use client';
 
+import { useState, useRef, useEffect } from 'react';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { Search, User, ShoppingBag } from 'lucide-react';
+import { useCart } from '@/hooks/useCart';
 import Link from 'next/link';
-import { Search, Heart, ShoppingBag, User, Menu, X, ChevronDown } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { useCart } from '@/lib/hooks/use-cart';
+
+const navItems = [
+  { label: 'TRANG CHỦ', href: '/' },
+  { label: 'CỬA HÀNG', href: '/cua-hang' },
+  { label: 'BỘ SƯU TẬP', href: '/bo-suu-tap' },
+  { label: 'VỀ CHÚNG TÔI', href: '/ve-chung-toi' },
+];
+
+interface MagneticButtonProps {
+  children: React.ReactNode;
+  className?: string;
+  onClick?: () => void;
+}
+
+function MagneticButton({ children, className = '', onClick }: MagneticButtonProps) {
+  const ref = useRef<HTMLButtonElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const springConfig = { stiffness: 150, damping: 15 };
+  const springX = useSpring(x, springConfig);
+  const springY = useSpring(y, springConfig);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    x.set((e.clientX - centerX) * 0.2);
+    y.set((e.clientY - centerY) * 0.2);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.button
+      ref={ref}
+      className={className}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      onClick={onClick}
+      style={{ x: springX, y: springY }}
+    >
+      {children}
+    </motion.button>
+  );
+}
 
 export function Header() {
-    const [isScrolled, setIsScrolled] = useState(false);
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [cartCount, setCartCount] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const { data: cart } = useCart();
 
-    const getCartCount = useCart((state) => state.getCartCount);
-    const items = useCart((state) => state.items);
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
 
-    useEffect(() => {
-        setCartCount(getCartCount());
-    }, [items, getCartCount]);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-    useEffect(() => {
-        const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50);
-        };
-        window.addEventListener('scroll', handleScroll);
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+  const cartItemCount = cart?.totalItems || 0;
 
-    return (
-        <header
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-                ? 'bg-white/95 backdrop-blur-md shadow-lg'
-                : 'bg-transparent'
-                }`}
-        >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-20">
-                    {/* Logo */}
-                    <Link href="/" className="flex items-center">
-                        <span className="text-3xl font-black text-gray-900 tracking-tight">
-                            FASH.ON
-                        </span>
-                    </Link>
+  return (
+    <motion.header
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1] }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled
+          ? 'glass border-b border-neutral-200/50'
+          : 'bg-transparent'
+      }`}
+    >
+      <div className="mx-auto max-w-[1800px] px-4 sm:px-6 lg:px-8">
+        <div className="flex h-20 items-center justify-between">
+          {/* Logo */}
+          <Link href="/" className="flex-shrink-0">
+            <motion.span
+              className="font-display text-xl font-medium tracking-[0.3em] text-neutral-900"
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.2 }}
+            >
+              F A S H . O N
+            </motion.span>
+          </Link>
 
-                    {/* Desktop Navigation */}
-                    <nav className="hidden md:flex items-center gap-8">
-                        <Link
-                            href="/"
-                            className={`text-sm font-medium transition-colors hover:text-purple-600 ${isScrolled ? 'text-gray-900' : 'text-gray-900'
-                                }`}
-                        >
-                            Trang Chủ
-                        </Link>
-                        <Link
-                            href="/cua-hang"
-                            className={`text-sm font-medium transition-colors hover:text-purple-600 ${isScrolled ? 'text-gray-900' : 'text-gray-900'
-                                }`}
-                        >
-                            Cửa Hàng
-                        </Link>
-                        <div className="relative group">
-                            <button
-                                className={`flex items-center gap-1 text-sm font-medium transition-colors hover:text-purple-600 ${isScrolled ? 'text-gray-900' : 'text-gray-900'
-                                    }`}
-                            >
-                                Danh Mục
-                                <ChevronDown className="w-4 h-4" />
-                            </button>
-                            {/* Dropdown menu placeholder */}
-                            <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                                <div className="py-2">
-                                    <Link
-                                        href="/cua-hang?category=1"
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600"
-                                    >
-                                        Áo Nam
-                                    </Link>
-                                    <Link
-                                        href="/cua-hang?category=2"
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600"
-                                    >
-                                        Áo Nữ
-                                    </Link>
-                                    <Link
-                                        href="/cua-hang?category=3"
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600"
-                                    >
-                                        Quần Jeans
-                                    </Link>
-                                    <Link
-                                        href="/cua-hang?category=4"
-                                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-purple-50 hover:text-purple-600"
-                                    >
-                                        Phụ Kiện
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
-                    </nav>
+          {/* Navigation */}
+          <nav className="hidden md:flex items-center gap-10">
+            {navItems.map((item, index) => (
+              <motion.div
+                key={item.label}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.4 }}
+              >
+                <Link
+                  href={item.href}
+                  className="relative text-xs font-medium tracking-[0.15em] text-neutral-700 hover:text-neutral-900 transition-colors group"
+                >
+                  {item.label}
+                  <span className="absolute -bottom-1 left-0 w-0 h-px bg-neutral-900 transition-all duration-300 group-hover:w-full" />
+                </Link>
+              </motion.div>
+            ))}
+          </nav>
 
-                    {/* Icons */}
-                    <div className="flex items-center gap-4">
-                        <button
-                            className={`p-2 rounded-full transition-colors hover:bg-gray-100 ${isScrolled ? 'text-gray-900' : 'text-gray-900'
-                                }`}
-                            aria-label="Tìm kiếm"
-                        >
-                            <Search className="w-5 h-5" />
-                        </button>
-                        <button
-                            className={`p-2 rounded-full transition-colors hover:bg-gray-100 ${isScrolled ? 'text-gray-900' : 'text-gray-900'
-                                }`}
-                            aria-label="Yêu thích"
-                        >
-                            <Heart className="w-5 h-5" />
-                        </button>
-                        <Link
-                            href="/gio-hang"
-                            className={`relative p-2 rounded-full transition-colors hover:bg-gray-100 ${isScrolled ? 'text-gray-900' : 'text-gray-900'
-                                }`}
-                            aria-label="Giỏ hàng"
-                        >
-                            <ShoppingBag className="w-5 h-5" />
-                            {cartCount > 0 && (
-                                <Badge
-                                    variant="cart"
-                                    className="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center text-[10px] p-0"
-                                >
-                                    {cartCount > 99 ? '99+' : cartCount}
-                                </Badge>
-                            )}
-                        </Link>
-                        <Link
-                            href="/dang-nhap"
-                            className={`p-2 rounded-full transition-colors hover:bg-gray-100 ${isScrolled ? 'text-gray-900' : 'text-gray-900'
-                                }`}
-                            aria-label="Tài khoản"
-                        >
-                            <User className="w-5 h-5" />
-                        </Link>
+          {/* Actions */}
+          <div className="flex items-center gap-2">
+            <MagneticButton
+              className="p-3 rounded-full hover:bg-neutral-100/50 transition-colors"
+              aria-label="Tìm kiếm"
+            >
+              <Search className="w-5 h-5 text-neutral-700" />
+            </MagneticButton>
 
-                        {/* Mobile Menu Button */}
-                        <button
-                            className="md:hidden p-2 rounded-full hover:bg-gray-100"
-                            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                            aria-label="Menu"
-                        >
-                            {isMobileMenuOpen ? (
-                                <X className="w-6 h-6" />
-                            ) : (
-                                <Menu className="w-6 h-6" />
-                            )}
-                        </button>
-                    </div>
-                </div>
+            <MagneticButton
+              className="p-3 rounded-full hover:bg-neutral-100/50 transition-colors"
+              aria-label="Tài khoản"
+            >
+              <User className="w-5 h-5 text-neutral-700" />
+            </MagneticButton>
 
-                {/* Mobile Menu */}
-                {isMobileMenuOpen && (
-                    <div className="md:hidden py-4 border-t">
-                        <nav className="flex flex-col gap-4">
-                            <Link
-                                href="/"
-                                className="text-sm font-medium text-gray-900 hover:text-purple-600"
-                                onClick={() => setIsMobileMenuOpen(false)}
-                            >
-                                Trang Chủ
-                            </Link>
-                            <Link
-                                href="/cua-hang"
-                                className="text-sm font-medium text-gray-900 hover:text-purple-600"
-                                onClick={() => setIsMobileMenuOpen(false)}
-                            >
-                                Cửa Hàng
-                            </Link>
-                            <Link
-                                href="/cua-hang"
-                                className="text-sm font-medium text-gray-900 hover:text-purple-600"
-                                onClick={() => setIsMobileMenuOpen(false)}
-                            >
-                                Danh Mục
-                            </Link>
-                        </nav>
-                    </div>
-                )}
-            </div>
-        </header>
-    );
+            <MagneticButton
+              className="relative p-3 rounded-full hover:bg-neutral-100/50 transition-colors"
+              aria-label="Giỏ hàng"
+            >
+              <ShoppingBag className="w-5 h-5 text-neutral-700" />
+              {cartItemCount > 0 && (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center bg-neutral-900 text-white text-[10px] font-medium rounded-full"
+                >
+                  {cartItemCount > 9 ? '9+' : cartItemCount}
+                </motion.span>
+              )}
+            </MagneticButton>
+          </div>
+        </div>
+      </div>
+    </motion.header>
+  );
 }

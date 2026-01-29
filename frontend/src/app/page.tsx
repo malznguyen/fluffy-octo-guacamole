@@ -1,30 +1,19 @@
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { HeroSlideshow } from "@/components/home/HeroSlideshow";
-import { CategoryGrid } from "@/components/home/CategoryGrid";
-import { BestSellersGrid } from "@/components/home/BestSellersGrid";
-import { ServiceBanner } from "@/components/home/ServiceBanner";
+import { Header } from '@/components/layout/Header';
+import { HeroSection } from '@/components/home/HeroSection';
+import { CategoryBento } from '@/components/home/CategoryBento';
+import { LookbookGrid } from '@/components/home/LookbookGrid';
+import { MarqueeBanner } from '@/components/home/MarqueeBanner';
+import { Footer } from '@/components/layout/Footer';
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white">
+    <main className="min-h-screen bg-neutral-50">
       <Header />
-
-      <main>
-        {/* Hero Slideshow */}
-        <HeroSlideshow />
-
-        {/* Featured Categories */}
-        <CategoryGrid />
-
-        {/* Best Selling Products */}
-        <BestSellersGrid />
-
-        {/* Service Banner */}
-        <ServiceBanner />
-      </main>
-
+      <HeroSection />
+      <CategoryBento />
+      <MarqueeBanner />
+      <LookbookGrid />
       <Footer />
-    </div>
+    </main>
   );
 }

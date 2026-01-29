@@ -1,211 +1,230 @@
+'use client';
+
+import { useState } from 'react';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { MapPin, Phone, Mail, Facebook, Instagram, Youtube } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { ArrowRight, MapPin, Phone, Mail, Instagram, Facebook } from 'lucide-react';
+
+const footerLinks = {
+  explore: [
+    { label: 'Áo Nam', href: '/danh-muc/ao-nam' },
+    { label: 'Áo Nữ', href: '/danh-muc/ao-nu' },
+    { label: 'Phụ Kiện', href: '/danh-muc/phu-kien' },
+    { label: 'Giảm Giá', href: '/giam-gia' },
+  ],
+  support: [
+    { label: 'Chính Sách Đổi Trả', href: '/chinh-sach-doi-tra' },
+    { label: 'Bảo Mật', href: '/bao-mat' },
+    { label: 'Vận Chuyển', href: '/van-chuyen' },
+    { label: 'Liên Hệ', href: '/lien-he' },
+  ],
+  company: [
+    { label: 'Về FASH.ON', href: '/ve-chung-toi' },
+    { label: 'Tuyển Dụng', href: '/tuyen-dung' },
+    { label: 'Hệ Thống Cửa Hàng', href: '/cua-hang' },
+  ],
+};
 
 export function Footer() {
-    return (
-        <footer className="bg-gray-900 text-white">
-            {/* Newsletter Section */}
-            <div className="bg-gray-800 py-12">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                        <div>
-                            <h3 className="text-2xl font-bold text-white">
-                                Đăng Ký Nhận Tin Khuyến Mãi
-                            </h3>
-                            <p className="text-white/80 mt-1">
-                                Nhận ngay voucher giảm 10% cho đơn hàng đầu tiên
-                            </p>
-                        </div>
-                        <form className="flex gap-2 w-full md:w-auto">
-                            <input
-                                type="email"
-                                placeholder="Nhập email của bạn..."
-                                className="flex-1 md:w-80 px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/50"
-                            />
-                            <Button
-                                type="submit"
-                                className="bg-white text-purple-600 hover:bg-gray-100 px-6"
-                            >
-                                Đăng Ký
-                            </Button>
-                        </form>
-                    </div>
-                </div>
+  const [email, setEmail] = useState('');
+  const [isSubscribed, setIsSubscribed] = useState(false);
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (email) {
+      setIsSubscribed(true);
+      setEmail('');
+      setTimeout(() => setIsSubscribed(false), 3000);
+    }
+  };
+
+  return (
+    <footer className="bg-neutral-900 text-white">
+      {/* Newsletter Section */}
+      <div className="border-b border-white/10">
+        <div className="mx-auto max-w-[1800px] px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-semibold mb-4">
+                ĐĂNG KÝ NHẬN TIN
+              </h2>
+              <p className="text-neutral-400 text-sm sm:text-base max-w-md">
+                Nhận thông tin về bộ sưu tập mới, ưu đãi đặc biệt và sự kiện độc quyền.
+              </p>
+            </motion.div>
+
+            <motion.form
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              onSubmit={handleSubscribe}
+              className="flex flex-col sm:flex-row gap-4"
+            >
+              <div className="relative flex-1">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Nhập email của bạn..."
+                  className="w-full px-0 py-4 bg-transparent border-0 border-b border-white/30 focus:border-white focus:outline-none text-white placeholder:text-neutral-500 transition-colors"
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                className="px-8 py-4 bg-white text-neutral-900 text-xs font-medium tracking-[0.15em] uppercase hover:bg-neutral-200 transition-colors flex items-center justify-center gap-2"
+              >
+                {isSubscribed ? 'ĐÃ ĐĂNG KÝ' : 'ĐĂNG KÝ'}
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </motion.form>
+          </div>
+        </div>
+      </div>
+
+      {/* Main Footer Content */}
+      <div className="mx-auto max-w-[1800px] px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8">
+          {/* Brand Column */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="lg:col-span-2"
+          >
+            <Link href="/" className="inline-block mb-6">
+              <span className="font-display text-2xl font-medium tracking-[0.2em]">
+                F A S H . O N
+              </span>
+            </Link>
+            <p className="text-neutral-400 text-sm leading-relaxed mb-6 max-w-sm">
+              Thờitrang hiện đại, đẳng cấp cho ngườiviệt. Chúng tôi mang đến những sản phẩm chất lượng cao với phong cách độc đáo.
+            </p>
+            <div className="space-y-3 text-sm text-neutral-400">
+              <div className="flex items-center gap-3">
+                <MapPin className="w-4 h-4 text-neutral-500" />
+                <span>123 Nguyễn Văn A, Quận 1, TP.HCM</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Phone className="w-4 h-4 text-neutral-500" />
+                <span>+84 123 456 789</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <Mail className="w-4 h-4 text-neutral-500" />
+                <span>contact@fashon.vn</span>
+              </div>
             </div>
+          </motion.div>
 
-            {/* Main Footer */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-                    <div>
-                        <Link href="/" className="inline-block">
-                            <span className="text-3xl font-black text-white">
-                                FASH.ON
-                            </span>
-                        </Link>
-                        <p className="mt-4 text-gray-400 leading-relaxed">
-                            Thời trang đỉnh cao cho người Việt. Chúng tôi mang đến những xu hướng mới nhất với chất lượng tốt nhất.
-                        </p>
-                        <div className="flex gap-4 mt-6">
-                            <a
-                                href="#"
-                                className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-purple-600 transition-colors"
-                                aria-label="Facebook"
-                            >
-                                <Facebook className="w-5 h-5" />
-                            </a>
-                            <a
-                                href="#"
-                                className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-pink-600 transition-colors"
-                                aria-label="Instagram"
-                            >
-                                <Instagram className="w-5 h-5" />
-                            </a>
-                            <a
-                                href="#"
-                                className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-red-600 transition-colors"
-                                aria-label="Youtube"
-                            >
-                                <Youtube className="w-5 h-5" />
-                            </a>
-                        </div>
-                    </div>
+          {/* Links Columns */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <h3 className="text-xs font-medium tracking-[0.2em] uppercase mb-6 text-neutral-300">
+              Khám Phá
+            </h3>
+            <ul className="space-y-4">
+              {footerLinks.explore.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-neutral-400 hover:text-white transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
 
-                    {/* Links 1 */}
-                    <div>
-                        <h4 className="text-lg font-semibold mb-6">Về Chúng Tôi</h4>
-                        <ul className="space-y-3">
-                            <li>
-                                <Link
-                                    href="/gioi-thieu"
-                                    className="text-gray-400 hover:text-white transition-colors"
-                                >
-                                    Giới Thiệu
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/tuyen-dung"
-                                    className="text-gray-400 hover:text-white transition-colors"
-                                >
-                                    Tuyển Dụng
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/bao-chi"
-                                    className="text-gray-400 hover:text-white transition-colors"
-                                >
-                                    Báo Chí
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/lien-he"
-                                    className="text-gray-400 hover:text-white transition-colors"
-                                >
-                                    Liên Hệ
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <h3 className="text-xs font-medium tracking-[0.2em] uppercase mb-6 text-neutral-300">
+              Hỗ Trợ
+            </h3>
+            <ul className="space-y-4">
+              {footerLinks.support.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-neutral-400 hover:text-white transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
 
-                    {/* Links 2 */}
-                    <div>
-                        <h4 className="text-lg font-semibold mb-6">Hỗ Trợ Khách Hàng</h4>
-                        <ul className="space-y-3">
-                            <li>
-                                <Link
-                                    href="/huong-dan-mua-hang"
-                                    className="text-gray-400 hover:text-white transition-colors"
-                                >
-                                    Hướng Dẫn Mua Hàng
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/chinh-sach-doi-tra"
-                                    className="text-gray-400 hover:text-white transition-colors"
-                                >
-                                    Chính Sách Đổi Trả
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/chinh-sach-van-chuyen"
-                                    className="text-gray-400 hover:text-white transition-colors"
-                                >
-                                    Chính Sách Vận Chuyển
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/faq"
-                                    className="text-gray-400 hover:text-white transition-colors"
-                                >
-                                    Câu Hỏi Thường Gặp
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <h3 className="text-xs font-medium tracking-[0.2em] uppercase mb-6 text-neutral-300">
+              Công Ty
+            </h3>
+            <ul className="space-y-4">
+              {footerLinks.company.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-neutral-400 hover:text-white transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        </div>
+      </div>
 
-                    {/* Contact */}
-                    <div>
-                        <h4 className="text-lg font-semibold mb-6">Liên Hệ</h4>
-                        <ul className="space-y-4">
-                            <li className="flex items-start gap-3">
-                                <MapPin className="w-5 h-5 text-purple-400 shrink-0 mt-0.5" />
-                                <span className="text-gray-400">
-                                    123 Đường Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh
-                                </span>
-                            </li>
-                            <li className="flex items-center gap-3">
-                                <Phone className="w-5 h-5 text-purple-400 shrink-0" />
-                                <a
-                                    href="tel:1900123456"
-                                    className="text-gray-400 hover:text-white transition-colors"
-                                >
-                                    1900 123 456
-                                </a>
-                            </li>
-                            <li className="flex items-center gap-3">
-                                <Mail className="w-5 h-5 text-purple-400 shrink-0" />
-                                <a
-                                    href="mailto:support@fashon.vn"
-                                    className="text-gray-400 hover:text-white transition-colors"
-                                >
-                                    support@fashon.vn
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+      {/* Bottom Bar */}
+      <div className="border-t border-white/10">
+        <div className="mx-auto max-w-[1800px] px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p className="text-xs text-neutral-500 text-center sm:text-left">
+              © 2026 FASH.ON - Đồ án tốt nghiệp - Lê Trọng Duy
+            </p>
+            <div className="flex items-center gap-4">
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 text-neutral-400 hover:text-white transition-colors"
+                aria-label="Instagram"
+              >
+                <Instagram className="w-5 h-5" />
+              </a>
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 text-neutral-400 hover:text-white transition-colors"
+                aria-label="Facebook"
+              >
+                <Facebook className="w-5 h-5" />
+              </a>
             </div>
-
-            {/* Bottom Bar */}
-            <div className="border-t border-gray-800">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                        <p className="text-gray-500 text-sm">
-                            © 2026 FASH.ON. Tất cả quyền được bảo lưu.
-                        </p>
-                        <div className="flex gap-6">
-                            <Link
-                                href="/dieu-khoan"
-                                className="text-gray-500 hover:text-white text-sm transition-colors"
-                            >
-                                Điều Khoản Dịch Vụ
-                            </Link>
-                            <Link
-                                href="/bao-mat"
-                                className="text-gray-500 hover:text-white text-sm transition-colors"
-                            >
-                                Chính Sách Bảo Mật
-                            </Link>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    );
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
 }
