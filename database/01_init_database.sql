@@ -53,13 +53,19 @@ BEGIN
         updated_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         deleted_at DATETIME2 NULL,
         
-        CONSTRAINT fk_categories_parent FOREIGN KEY (parent_id) 
-            REFERENCES categories(id) ON DELETE SET NULL,
-        
         INDEX idx_categories_slug (slug),
         INDEX idx_categories_parent (parent_id),
         INDEX idx_categories_deleted (deleted_at)
     );
+END
+GO
+
+-- Add self-referencing FK after table creation
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'fk_categories_parent')
+BEGIN
+    ALTER TABLE categories
+    ADD CONSTRAINT fk_categories_parent FOREIGN KEY (parent_id) 
+        REFERENCES categories(id) ON DELETE NO ACTION;
 END
 GO
 
@@ -80,14 +86,20 @@ BEGIN
         updated_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         deleted_at DATETIME2 NULL,
         
-        CONSTRAINT fk_products_category FOREIGN KEY (category_id) 
-            REFERENCES categories(id) ON DELETE RESTRICT,
-        
         INDEX idx_products_slug (slug),
         INDEX idx_products_category (category_id),
         INDEX idx_products_status (status),
         INDEX idx_products_deleted (deleted_at)
     );
+END
+GO
+
+-- Add FK after table creation
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'fk_products_category')
+BEGIN
+    ALTER TABLE products
+    ADD CONSTRAINT fk_products_category FOREIGN KEY (category_id) 
+        REFERENCES categories(id) ON DELETE NO ACTION;
 END
 GO
 
@@ -108,13 +120,19 @@ BEGIN
         updated_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         deleted_at DATETIME2 NULL,
         
-        CONSTRAINT fk_variants_product FOREIGN KEY (product_id) 
-            REFERENCES products(id) ON DELETE CASCADE,
-        
         INDEX idx_variants_product (product_id),
         INDEX idx_variants_sku (sku),
         INDEX idx_variants_deleted (deleted_at)
     );
+END
+GO
+
+-- Add FK after table creation
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'fk_variants_product')
+BEGIN
+    ALTER TABLE product_variants
+    ADD CONSTRAINT fk_variants_product FOREIGN KEY (product_id) 
+        REFERENCES products(id) ON DELETE CASCADE;
 END
 GO
 
@@ -133,13 +151,19 @@ BEGIN
         updated_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         deleted_at DATETIME2 NULL,
         
-        CONSTRAINT fk_images_product FOREIGN KEY (product_id) 
-            REFERENCES products(id) ON DELETE CASCADE,
-        
         INDEX idx_images_product (product_id),
         INDEX idx_images_sort (sort_order),
         INDEX idx_images_deleted (deleted_at)
     );
+END
+GO
+
+-- Add FK after table creation
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'fk_images_product')
+BEGIN
+    ALTER TABLE product_images
+    ADD CONSTRAINT fk_images_product FOREIGN KEY (product_id) 
+        REFERENCES products(id) ON DELETE CASCADE;
 END
 GO
 
@@ -155,12 +179,18 @@ BEGIN
         updated_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         deleted_at DATETIME2 NULL,
         
-        CONSTRAINT fk_carts_user FOREIGN KEY (user_id) 
-            REFERENCES users(id) ON DELETE CASCADE,
-        
         INDEX idx_carts_user (user_id),
         INDEX idx_carts_deleted (deleted_at)
     );
+END
+GO
+
+-- Add FK after table creation
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'fk_carts_user')
+BEGIN
+    ALTER TABLE carts
+    ADD CONSTRAINT fk_carts_user FOREIGN KEY (user_id) 
+        REFERENCES users(id) ON DELETE CASCADE;
 END
 GO
 
@@ -178,15 +208,27 @@ BEGIN
         updated_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         deleted_at DATETIME2 NULL,
         
-        CONSTRAINT fk_cart_items_cart FOREIGN KEY (cart_id) 
-            REFERENCES carts(id) ON DELETE CASCADE,
-        CONSTRAINT fk_cart_items_variant FOREIGN KEY (variant_id) 
-            REFERENCES product_variants(id) ON DELETE CASCADE,
-        
         INDEX idx_cart_items_cart (cart_id),
         INDEX idx_cart_items_variant (variant_id),
         INDEX idx_cart_items_deleted (deleted_at)
     );
+END
+GO
+
+-- Add FKs after table creation
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'fk_cart_items_cart')
+BEGIN
+    ALTER TABLE cart_items
+    ADD CONSTRAINT fk_cart_items_cart FOREIGN KEY (cart_id) 
+        REFERENCES carts(id) ON DELETE CASCADE;
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'fk_cart_items_variant')
+BEGIN
+    ALTER TABLE cart_items
+    ADD CONSTRAINT fk_cart_items_variant FOREIGN KEY (variant_id) 
+        REFERENCES product_variants(id) ON DELETE CASCADE;
 END
 GO
 
@@ -208,14 +250,20 @@ BEGIN
         updated_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         deleted_at DATETIME2 NULL,
         
-        CONSTRAINT fk_orders_user FOREIGN KEY (user_id) 
-            REFERENCES users(id) ON DELETE RESTRICT,
-        
         INDEX idx_orders_code (order_code),
         INDEX idx_orders_user (user_id),
         INDEX idx_orders_status (status),
         INDEX idx_orders_deleted (deleted_at)
     );
+END
+GO
+
+-- Add FK after table creation
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'fk_orders_user')
+BEGIN
+    ALTER TABLE orders
+    ADD CONSTRAINT fk_orders_user FOREIGN KEY (user_id) 
+        REFERENCES users(id) ON DELETE NO ACTION;
 END
 GO
 
@@ -235,12 +283,18 @@ BEGIN
         updated_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         deleted_at DATETIME2 NULL,
         
-        CONSTRAINT fk_order_items_order FOREIGN KEY (order_id) 
-            REFERENCES orders(id) ON DELETE CASCADE,
-        
         INDEX idx_order_items_order (order_id),
         INDEX idx_order_items_deleted (deleted_at)
     );
+END
+GO
+
+-- Add FK after table creation
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'fk_order_items_order')
+BEGIN
+    ALTER TABLE order_items
+    ADD CONSTRAINT fk_order_items_order FOREIGN KEY (order_id) 
+        REFERENCES orders(id) ON DELETE CASCADE;
 END
 GO
 
@@ -260,11 +314,6 @@ BEGIN
         updated_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         deleted_at DATETIME2 NULL,
         
-        CONSTRAINT fk_reviews_user FOREIGN KEY (user_id) 
-            REFERENCES users(id) ON DELETE CASCADE,
-        CONSTRAINT fk_reviews_product FOREIGN KEY (product_id) 
-            REFERENCES products(id) ON DELETE CASCADE,
-        
         -- Unique constraint: one review per user per product (when not soft deleted)
         CONSTRAINT uq_user_product_review UNIQUE (user_id, product_id),
         
@@ -272,6 +321,23 @@ BEGIN
         INDEX idx_reviews_rating (rating),
         INDEX idx_reviews_deleted (deleted_at)
     );
+END
+GO
+
+-- Add FKs after table creation
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'fk_reviews_user')
+BEGIN
+    ALTER TABLE product_reviews
+    ADD CONSTRAINT fk_reviews_user FOREIGN KEY (user_id) 
+        REFERENCES users(id) ON DELETE CASCADE;
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'fk_reviews_product')
+BEGIN
+    ALTER TABLE product_reviews
+    ADD CONSTRAINT fk_reviews_product FOREIGN KEY (product_id) 
+        REFERENCES products(id) ON DELETE CASCADE;
 END
 GO
 
@@ -288,11 +354,6 @@ BEGIN
         updated_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         deleted_at DATETIME2 NULL,
         
-        CONSTRAINT fk_wishlists_user FOREIGN KEY (user_id) 
-            REFERENCES users(id) ON DELETE CASCADE,
-        CONSTRAINT fk_wishlists_product FOREIGN KEY (product_id) 
-            REFERENCES products(id) ON DELETE CASCADE,
-        
         -- Unique constraint: one wishlist entry per user per product
         CONSTRAINT uq_user_product_wishlist UNIQUE (user_id, product_id),
         
@@ -300,6 +361,23 @@ BEGIN
         INDEX idx_wishlists_product (product_id),
         INDEX idx_wishlists_deleted (deleted_at)
     );
+END
+GO
+
+-- Add FKs after table creation
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'fk_wishlists_user')
+BEGIN
+    ALTER TABLE wishlists
+    ADD CONSTRAINT fk_wishlists_user FOREIGN KEY (user_id) 
+        REFERENCES users(id) ON DELETE CASCADE;
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'fk_wishlists_product')
+BEGIN
+    ALTER TABLE wishlists
+    ADD CONSTRAINT fk_wishlists_product FOREIGN KEY (product_id) 
+        REFERENCES products(id) ON DELETE CASCADE;
 END
 GO
 
@@ -343,15 +421,27 @@ BEGIN
         updated_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         deleted_at DATETIME2 NULL,
         
-        CONSTRAINT fk_inventory_variant FOREIGN KEY (variant_id) 
-            REFERENCES product_variants(id) ON DELETE RESTRICT,
-        CONSTRAINT fk_inventory_order FOREIGN KEY (order_id) 
-            REFERENCES orders(id) ON DELETE SET NULL,
-        
         INDEX idx_inventory_variant (variant_id),
         INDEX idx_inventory_order (order_id),
         INDEX idx_inventory_deleted (deleted_at)
     );
+END
+GO
+
+-- Add FKs after table creation
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'fk_inventory_variant')
+BEGIN
+    ALTER TABLE inventory_transactions
+    ADD CONSTRAINT fk_inventory_variant FOREIGN KEY (variant_id) 
+        REFERENCES product_variants(id) ON DELETE NO ACTION;
+END
+GO
+
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'fk_inventory_order')
+BEGIN
+    ALTER TABLE inventory_transactions
+    ADD CONSTRAINT fk_inventory_order FOREIGN KEY (order_id) 
+        REFERENCES orders(id) ON DELETE SET NULL;
 END
 GO
 
