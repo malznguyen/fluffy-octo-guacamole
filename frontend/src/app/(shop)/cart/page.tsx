@@ -114,23 +114,19 @@ export default function CartPage() {
                   {cart.items.map((item) => (
                     <TableRow key={item.id}>
                       <TableCell>
-                        <Link href={`/product/${item.productSlug}`}>
+                        <div className="relative w-20 h-20 bg-muted rounded-lg overflow-hidden">
                           <div className="relative w-20 h-20 bg-muted rounded-lg overflow-hidden">
                             <Image
-                              src={item.productImage || '/placeholder.png'}
+                              src={item.imageUrl || '/placeholder.png'}
                               alt={item.productName}
                               fill
                               className="object-cover"
                             />
                           </div>
-                        </Link>
+                        </div>
                       </TableCell>
                       <TableCell>
-                        <Link href={`/product/${item.productSlug}`}>
-                          <div className="font-medium hover:text-primary transition-colors">
-                            {item.productName}
-                          </div>
-                        </Link>
+                        <div className="font-medium">{item.productName}</div>
                         <div className="text-sm text-muted-foreground">
                           {item.size && `Size: ${item.size}`}
                           {item.size && item.color && ' / '}
@@ -138,7 +134,7 @@ export default function CartPage() {
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
-                        {formatPrice(item.price)}
+                        {formatPrice(item.unitPrice)}
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center justify-center gap-2">

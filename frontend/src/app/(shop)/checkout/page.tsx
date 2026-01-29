@@ -50,7 +50,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const { data: cart, isLoading: isLoadingCart } = useCart();
   const { mutate: createOrder, isPending: isCreatingOrder } = useCreateOrder();
-  const { user, isAuthenticated } = useAuth();
+  const { user } = useAuth();
 
   const form = useForm<CheckoutFormData>({
     resolver: zodResolver(checkoutSchema),
@@ -72,9 +72,8 @@ export default function CheckoutPage() {
   const onSubmit = (data: CheckoutFormData) => {
     createOrder(
       {
-        shippingName: data.shippingName,
-        shippingPhone: data.shippingPhone,
         shippingAddress: data.shippingAddress,
+        phone: data.shippingPhone,
         note: data.note,
         paymentMethod: data.paymentMethod,
       },
@@ -283,7 +282,7 @@ export default function CheckoutPage() {
                   <div key={item.id} className="flex gap-3">
                     <div className="relative w-16 h-16 bg-muted rounded-lg overflow-hidden shrink-0">
                       <Image
-                        src={item.productImage || '/placeholder.png'}
+                        src={item.imageUrl || '/placeholder.png'}
                         alt={item.productName}
                         fill
                         className="object-cover"
@@ -297,7 +296,7 @@ export default function CheckoutPage() {
                         {item.color && `Màu: ${item.color}`}
                       </div>
                       <div className="text-sm">
-                        {formatPrice(item.price)} x {item.quantity}
+                        {formatPrice(item.unitPrice)} x {item.quantity}
                       </div>
                     </div>
                     <div className="font-medium text-sm">

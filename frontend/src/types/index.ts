@@ -8,12 +8,14 @@ export interface ProductImage {
 
 export interface ProductVariant {
   id: number;
-  size?: string;
-  color?: string;
-  colorCode?: string;
   sku: string;
+  color?: string;
+  size?: string;
+  stockQuantity: number;
   priceAdjustment: number;
-  quantity: number;
+  finalPrice: number;
+  isAvailable: boolean;
+  inStock: boolean;
 }
 
 export interface Product {
@@ -22,10 +24,10 @@ export interface Product {
   slug: string;
   description?: string;
   basePrice: number;
-  salePrice?: number;
   categoryId: number;
   categoryName?: string;
-  isActive: boolean;
+  isVisible: boolean;
+  soldCount?: number;
   images: ProductImage[];
   variants: ProductVariant[];
   createdAt: string;
@@ -47,59 +49,56 @@ export interface Category {
 // Cart Types
 export interface CartItem {
   id: number;
-  productId: number;
-  productName: string;
-  productSlug: string;
-  productImage?: string;
   variantId?: number;
-  size?: string;
+  productName: string;
   color?: string;
-  price: number;
+  size?: string;
+  sku?: string;
+  unitPrice: number;
   quantity: number;
   subtotal: number;
+  imageUrl?: string;
 }
 
 export interface Cart {
   id: number;
+  userId?: number;
   items: CartItem[];
   totalItems: number;
   totalAmount: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 // Order Types
-export type OrderStatus = 'PENDING' | 'CONFIRMED' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
+export type OrderStatus = 'PENDING' | 'CONFIRMED' | 'SHIPPED' | 'DELIVERED' | 'COMPLETED' | 'CANCELLED';
 export type PaymentMethod = 'COD' | 'BANK_TRANSFER';
 export type PaymentStatus = 'PENDING' | 'PAID' | 'FAILED';
 
 export interface OrderItem {
   id: number;
-  productId: number;
-  productName: string;
-  productImage?: string;
-  variantId?: number;
-  size?: string;
-  color?: string;
-  price: number;
+  productNameSnapshot: string;
+  variantInfoSnapshot: string;
+  unitPrice: number;
   quantity: number;
   subtotal: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Order {
   id: number;
-  orderNumber: string;
+  orderCode: string;
   userId: number;
+  customerName?: string;
+  customerEmail?: string;
   status: OrderStatus;
-  totalAmount: number;
-  shippingFee: number;
-  discountAmount: number;
-  finalAmount: number;
-  shippingName: string;
-  shippingPhone: string;
+  total: number;
   shippingAddress: string;
+  phone: string;
   note?: string;
-  paymentMethod: PaymentMethod;
-  paymentStatus: PaymentStatus;
   items: OrderItem[];
+  totalItems?: number;
   createdAt: string;
   updatedAt: string;
 }

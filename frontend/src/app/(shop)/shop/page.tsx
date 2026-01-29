@@ -42,8 +42,7 @@ function ProductCard({
   onQuickView: (product: Product) => void;
 }) {
   const mainImage = product.images?.[0]?.imageUrl || '/placeholder.png';
-  const price = product.salePrice || product.basePrice;
-  const hasDiscount = product.salePrice && product.salePrice < product.basePrice;
+  const price = product.basePrice;
 
   return (
     <Card className="group overflow-hidden border-0 shadow-sm hover:shadow-md transition-all">
@@ -54,9 +53,9 @@ function ProductCard({
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-300"
         />
-        {hasDiscount && (
-          <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-medium px-2 py-1 rounded">
-            Giảm giá
+        {product.soldCount && product.soldCount > 0 && (
+          <div className="absolute top-2 left-2 bg-black/75 text-white text-xs font-medium px-2 py-1 rounded">
+            Đã bán {product.soldCount}
           </div>
         )}
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
@@ -81,11 +80,6 @@ function ProductCard({
           </h3>
           <div className="flex items-center gap-2">
             <span className="font-bold text-lg">{formatPrice(price)}</span>
-            {hasDiscount && (
-              <span className="text-sm text-muted-foreground line-through">
-                {formatPrice(product.basePrice)}
-              </span>
-            )}
           </div>
         </CardContent>
       </Link>
@@ -118,10 +112,13 @@ function QuickViewDialog({
   if (!product) return null;
 
   const mainImage = product.images?.[0]?.imageUrl || '/placeholder.png';
-  const price = product.salePrice || product.basePrice;
-  const hasDiscount = product.salePrice && product.salePrice < product.basePrice;
+  const price = product.basePrice;
 
   const handleAddToCart = () => {
+    if (!selectedVariant) {
+      toast.error('Vui lòng chọn biến thể trước khi thêm vào giỏ hàng');
+      return;
+    }
     addToCart(
       {
         productId: product.id,
@@ -159,11 +156,6 @@ function QuickViewDialog({
             <h2 className="text-2xl font-bold">{product.name}</h2>
             <div className="flex items-center gap-3">
               <span className="text-2xl font-bold">{formatPrice(price)}</span>
-              {hasDiscount && (
-                <span className="text-lg text-muted-foreground line-through">
-                  {formatPrice(product.basePrice)}
-                </span>
-              )}
             </div>
             <p className="text-muted-foreground">{product.description}</p>
 

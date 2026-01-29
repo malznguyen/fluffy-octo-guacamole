@@ -56,17 +56,17 @@ function getStatusConfig(status: OrderStatus) {
       color: 'bg-blue-100 text-blue-800 border-blue-200',
       icon: <CheckCircle className="h-4 w-4" />,
     },
-    PROCESSING: {
-      label: 'Đang xử lý',
-      color: 'bg-purple-100 text-purple-800 border-purple-200',
-      icon: <Package className="h-4 w-4" />,
-    },
     SHIPPED: {
       label: 'Đang giao',
       color: 'bg-indigo-100 text-indigo-800 border-indigo-200',
       icon: <Truck className="h-4 w-4" />,
     },
     DELIVERED: {
+      label: 'Đã giao',
+      color: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+      icon: <CheckCircle className="h-4 w-4" />,
+    },
+    COMPLETED: {
       label: 'Hoàn thành',
       color: 'bg-green-100 text-green-800 border-green-200',
       icon: <CheckCircle className="h-4 w-4" />,
@@ -78,14 +78,6 @@ function getStatusConfig(status: OrderStatus) {
     },
   };
   return configs[status] || configs.PENDING;
-}
-
-function getPaymentMethodLabel(method: string): string {
-  const labels: Record<string, string> = {
-    COD: 'Thanh toán khi nhận hàng',
-    BANK_TRANSFER: 'Chuyển khoản ngân hàng',
-  };
-  return labels[method] || method;
 }
 
 function OrderDetailDialog({
@@ -105,7 +97,7 @@ function OrderDetailDialog({
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Chi Tiết Đơn Hàng #{order.orderNumber}</DialogTitle>
+          <DialogTitle>Chi Tiết Đơn Hàng #{order.orderCode}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-6">
@@ -125,14 +117,8 @@ function OrderDetailDialog({
               <div className="font-medium">{formatDate(order.createdAt)}</div>
             </div>
             <div>
-              <div className="text-sm text-muted-foreground">Phương thức thanh toán</div>
-              <div className="font-medium">{getPaymentMethodLabel(order.paymentMethod)}</div>
-            </div>
-            <div>
-              <div className="text-sm text-muted-foreground">Trạng thái thanh toán</div>
-              <Badge variant={order.paymentStatus === 'PAID' ? 'default' : 'secondary'}>
-                {order.paymentStatus === 'PAID' ? 'Đã thanh toán' : 'Chưa thanh toán'}
-              </Badge>
+              <div className="text-sm text-muted-foreground">Mã đơn hàng</div>
+              <div className="font-medium">{order.orderCode}</div>
             </div>
           </div>
 
@@ -143,12 +129,12 @@ function OrderDetailDialog({
             <h3 className="font-semibold mb-3">Thông tin giao hàng</h3>
             <div className="bg-muted rounded-lg p-4 space-y-2">
               <div>
-                <span className="text-muted-foreground">Ngườ nhận: </span>
-                <span className="font-medium">{order.shippingName}</span>
+                <span className="text-muted-foreground">Người nhận: </span>
+                <span className="font-medium">{order.customerName || 'Khách hàng'}</span>
               </div>
               <div>
                 <span className="text-muted-foreground">Số điện thoại: </span>
-                <span className="font-medium">{order.shippingPhone}</span>
+                <span className="font-medium">{order.phone}</span>
               </div>
               <div>
                 <span className="text-muted-foreground">Địa chỉ: </span>
@@ -172,22 +158,17 @@ function OrderDetailDialog({
               {order.items.map((item) => (
                 <div key={item.id} className="flex gap-4">
                   <div className="relative w-20 h-20 bg-muted rounded-lg overflow-hidden shrink-0">
-                    <Image
-                      src={item.productImage || '/placeholder.png'}
-                      alt={item.productName}
-                      fill
-                      className="object-cover"
-                    />
+                    <div className="absolute inset-0 flex items-center justify-center text-xs text-muted-foreground">
+                      Ảnh
+                    </div>
                   </div>
                   <div className="flex-1">
-                    <div className="font-medium">{item.productName}</div>
+                    <div className="font-medium">{item.productNameSnapshot}</div>
                     <div className="text-sm text-muted-foreground">
-                      {item.size && `Size: ${item.size}`}
-                      {item.size && item.color && ' / '}
-                      {item.color && `Màu: ${item.color}`}
+                      {item.variantInfoSnapshot}
                     </div>
                     <div className="text-sm">
-                      {formatPrice(item.price)} x {item.quantity}
+                      {formatPrice(item.unitPrice)} x {item.quantity}
                     </div>
                   </div>
                   <div className="font-medium">{formatPrice(item.subtotal)}</div>
@@ -200,27 +181,13 @@ function OrderDetailDialog({
 
           {/* Order Summary */}
           <div className="space-y-2">
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Tạm tính</span>
-              <span>{formatPrice(order.totalAmount)}</span>
-            </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Phí vận chuyển</span>
-              <span>{formatPrice(order.shippingFee)}</span>
-            </div>
-            {order.discountAmount > 0 && (
-              <div className="flex justify-between text-sm">
-                <span className="text-muted-foreground">Giảm giá</span>
-                <span className="text-green-600">-{formatPrice(order.discountAmount)}</span>
+              <div className="flex justify-between pt-2">
+                <span className="font-semibold text-lg">Tổng cộng</span>
+                <span className="font-bold text-xl text-primary">
+                  {formatPrice(order.total)}
+                </span>
               </div>
-            )}
-            <div className="flex justify-between pt-2">
-              <span className="font-semibold text-lg">Tổng cộng</span>
-              <span className="font-bold text-xl text-primary">
-                {formatPrice(order.finalAmount)}
-              </span>
             </div>
-          </div>
         </div>
       </DialogContent>
     </Dialog>
@@ -232,9 +199,9 @@ export default function OrdersPage() {
   const { mutate: cancelOrder } = useCancelOrder();
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
-  const handleCancelOrder = (orderId: number) => {
+  const handleCancelOrder = (orderCode: string) => {
     if (confirm('Bạn có chắc muốn hủy đơn hàng này?')) {
-      cancelOrder(orderId, {
+      cancelOrder(orderCode, {
         onSuccess: () => {
           toast.success('Đã hủy đơn hàng thành công');
         },
@@ -305,10 +272,10 @@ export default function OrdersPage() {
                   const statusConfig = getStatusConfig(order.status);
                   return (
                     <TableRow key={order.id}>
-                      <TableCell className="font-medium">#{order.orderNumber}</TableCell>
+                      <TableCell className="font-medium">#{order.orderCode}</TableCell>
                       <TableCell>{formatDate(order.createdAt)}</TableCell>
                       <TableCell className="font-semibold">
-                        {formatPrice(order.finalAmount)}
+                        {formatPrice(order.total)}
                       </TableCell>
                       <TableCell>
                         <Badge className={statusConfig.color}>
@@ -332,7 +299,7 @@ export default function OrdersPage() {
                               variant="ghost"
                               size="sm"
                               className="text-destructive hover:text-destructive"
-                              onClick={() => handleCancelOrder(order.id)}
+                              onClick={() => handleCancelOrder(order.orderCode)}
                             >
                               Hủy
                             </Button>
@@ -357,7 +324,7 @@ export default function OrdersPage() {
               <CardContent className="p-4">
                 <div className="flex justify-between items-start mb-3">
                   <div>
-                    <div className="font-medium">#{order.orderNumber}</div>
+                    <div className="font-medium">#{order.orderCode}</div>
                     <div className="text-sm text-muted-foreground">
                       {formatDate(order.createdAt)}
                     </div>
@@ -370,9 +337,9 @@ export default function OrdersPage() {
                   </Badge>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="font-bold text-lg text-primary">
-                    {formatPrice(order.finalAmount)}
-                  </div>
+                    <div className="font-bold text-lg text-primary">
+                      {formatPrice(order.total)}
+                    </div>
                   <div className="flex gap-2">
                     <Button
                       variant="outline"
@@ -382,16 +349,16 @@ export default function OrdersPage() {
                       <Eye className="h-4 w-4 mr-1" />
                       Xem
                     </Button>
-                    {order.status === 'PENDING' && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-destructive hover:text-destructive"
-                        onClick={() => handleCancelOrder(order.id)}
-                      >
-                        Hủy
-                      </Button>
-                    )}
+                      {order.status === 'PENDING' && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-destructive hover:text-destructive"
+                          onClick={() => handleCancelOrder(order.orderCode)}
+                        >
+                          Hủy
+                        </Button>
+                      )}
                   </div>
                 </div>
               </CardContent>

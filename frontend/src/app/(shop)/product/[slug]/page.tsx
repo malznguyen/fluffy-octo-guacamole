@@ -79,15 +79,16 @@ export default function ProductDetailPage() {
 
   const images = product.images || [];
   const mainImage = images[selectedImage]?.imageUrl || '/placeholder.png';
-  const price = product.salePrice || product.basePrice;
-  const hasDiscount = product.salePrice && product.salePrice < product.basePrice;
+  const price = product.basePrice;
 
   const selectedVariantData = product.variants.find((v) => v.id === selectedVariant);
-  const finalPrice = selectedVariantData
-    ? price + selectedVariantData.priceAdjustment
-    : price;
+  const finalPrice = selectedVariantData ? selectedVariantData.finalPrice : price;
 
   const handleAddToCart = () => {
+    if (!selectedVariant) {
+      toast.error('Vui lòng chọn biến thể trước khi thêm vào giỏ hàng');
+      return;
+    }
     addToCart(
       {
         productId: product.id,
@@ -201,12 +202,7 @@ export default function ProductDetailPage() {
           {/* Price */}
           <div className="flex items-baseline gap-3">
             <span className="text-3xl font-bold">{formatPrice(finalPrice)}</span>
-            {hasDiscount && (
-              <span className="text-xl text-muted-foreground line-through">
-                {formatPrice(product.basePrice)}
-              </span>
-            )}
-          </div>
+            </div>
 
           <Separator />
 
@@ -227,11 +223,11 @@ export default function ProductDetailPage() {
                   <button
                     key={variant.id}
                     onClick={() => setSelectedVariant(variant.id)}
-                    disabled={variant.quantity === 0}
+                    disabled={!variant.inStock}
                     className={`px-4 py-2 rounded-md border text-sm font-medium transition-colors ${
                       selectedVariant === variant.id
                         ? 'border-primary bg-primary text-primary-foreground'
-                        : variant.quantity === 0
+                        : !variant.inStock
                         ? 'border-gray-200 text-gray-400 cursor-not-allowed'
                         : 'border-gray-300 hover:border-primary'
                     }`}

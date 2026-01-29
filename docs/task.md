@@ -232,6 +232,12 @@ Phase 6.1: Completed customer frontend pages (Home, Shop, Product, Cart, Checkou
 - Toast notifications (Sonner)
 - Form validation with Vietnamese error messages
 
+### Phase 6.1 Update (Fix schema + wire frontend)
+- Disabled Hibernate schema auto-management (ddl-auto: none) to prevent SQL Server DDL conflicts.
+- Added CORS allowance for http://localhost:3000 in SecurityConfig.
+- Wired frontend API hooks to public endpoints and response wrapper format.
+- Updated Home/Shop/Product/Cart/Checkout/Orders pages to align with backend DTOs (orderCode, unitPrice, imageUrl, variantInfoSnapshot).
+
 ### Technical Stack
 - Next.js 16 with App Router
 - TypeScript

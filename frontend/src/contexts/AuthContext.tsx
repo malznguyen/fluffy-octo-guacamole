@@ -35,8 +35,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const response = await apiClient.post<AuthResponse>('/api/v1/auth/login', { email, password });
-    const { token, user } = response.data;
+    const response = await apiClient.post<{ success: boolean; data: AuthResponse }>('/api/v1/auth/login', { email, password });
+    const { token, user } = response.data.data;
     
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(user));
@@ -44,8 +44,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const register = async (data: { email: string; password: string; fullName: string; phone?: string }) => {
-    const response = await apiClient.post<AuthResponse>('/api/v1/auth/register', data);
-    const { token, user } = response.data;
+    const response = await apiClient.post<{ success: boolean; data: AuthResponse }>('/api/v1/auth/register', data);
+    const { token, user } = response.data.data;
     
     localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(user));
