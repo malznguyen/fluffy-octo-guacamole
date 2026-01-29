@@ -22,7 +22,7 @@ export interface ProductDTO {
   name: string;
   slug: string;
   description?: string;
-  price: number;
+  basePrice: number;
   salePrice?: number;
   categoryId: number;
   categoryName: string;
@@ -35,7 +35,7 @@ export interface ProductDTO {
 
 export interface ProductImageDTO {
   id: number;
-  url: string;
+  imageUrl: string;
   alt?: string;
   isPrimary: boolean;
 }
@@ -97,4 +97,24 @@ export interface RegisterRequest {
 export interface AuthResponse {
   token: string;
   user: UserResponse;
+}
+
+// Pagination Types
+export interface PageResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  currentPage: number;
+}
+
+export interface ProductQueryParams {
+  page?: number;
+  size?: number;
+  sort?: string;
+  categoryId?: number;
+  minPrice?: number;
+  maxPrice?: number;
+  search?: string;
+  [key: string]: unknown;
 }

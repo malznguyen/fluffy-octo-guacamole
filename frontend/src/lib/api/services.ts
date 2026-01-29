@@ -9,6 +9,8 @@ import {
   LoginRequest,
   RegisterRequest,
   UserResponse,
+  PageResponse,
+  ProductQueryParams,
 } from './types';
 
 // Public Services
@@ -16,6 +18,9 @@ export const publicApi = {
   // Categories
   getCategories: (): Promise<CategoryDTO[]> =>
     apiClient.get<CategoryDTO[]>('/public/categories/tree'),
+
+  getFlatCategories: (): Promise<CategoryDTO[]> =>
+    apiClient.get<CategoryDTO[]>('/public/categories'),
 
   // Products
   getTopSellingProducts: (): Promise<ProductDTO[]> =>
@@ -26,6 +31,10 @@ export const publicApi = {
 
   getProductBySlug: (slug: string): Promise<ProductDTO> =>
     apiClient.get<ProductDTO>(`/public/products/${slug}`),
+
+  // Paginated Products for Shop Page
+  getProductsPaginated: (params?: ProductQueryParams): Promise<PageResponse<ProductDTO>> =>
+    apiClient.get<PageResponse<ProductDTO>>('/public/products', params),
 };
 
 // Cart Services

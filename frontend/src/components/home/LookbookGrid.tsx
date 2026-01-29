@@ -26,11 +26,11 @@ const fallbackProducts: ProductDTO[] = [
     id: 1,
     name: 'Áo Sơ Mi Nam Cao Cấp',
     slug: 'ao-so-mi-nam-cao-cap',
-    price: 850000,
+    basePrice: 850000,
     salePrice: 680000,
     categoryId: 1,
     categoryName: 'Áo Nam',
-    images: [{ id: 1, url: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600&q=80', alt: 'Áo sơ mi nam', isPrimary: true }],
+    images: [{ id: 1, imageUrl: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600&q=80', alt: 'Áo sơ mi nam', isPrimary: true }],
     variants: [{ id: 1, size: 'M', color: 'Trắng', stockQuantity: 10 }],
     isNew: true,
     discount: 20,
@@ -39,10 +39,10 @@ const fallbackProducts: ProductDTO[] = [
     id: 2,
     name: 'Váy Liền Nữ Elegance',
     slug: 'vay-lien-nu-elegance',
-    price: 1200000,
+    basePrice: 1200000,
     categoryId: 2,
     categoryName: 'Áo Nữ',
-    images: [{ id: 2, url: 'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=600&q=80', alt: 'Váy liền nữ', isPrimary: true }],
+    images: [{ id: 2, imageUrl: 'https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=600&q=80', alt: 'Váy liền nữ', isPrimary: true }],
     variants: [{ id: 2, size: 'S', color: 'Đen', stockQuantity: 5 }],
     isNew: true,
   },
@@ -50,11 +50,11 @@ const fallbackProducts: ProductDTO[] = [
     id: 3,
     name: 'Blazer Nam Premium',
     slug: 'blazer-nam-premium',
-    price: 2500000,
+    basePrice: 2500000,
     salePrice: 2000000,
     categoryId: 1,
     categoryName: 'Áo Nam',
-    images: [{ id: 3, url: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600&q=80', alt: 'Blazer nam', isPrimary: true }],
+    images: [{ id: 3, imageUrl: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600&q=80', alt: 'Blazer nam', isPrimary: true }],
     variants: [{ id: 3, size: 'L', color: 'Xanh Navy', stockQuantity: 8 }],
     discount: 20,
   },
@@ -62,21 +62,21 @@ const fallbackProducts: ProductDTO[] = [
     id: 4,
     name: 'Túi Xách Da Thật',
     slug: 'tui-xach-da-that',
-    price: 1800000,
+    basePrice: 1800000,
     categoryId: 3,
     categoryName: 'Phụ Kiện',
-    images: [{ id: 4, url: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&q=80', alt: 'Túi xách', isPrimary: true }],
+    images: [{ id: 4, imageUrl: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&q=80', alt: 'Túi xách', isPrimary: true }],
     variants: [{ id: 4, stockQuantity: 15 }],
   },
   {
     id: 5,
     name: 'Giày Lườ Nam Classic',
     slug: 'giay-luoi-nam-classic',
-    price: 1500000,
+    basePrice: 1500000,
     salePrice: 1200000,
     categoryId: 4,
     categoryName: 'Giày Dép',
-    images: [{ id: 5, url: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=600&q=80', alt: 'Giày lườ', isPrimary: true }],
+    images: [{ id: 5, imageUrl: 'https://images.unsplash.com/photo-1533867617858-e7b97e060509?w=600&q=80', alt: 'Giày lườ', isPrimary: true }],
     variants: [{ id: 5, size: '42', color: 'Nâu', stockQuantity: 12 }],
     discount: 20,
   },
@@ -84,10 +84,10 @@ const fallbackProducts: ProductDTO[] = [
     id: 6,
     name: 'Áo Khoác Dù Unisex',
     slug: 'ao-khoac-du-unisex',
-    price: 950000,
+    basePrice: 950000,
     categoryId: 1,
     categoryName: 'Áo Nam',
-    images: [{ id: 6, url: 'https://images.unsplash.com/photo-1551028919-ac76c9028d1e?w=600&q=80', alt: 'Áo khoác dù', isPrimary: true }],
+    images: [{ id: 6, imageUrl: 'https://images.unsplash.com/photo-1551028919-ac76c9028d1e?w=600&q=80', alt: 'Áo khoác dù', isPrimary: true }],
     variants: [{ id: 6, size: 'XL', color: 'Xám', stockQuantity: 20 }],
     isNew: true,
   },
@@ -119,7 +119,7 @@ function ProductCard({ product, index }: ProductCardProps) {
 
   const primaryImage = product.images?.find(img => img.isPrimary) || product.images?.[0];
   const hasDiscount = product.discount && product.discount > 0;
-  const hasValidPrice = product.price !== undefined && product.price !== null && !isNaN(product.price);
+  const hasValidPrice = product.basePrice !== undefined && product.basePrice !== null && !isNaN(product.basePrice);
 
   return (
     <motion.div
@@ -135,7 +135,7 @@ function ProductCard({ product, index }: ProductCardProps) {
         {/* Image Container */}
         <div className="relative aspect-[3/4] overflow-hidden bg-neutral-100 mb-4">
           <Image
-            src={primaryImage?.url || '/placeholder.jpg'}
+            src={primaryImage?.imageUrl || '/placeholder.jpg'}
             alt={product.name}
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -200,12 +200,12 @@ function ProductCard({ product, index }: ProductCardProps) {
                     {formatPrice(product.salePrice)}
                   </span>
                   <span className="text-sm text-neutral-400 line-through">
-                    {formatPrice(product.price)}
+                    {formatPrice(product.basePrice)}
                   </span>
                 </>
               ) : (
                 <span className="font-semibold text-neutral-900">
-                  {formatPrice(product.price)}
+                  {formatPrice(product.basePrice)}
                 </span>
               )
             ) : (
