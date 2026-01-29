@@ -2,10 +2,10 @@
 
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
-import { LoginForm } from '@/components/auth/LoginForm';
+import { RegisterForm } from '@/components/auth/RegisterForm';
 import { Loader2 } from 'lucide-react';
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const { isAuthenticated, isLoading } = useAuth();
 
   // Show loading state while checking auth
@@ -24,7 +24,7 @@ export default function LoginPage() {
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4">Bạn đã đăng nhập</h1>
           <p className="text-muted-foreground mb-6">
-            Bạn đã đăng nhập vào hệ thống.
+            Bạn đã đăng nhập vào hệ thống. Vui lòng đăng xuất để tạo tài khoản mới.
           </p>
           <Link
             href="/"
@@ -64,10 +64,10 @@ export default function LoginPage() {
           
           <div className="max-w-md">
             <blockquote className="text-2xl font-light leading-relaxed">
-              "Thởi trang là ngôn ngữ của cá tính, và chúng tôi giúp bạn kể câu chuyện của mình."
+              "Hãy để phong cách của bạn tỏa sáng. Đăng ký ngay để nhận ưu đãi đặc biệt."
             </blockquote>
             <p className="mt-4 text-neutral-400">
-              Khám phá bộ sưu tập mới nhất với hàng nghìn mẫu thờ trang độc đáo.
+              Tham gia cùng hàng nghìn khách hàng đang tận hưởng trải nghiệm mua sắm tuyệt vờ tại Fash.On.
             </p>
           </div>
           
@@ -79,7 +79,7 @@ export default function LoginPage() {
 
       {/* Right Side - Form */}
       <div className="flex-1 flex items-center justify-center p-4 sm:p-8 lg:p-12 bg-background">
-        <div className="w-full max-w-md space-y-8">
+        <div className="w-full max-w-md space-y-6">
           {/* Mobile Logo */}
           <div className="lg:hidden text-center">
             <Link href="/" className="text-3xl font-bold tracking-tight">
@@ -89,19 +89,19 @@ export default function LoginPage() {
 
           <div className="space-y-2">
             <h1 className="text-3xl font-bold tracking-tight text-center lg:text-left">
-              Đăng Nhập
+              Đăng Ký Tài Khoản
             </h1>
             <p className="text-muted-foreground text-center lg:text-left">
-              Đăng nhập để tiếp tục mua sắm và theo dõi đơn hàng của bạn
+              Tạo tài khoản để nhận ưu đãi đặc biệt và theo dõi đơn hàng dễ dàng
             </p>
           </div>
 
           <div className="bg-card p-6 sm:p-8 rounded-xl border shadow-sm">
-            <LoginForm />
+            <RegisterForm />
           </div>
 
           <p className="text-xs text-center text-muted-foreground">
-            Bằng việc đăng nhập, bạn đồng ý với{' '}
+            Bằng việc đăng ký, bạn đồng ý với{' '}
             <Link href="#" className="underline underline-offset-2 hover:text-primary">
               Điều khoản sử dụng
             </Link>{' '}

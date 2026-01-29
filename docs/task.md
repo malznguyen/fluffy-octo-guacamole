@@ -249,3 +249,76 @@ Phase 6.1: Completed customer frontend pages (Home, Shop, Product, Cart, Checkou
 
 Note: Desktop-only implementation. Mobile responsive design is Phase 6.2.
 
+## 2026-01-29 (Phase 6.2: Authentication Pages)
+
+Phase 6.2: Completed authentication pages (Login/Register) with Vietnamese UI, JWT integration, route protection.
+
+### Login Page (/login)
+- Split-screen layout: Left side with brand imagery and quote, right side with form
+- Form fields: Email (with Mail icon), Password (with Lock icon + Eye/EyeOff toggle)
+- Validation with Zod + React Hook Form:
+  - "Email không được để trống"
+  - "Email không đúng định dạng"
+  - "Mật khẩu không được để trống"
+  - "Mật khẩu phải có ít nhất 6 ký tự"
+- Loading state: Button shows "Đang xử lý..." with Loader2 spinner
+- Toast notifications: "Đăng nhập thành công!" / "Email hoặc mật khẩu không đúng."
+- Return URL support: Redirects back to protected page after login
+- Link to register: "Chưa có tài khoản? Đăng ký ngay"
+
+### Register Page (/register)
+- Matching split-screen layout design
+- Form fields:
+  - Họ và tên (User icon)
+  - Email (Mail icon)
+  - Số điện thoại (Phone icon, regex validation 10 digits)
+  - Mật khẩu (Lock icon + Eye/EyeOff toggle)
+  - Xác nhận mật khẩu (password match validation)
+- Validation with Vietnamese error messages:
+  - "Họ tên không được để trống"
+  - "Số điện thoại không hợp lệ (cần 10 số)"
+  - "Mật khẩu xác nhận không khớp"
+- Success state: Shows checkmark icon, auto-redirects to login after 2 seconds
+- Toast notifications: "Đăng ký thành công! Bạn có thể đăng nhập ngay."
+- Link to login: "Đã có tài khoản? Đăng nhập ngay"
+
+### Route Protection (Middleware)
+- Created middleware.ts for server-side route protection
+- Protected routes: /cart, /checkout, /orders (require authentication)
+- Auth routes: /login, /register (redirect to home if already authenticated)
+- Return URL: Stores original URL in query param for post-login redirect
+- Cookie-based auth check for middleware compatibility
+
+### AuthContext Updates
+- Added cookie management for middleware compatibility
+- Login stores token in both localStorage and cookies
+- Logout clears both localStorage and cookies
+- Return URL handling: Redirects to returnUrl or home after login
+- Improved error handling with toast notifications
+
+### Header Updates
+- Already displays user name and logout button when authenticated
+- Shows login button when not authenticated
+- Works with AuthContext state
+
+### Components Created
+- LoginForm.tsx: Reusable login form with validation
+- RegisterForm.tsx: Reusable register form with validation
+
+### Design Compliance
+- 100% Vietnamese UI (no English)
+- Be Vietnam Pro font
+- Lucide icons only (Mail, Lock, User, Phone, Eye, EyeOff, Loader2, ArrowRight, CheckCircle2)
+- No emojis in UI
+- Wide layout with large inputs
+- Loading states with spinners
+
+### Testing Flow
+- Register new account -> Success message -> Auto-redirect to login
+- Login -> Redirect to home or return URL
+- Access /cart without login -> Redirect to /login?returnUrl=/cart
+- Login from redirect -> Back to /cart
+- Logout -> Clear auth state -> Redirect to home
+
+Note: Ready for Phase 6.3 Admin Dashboard.
+
