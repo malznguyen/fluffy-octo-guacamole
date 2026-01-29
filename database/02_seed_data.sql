@@ -21,124 +21,124 @@ GO
 -- CATEGORIES (Tree structure: parent-child)
 -- =============================================
 -- Parent categories
-INSERT INTO categories (name, slug, description, parent_id, created_at, updated_at)
+INSERT INTO categories (name, slug, description, parent_id, sort_order, is_active, created_at, updated_at)
 VALUES 
-    (N'ThờI Trang Nam', N'thoi-trang-nam', N'Bộ sưu tập thờI trang nam tính, hiện đạI', NULL, GETDATE(), GETDATE()),
-    (N'ThờI Trang Nữ', N'thoi-trang-nu', N'Bộ sưu tập thờI trang nữ thanh lịch', NULL, GETDATE(), GETDATE()),
-    (N'Phụ Kiện', N'phu-kien', N'Các loạI phụ kiện thờI trang', NULL, GETDATE(), GETDATE());
+    (N'ThờI Trang Nam', N'thoi-trang-nam', N'Bộ sưu tập thờI trang nam tính, hiện đạI', NULL, 1, 1, GETDATE(), GETDATE()),
+    (N'ThờI Trang Nữ', N'thoi-trang-nu', N'Bộ sưu tập thờI trang nữ thanh lịch', NULL, 2, 1, GETDATE(), GETDATE()),
+    (N'Phụ Kiện', N'phu-kien', N'Các loạI phụ kiện thờI trang', NULL, 3, 1, GETDATE(), GETDATE());
 GO
 
 -- Child categories (Nam)
-INSERT INTO categories (name, slug, description, parent_id, created_at, updated_at)
+INSERT INTO categories (name, slug, description, parent_id, sort_order, is_active, created_at, updated_at)
 VALUES 
-    (N'Áo Nam', N'ao-nam', N'Áo thun, áo sơ mI, áo polo nam', 1, GETDATE(), GETDATE()),
-    (N'Quần Nam', N'quan-nam', N'Quần jean, quần kakI, quần short nam', 1, GETDATE(), GETDATE());
+    (N'Áo Nam', N'ao-nam', N'Áo thun, áo sơ mI, áo polo nam', 1, 1, 1, GETDATE(), GETDATE()),
+    (N'Quần Nam', N'quan-nam', N'Quần jean, quần kakI, quần short nam', 1, 2, 1, GETDATE(), GETDATE());
 GO
 
 -- Child categories (Nữ)
-INSERT INTO categories (name, slug, description, parent_id, created_at, updated_at)
+INSERT INTO categories (name, slug, description, parent_id, sort_order, is_active, created_at, updated_at)
 VALUES 
-    (N'Áo Nữ', N'ao-nu', N'Áo thun, áo sơ mI, áo kiểu nữ', 2, GETDATE(), GETDATE()),
-    (N'Váy Đầm', N'vay-dam', N'Váy, đầm thờI trang nữ', 2, GETDATE(), GETDATE());
+    (N'Áo Nữ', N'ao-nu', N'Áo thun, áo sơ mI, áo kiểu nữ', 2, 1, 1, GETDATE(), GETDATE()),
+    (N'Váy Đầm', N'vay-dam', N'Váy, đầm thờI trang nữ', 2, 2, 1, GETDATE(), GETDATE());
 GO
 
 -- =============================================
 -- PRODUCTS
 -- =============================================
-INSERT INTO products (name, slug, description, base_price, category_id, status, created_at, updated_at)
+INSERT INTO products (name, slug, description, base_price, category_id, is_visible, sold_count, created_at, updated_at)
 VALUES 
-    (N'Áo Thun Nam Cotton Cao Cấp', N'ao-thun-nam-cotton-cao-cap', N'Áo thun nam chất liệu cotton 100%, thoáng mát, thấm hút mồ hôI tốt, phù hợp mặc hè', 99000.0000, 4, 'active', GETDATE(), GETDATE()),
-    (N'Quần Jean Ống Rộng Nam', N'quan-jean-ong-rong-nam', N'Quần jean ống rộng phong cách streetwear, chất jean dày dặn, form chuẩn', 299000.0000, 5, 'active', GETDATE(), GETDATE()),
-    (N'Áo Sơ MI Nữ Công Sở', N'ao-so-mi-nu-cong-so', N'Áo sơ mI nữ tay dàI, chất liệu lụa mềm mạI, phù hợp đI làm công sở', 149000.0000, 6, 'active', GETDATE(), GETDATE()),
-    (N'Váy Đầm Dạ HộI', N'vay-dam-da-hoi', N'Váy đầm dự tiệc sang trọng, thiết kế tinh tế, tôn dáng', 599000.0000, 7, 'active', GETDATE(), GETDATE());
+    (N'Áo Thun Nam Cotton Cao Cấp', N'ao-thun-nam-cotton-cao-cap', N'Áo thun nam chất liệu cotton 100%, thoáng mát, thấm hút mồ hôI tốt, phù hợp mặc hè', 99000.0000, 4, 1, 5, GETDATE(), GETDATE()),
+    (N'Quần Jean Ống Rộng Nam', N'quan-jean-ong-rong-nam', N'Quần jean ống rộng phong cách streetwear, chất jean dày dặn, form chuẩn', 299000.0000, 5, 1, 2, GETDATE(), GETDATE()),
+    (N'Áo Sơ MI Nữ Công Sở', N'ao-so-mi-nu-cong-so', N'Áo sơ mI nữ tay dàI, chất liệu lụa mềm mạI, phù hợp đI làm công sở', 149000.0000, 6, 1, 1, GETDATE(), GETDATE()),
+    (N'Váy Đầm Dạ HộI', N'vay-dam-da-hoi', N'Váy đầm dự tiệc sang trọng, thiết kế tinh tế, tôn dáng', 599000.0000, 7, 1, 0, GETDATE(), GETDATE());
 GO
 
 -- =============================================
 -- PRODUCT VARIANTS
 -- =============================================
 -- Product 1: Áo Thun Nam Cotton (Size M/L/XL + Màu Đen/Trắng/Xanh)
-INSERT INTO product_variants (product_id, color, size, sku, stock_qty, price_adjustment, created_at, updated_at)
+INSERT INTO product_variants (product_id, color, size, sku, stock_quantity, price_adjustment, is_available, created_at, updated_at)
 VALUES 
-    (1, N'Đen', N'M', N'ATN-CC-DEN-M', 50, 0.0000, GETDATE(), GETDATE()),
-    (1, N'Đen', N'L', N'ATN-CC-DEN-L', 45, 0.0000, GETDATE(), GETDATE()),
-    (1, N'Đen', N'XL', N'ATN-CC-DEN-XL', 40, 5000.0000, GETDATE(), GETDATE()),
-    (1, N'Trắng', N'M', N'ATN-CC-TRANG-M', 60, 0.0000, GETDATE(), GETDATE()),
-    (1, N'Trắng', N'L', N'ATN-CC-TRANG-L', 55, 0.0000, GETDATE(), GETDATE()),
-    (1, N'Trắng', N'XL', N'ATN-CC-TRANG-XL', 50, 5000.0000, GETDATE(), GETDATE()),
-    (1, N'Xanh Navy', N'M', N'ATN-CC-NAVY-M', 40, 10000.0000, GETDATE(), GETDATE()),
-    (1, N'Xanh Navy', N'L', N'ATN-CC-NAVY-L', 35, 10000.0000, GETDATE(), GETDATE()),
-    (1, N'Xanh Navy', N'XL', N'ATN-CC-NAVY-XL', 30, 15000.0000, GETDATE(), GETDATE());
+    (1, N'Đen', N'M', N'ATN-CC-DEN-M', 50, 0.0000, 1, GETDATE(), GETDATE()),
+    (1, N'Đen', N'L', N'ATN-CC-DEN-L', 45, 0.0000, 1, GETDATE(), GETDATE()),
+    (1, N'Đen', N'XL', N'ATN-CC-DEN-XL', 40, 5000.0000, 1, GETDATE(), GETDATE()),
+    (1, N'Trắng', N'M', N'ATN-CC-TRANG-M', 60, 0.0000, 1, GETDATE(), GETDATE()),
+    (1, N'Trắng', N'L', N'ATN-CC-TRANG-L', 55, 0.0000, 1, GETDATE(), GETDATE()),
+    (1, N'Trắng', N'XL', N'ATN-CC-TRANG-XL', 50, 5000.0000, 1, GETDATE(), GETDATE()),
+    (1, N'Xanh Navy', N'M', N'ATN-CC-NAVY-M', 40, 10000.0000, 1, GETDATE(), GETDATE()),
+    (1, N'Xanh Navy', N'L', N'ATN-CC-NAVY-L', 35, 10000.0000, 1, GETDATE(), GETDATE()),
+    (1, N'Xanh Navy', N'XL', N'ATN-CC-NAVY-XL', 30, 15000.0000, 1, GETDATE(), GETDATE());
 GO
 
 -- Product 2: Quần Jean Ống Rộng
-INSERT INTO product_variants (product_id, color, size, sku, stock_qty, price_adjustment, created_at, updated_at)
+INSERT INTO product_variants (product_id, color, size, sku, stock_quantity, price_adjustment, is_available, created_at, updated_at)
 VALUES 
-    (2, N'Xanh Đậm', N'28', N'QJOR-XD-28', 30, 0.0000, GETDATE(), GETDATE()),
-    (2, N'Xanh Đậm', N'29', N'QJOR-XD-29', 35, 0.0000, GETDATE(), GETDATE()),
-    (2, N'Xanh Đậm', N'30', N'QJOR-XD-30', 40, 0.0000, GETDATE(), GETDATE()),
-    (2, N'Xanh Đậm', N'31', N'QJOR-XD-31', 35, 0.0000, GETDATE(), GETDATE()),
-    (2, N'Xanh Nhạt', N'28', N'QJOR-XN-28', 25, 0.0000, GETDATE(), GETDATE()),
-    (2, N'Xanh Nhạt', N'29', N'QJOR-XN-29', 30, 0.0000, GETDATE(), GETDATE()),
-    (2, N'Xanh Nhạt', N'30', N'QJOR-XN-30', 35, 0.0000, GETDATE(), GETDATE()),
-    (2, N'Xanh Nhạt', N'31', N'QJOR-XN-31', 30, 0.0000, GETDATE(), GETDATE()),
-    (2, N'Đen', N'28', N'QJOR-DEN-28', 20, 10000.0000, GETDATE(), GETDATE()),
-    (2, N'Đen', N'29', N'QJOR-DEN-29', 25, 10000.0000, GETDATE(), GETDATE()),
-    (2, N'Đen', N'30', N'QJOR-DEN-30', 30, 10000.0000, GETDATE(), GETDATE()),
-    (2, N'Đen', N'31', N'QJOR-DEN-31', 25, 10000.0000, GETDATE(), GETDATE());
+    (2, N'Xanh Đậm', N'28', N'QJOR-XD-28', 30, 0.0000, 1, GETDATE(), GETDATE()),
+    (2, N'Xanh Đậm', N'29', N'QJOR-XD-29', 35, 0.0000, 1, GETDATE(), GETDATE()),
+    (2, N'Xanh Đậm', N'30', N'QJOR-XD-30', 40, 0.0000, 1, GETDATE(), GETDATE()),
+    (2, N'Xanh Đậm', N'31', N'QJOR-XD-31', 35, 0.0000, 1, GETDATE(), GETDATE()),
+    (2, N'Xanh Nhạt', N'28', N'QJOR-XN-28', 25, 0.0000, 1, GETDATE(), GETDATE()),
+    (2, N'Xanh Nhạt', N'29', N'QJOR-XN-29', 30, 0.0000, 1, GETDATE(), GETDATE()),
+    (2, N'Xanh Nhạt', N'30', N'QJOR-XN-30', 35, 0.0000, 1, GETDATE(), GETDATE()),
+    (2, N'Xanh Nhạt', N'31', N'QJOR-XN-31', 30, 0.0000, 1, GETDATE(), GETDATE()),
+    (2, N'Đen', N'28', N'QJOR-DEN-28', 20, 10000.0000, 1, GETDATE(), GETDATE()),
+    (2, N'Đen', N'29', N'QJOR-DEN-29', 25, 10000.0000, 1, GETDATE(), GETDATE()),
+    (2, N'Đen', N'30', N'QJOR-DEN-30', 30, 10000.0000, 1, GETDATE(), GETDATE()),
+    (2, N'Đen', N'31', N'QJOR-DEN-31', 25, 10000.0000, 1, GETDATE(), GETDATE());
 GO
 
 -- Product 3: Áo Sơ MI Nữ
-INSERT INTO product_variants (product_id, color, size, sku, stock_qty, price_adjustment, created_at, updated_at)
+INSERT INTO product_variants (product_id, color, size, sku, stock_quantity, price_adjustment, is_available, created_at, updated_at)
 VALUES 
-    (3, N'Trắng', N'S', N'ASMNU-TRANG-S', 40, 0.0000, GETDATE(), GETDATE()),
-    (3, N'Trắng', N'M', N'ASMNU-TRANG-M', 50, 0.0000, GETDATE(), GETDATE()),
-    (3, N'Trắng', N'L', N'ASMNU-TRANG-L', 45, 0.0000, GETDATE(), GETDATE()),
-    (3, N'Hồng Nhạt', N'S', N'ASMNU-HONG-S', 35, 5000.0000, GETDATE(), GETDATE()),
-    (3, N'Hồng Nhạt', N'M', N'ASMNU-HONG-M', 40, 5000.0000, GETDATE(), GETDATE()),
-    (3, N'Hồng Nhạt', N'L', N'ASMNU-HONG-L', 35, 5000.0000, GETDATE(), GETDATE()),
-    (3, N'Xanh Da TrờI', N'S', N'ASMNU-XDT-S', 30, 5000.0000, GETDATE(), GETDATE()),
-    (3, N'Xanh Da TrờI', N'M', N'ASMNU-XDT-M', 35, 5000.0000, GETDATE(), GETDATE()),
-    (3, N'Xanh Da TrờI', N'L', N'ASMNU-XDT-L', 30, 5000.0000, GETDATE(), GETDATE());
+    (3, N'Trắng', N'S', N'ASMNU-TRANG-S', 40, 0.0000, 1, GETDATE(), GETDATE()),
+    (3, N'Trắng', N'M', N'ASMNU-TRANG-M', 50, 0.0000, 1, GETDATE(), GETDATE()),
+    (3, N'Trắng', N'L', N'ASMNU-TRANG-L', 45, 0.0000, 1, GETDATE(), GETDATE()),
+    (3, N'Hồng Nhạt', N'S', N'ASMNU-HONG-S', 35, 5000.0000, 1, GETDATE(), GETDATE()),
+    (3, N'Hồng Nhạt', N'M', N'ASMNU-HONG-M', 40, 5000.0000, 1, GETDATE(), GETDATE()),
+    (3, N'Hồng Nhạt', N'L', N'ASMNU-HONG-L', 35, 5000.0000, 1, GETDATE(), GETDATE()),
+    (3, N'Xanh Da TrờI', N'S', N'ASMNU-XDT-S', 30, 5000.0000, 1, GETDATE(), GETDATE()),
+    (3, N'Xanh Da TrờI', N'M', N'ASMNU-XDT-M', 35, 5000.0000, 1, GETDATE(), GETDATE()),
+    (3, N'Xanh Da TrờI', N'L', N'ASMNU-XDT-L', 30, 5000.0000, 1, GETDATE(), GETDATE());
 GO
 
 -- Product 4: Váy Đầm Dạ HộI
-INSERT INTO product_variants (product_id, color, size, sku, stock_qty, price_adjustment, created_at, updated_at)
+INSERT INTO product_variants (product_id, color, size, sku, stock_quantity, price_adjustment, is_available, created_at, updated_at)
 VALUES 
-    (4, N'Đỏ', N'S', N'VDDH-DO-S', 20, 0.0000, GETDATE(), GETDATE()),
-    (4, N'Đỏ', N'M', N'VDDH-DO-M', 25, 0.0000, GETDATE(), GETDATE()),
-    (4, N'Đỏ', N'L', N'VDDH-DO-L', 20, 0.0000, GETDATE(), GETDATE()),
-    (4, N'Đen', N'S', N'VDDH-DEN-S', 15, 0.0000, GETDATE(), GETDATE()),
-    (4, N'Đen', N'M', N'VDDH-DEN-M', 20, 0.0000, GETDATE(), GETDATE()),
-    (4, N'Đen', N'L', N'VDDH-DEN-L', 15, 0.0000, GETDATE(), GETDATE()),
-    (4, N'Xanh Cobalt', N'S', N'VDDH-COBALT-S', 10, 10000.0000, GETDATE(), GETDATE()),
-    (4, N'Xanh Cobalt', N'M', N'VDDH-COBALT-M', 15, 10000.0000, GETDATE(), GETDATE()),
-    (4, N'Xanh Cobalt', N'L', N'VDDH-COBALT-L', 10, 10000.0000, GETDATE(), GETDATE());
+    (4, N'Đỏ', N'S', N'VDDH-DO-S', 20, 0.0000, 1, GETDATE(), GETDATE()),
+    (4, N'Đỏ', N'M', N'VDDH-DO-M', 25, 0.0000, 1, GETDATE(), GETDATE()),
+    (4, N'Đỏ', N'L', N'VDDH-DO-L', 20, 0.0000, 1, GETDATE(), GETDATE()),
+    (4, N'Đen', N'S', N'VDDH-DEN-S', 15, 0.0000, 1, GETDATE(), GETDATE()),
+    (4, N'Đen', N'M', N'VDDH-DEN-M', 20, 0.0000, 1, GETDATE(), GETDATE()),
+    (4, N'Đen', N'L', N'VDDH-DEN-L', 15, 0.0000, 1, GETDATE(), GETDATE()),
+    (4, N'Xanh Cobalt', N'S', N'VDDH-COBALT-S', 10, 10000.0000, 1, GETDATE(), GETDATE()),
+    (4, N'Xanh Cobalt', N'M', N'VDDH-COBALT-M', 15, 10000.0000, 1, GETDATE(), GETDATE()),
+    (4, N'Xanh Cobalt', N'L', N'VDDH-COBALT-L', 10, 10000.0000, 1, GETDATE(), GETDATE());
 GO
 
 -- =============================================
 -- PRODUCT IMAGES
 -- =============================================
-INSERT INTO product_images (product_id, file_path, alt_text, sort_order, created_at, updated_at)
+INSERT INTO product_images (product_id, image_url, alt_text, sort_order, is_primary, created_at, updated_at)
 VALUES 
     -- Product 1: Áo Thun Nam Cotton
-    (1, N'/backend/uploads/products/ao-thun-nam-cotton-1.jpg', N'Áo thun nam cotton màu đen', 1, GETDATE(), GETDATE()),
-    (1, N'/backend/uploads/products/ao-thun-nam-cotton-2.jpg', N'Áo thun nam cotton màu trắng', 2, GETDATE(), GETDATE()),
-    (1, N'/backend/uploads/products/ao-thun-nam-cotton-3.jpg', N'Áo thun nam cotton màu xanh navy', 3, GETDATE(), GETDATE()),
+    (1, N'/backend/uploads/products/ao-thun-nam-cotton-1.jpg', N'Áo thun nam cotton màu đen', 1, 1, GETDATE(), GETDATE()),
+    (1, N'/backend/uploads/products/ao-thun-nam-cotton-2.jpg', N'Áo thun nam cotton màu trắng', 2, 0, GETDATE(), GETDATE()),
+    (1, N'/backend/uploads/products/ao-thun-nam-cotton-3.jpg', N'Áo thun nam cotton màu xanh navy', 3, 0, GETDATE(), GETDATE()),
     
     -- Product 2: Quần Jean Ống Rộng
-    (2, N'/backend/uploads/products/quan-jean-ong-rong-1.jpg', N'Quần jean ống rộng xanh đậm', 1, GETDATE(), GETDATE()),
-    (2, N'/backend/uploads/products/quan-jean-ong-rong-2.jpg', N'Quần jean ống rộng xanh nhạt', 2, GETDATE(), GETDATE()),
-    (2, N'/backend/uploads/products/quan-jean-ong-rong-3.jpg', N'Quần jean ống rộng màu đen', 3, GETDATE(), GETDATE()),
+    (2, N'/backend/uploads/products/quan-jean-ong-rong-1.jpg', N'Quần jean ống rộng xanh đậm', 1, 1, GETDATE(), GETDATE()),
+    (2, N'/backend/uploads/products/quan-jean-ong-rong-2.jpg', N'Quần jean ống rộng xanh nhạt', 2, 0, GETDATE(), GETDATE()),
+    (2, N'/backend/uploads/products/quan-jean-ong-rong-3.jpg', N'Quần jean ống rộng màu đen', 3, 0, GETDATE(), GETDATE()),
     
     -- Product 3: Áo Sơ MI Nữ
-    (3, N'/backend/uploads/products/ao-so-mi-nu-1.jpg', N'Áo sơ mI nữ màu trắng', 1, GETDATE(), GETDATE()),
-    (3, N'/backend/uploads/products/ao-so-mi-nu-2.jpg', N'Áo sơ mI nữ màu hồng nhạt', 2, GETDATE(), GETDATE()),
-    (3, N'/backend/uploads/products/ao-so-mi-nu-3.jpg', N'Áo sơ mI nữ màu xanh da trờI', 3, GETDATE(), GETDATE()),
+    (3, N'/backend/uploads/products/ao-so-mi-nu-1.jpg', N'Áo sơ mI nữ màu trắng', 1, 1, GETDATE(), GETDATE()),
+    (3, N'/backend/uploads/products/ao-so-mi-nu-2.jpg', N'Áo sơ mI nữ màu hồng nhạt', 2, 0, GETDATE(), GETDATE()),
+    (3, N'/backend/uploads/products/ao-so-mi-nu-3.jpg', N'Áo sơ mI nữ màu xanh da trờI', 3, 0, GETDATE(), GETDATE()),
     
     -- Product 4: Váy Đầm Dạ HộI
-    (4, N'/backend/uploads/products/vay-dam-da-hoi-1.jpg', N'Váy đầm dạ hộI màu đỏ', 1, GETDATE(), GETDATE()),
-    (4, N'/backend/uploads/products/vay-dam-da-hoi-2.jpg', N'Váy đầm dạ hộI màu đen', 2, GETDATE(), GETDATE()),
-    (4, N'/backend/uploads/products/vay-dam-da-hoi-3.jpg', N'Váy đầm dạ hộI màu xanh cobalt', 3, GETDATE(), GETDATE());
+    (4, N'/backend/uploads/products/vay-dam-da-hoi-1.jpg', N'Váy đầm dạ hộI màu đỏ', 1, 1, GETDATE(), GETDATE()),
+    (4, N'/backend/uploads/products/vay-dam-da-hoi-2.jpg', N'Váy đầm dạ hộI màu đen', 2, 0, GETDATE(), GETDATE()),
+    (4, N'/backend/uploads/products/vay-dam-da-hoi-3.jpg', N'Váy đầm dạ hộI màu xanh cobalt', 3, 0, GETDATE(), GETDATE());
 GO
 
 -- =============================================

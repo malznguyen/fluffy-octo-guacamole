@@ -1,6 +1,8 @@
 package com.fashon.application.dto;
 
+import com.fashon.domain.enums.PaymentMethod;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -24,4 +26,7 @@ public class CreateOrderRequest {
 
     @Size(max = 500, message = "Note must not exceed 500 characters")
     private String note;
+
+    @NotNull(message = "Payment method is required")
+    private PaymentMethod paymentMethod;
 }

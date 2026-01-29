@@ -104,3 +104,46 @@ Completed Order & Inventory Management module:
 
 Note: Database tables already exist from 01_init_database.sql. Test flow: Add to cart -> Create order -> Admin updates status -> Cancel order.
 
+## 2026-01-29 (Phase 5: Simple Payment Tracking)
+
+Phase 5: Simple payment tracking with COD and bank transfer confirmation (no third-party gateway integration).
+
+### Payment Entity
+- Payment entity linked to Order (1 order can have multiple payment attempts + 1 successful)
+- Fields: method (COD, BANK_TRANSFER), amount (BigDecimal 19,4), status (PENDING, PAID, FAILED, REFUNDED)
+- transactionCode (simulated or NULL for COD), paidAt timestamp, notes (NVARCHAR)
+- Soft delete support for cleaning up error history
+- PaymentMethod enum: COD, BANK_TRANSFER
+- PaymentStatus enum: PENDING, PAID, FAILED, REFUNDED
+
+### Business Logic
+- When creating order (PENDING), auto-create Payment with status PENDING
+- COD: Admin confirms payment after delivery (marks as PAID)
+- BANK_TRANSFER: Admin confirms received transfer via API (marks as PAID)
+- For non-COD payments, order auto-confirms when payment is marked PAID
+
+### APIs
+Customer endpoints:
+- GET /api/v1/orders/{orderCode}/payments - View payment history for order
+
+Admin endpoints:
+- GET /api/v1/admin/payments - All payments (pagination, filter by status/method)
+- GET /api/v1/admin/payments/order/{orderCode} - Payments for specific order
+- POST /api/v1/admin/payments/{orderCode}/confirm - Confirm payment received
+- POST /api/v1/admin/payments/{orderCode}/mark-failed - Mark payment as failed
+
+### Integration
+- CreateOrderRequest now requires paymentMethod field
+- OrderService auto-creates Payment when order is created
+- PaymentService handles confirmation logic and auto-order-confirmation for bank transfers
+
+### Database
+- Added payments table to 01_init_database.sql
+- 14 total tables now
+
+Constraints followed:
+- BigDecimal(19,4) for amount
+- NVARCHAR for transaction_code and notes
+- Soft delete on Payment entity
+- No third-party gateway integration (VNPay/Momo) - simplified for school project
+

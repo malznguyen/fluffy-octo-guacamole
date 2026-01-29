@@ -49,12 +49,16 @@ BEGIN
         slug NVARCHAR(100) NOT NULL UNIQUE,
         description NVARCHAR(500),
         parent_id INT NULL,
+        sort_order INT NOT NULL DEFAULT 0,
+        is_active BIT NOT NULL DEFAULT 1,
         created_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         updated_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         deleted_at DATETIME2 NULL,
         
         INDEX idx_categories_slug (slug),
         INDEX idx_categories_parent (parent_id),
+        INDEX idx_categories_sort (sort_order),
+        INDEX idx_categories_active (is_active),
         INDEX idx_categories_deleted (deleted_at)
     );
 END
@@ -81,14 +85,16 @@ BEGIN
         description NVARCHAR(MAX),
         base_price DECIMAL(19,4) NOT NULL,
         category_id INT NOT NULL,
-        status NVARCHAR(20) NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'inactive', 'out_of_stock')),
+        is_visible BIT NOT NULL DEFAULT 1,
+        sold_count BIGINT NOT NULL DEFAULT 0,
         created_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         updated_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         deleted_at DATETIME2 NULL,
         
         INDEX idx_products_slug (slug),
         INDEX idx_products_category (category_id),
-        INDEX idx_products_status (status),
+        INDEX idx_products_visible (is_visible),
+        INDEX idx_products_sold (sold_count),
         INDEX idx_products_deleted (deleted_at)
     );
 END
@@ -114,14 +120,16 @@ BEGIN
         color NVARCHAR(50) NOT NULL,
         size NVARCHAR(20) NOT NULL,
         sku NVARCHAR(50) NOT NULL UNIQUE,
-        stock_qty INT NOT NULL DEFAULT 0,
+        stock_quantity INT NOT NULL DEFAULT 0,
         price_adjustment DECIMAL(19,4) NOT NULL DEFAULT 0,
+        is_available BIT NOT NULL DEFAULT 1,
         created_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         updated_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         deleted_at DATETIME2 NULL,
         
         INDEX idx_variants_product (product_id),
         INDEX idx_variants_sku (sku),
+        INDEX idx_variants_available (is_available),
         INDEX idx_variants_deleted (deleted_at)
     );
 END
@@ -144,15 +152,17 @@ BEGIN
     CREATE TABLE product_images (
         id INT IDENTITY(1,1) PRIMARY KEY,
         product_id INT NOT NULL,
-        file_path NVARCHAR(500) NOT NULL,
+        image_url NVARCHAR(500) NOT NULL,
         alt_text NVARCHAR(200),
         sort_order INT NOT NULL DEFAULT 0,
+        is_primary BIT NOT NULL DEFAULT 0,
         created_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         updated_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         deleted_at DATETIME2 NULL,
         
         INDEX idx_images_product (product_id),
         INDEX idx_images_sort (sort_order),
+        INDEX idx_images_primary (is_primary),
         INDEX idx_images_deleted (deleted_at)
     );
 END
@@ -445,6 +455,42 @@ BEGIN
 END
 GO
 
+-- =============================================
+-- TABLE: payments
+-- =============================================
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'payments')
+BEGIN
+    CREATE TABLE payments (
+        id INT IDENTITY(1,1) PRIMARY KEY,
+        order_id INT NOT NULL,
+        method NVARCHAR(30) NOT NULL CHECK (method IN ('COD', 'BANK_TRANSFER')),
+        amount DECIMAL(19,4) NOT NULL,
+        status NVARCHAR(30) NOT NULL DEFAULT 'PENDING' 
+            CHECK (status IN ('PENDING', 'PAID', 'FAILED', 'REFUNDED')),
+        transaction_code NVARCHAR(100) NULL,
+        paid_at DATETIME2 NULL,
+        notes NVARCHAR(1000) NULL,
+        created_at DATETIME2 NOT NULL DEFAULT GETDATE(),
+        updated_at DATETIME2 NOT NULL DEFAULT GETDATE(),
+        deleted_at DATETIME2 NULL,
+        
+        INDEX idx_payments_order (order_id),
+        INDEX idx_payments_status (status),
+        INDEX idx_payments_method (method),
+        INDEX idx_payments_deleted (deleted_at)
+    );
+END
+GO
+
+-- Add FK after table creation
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE name = 'fk_payments_order')
+BEGIN
+    ALTER TABLE payments
+    ADD CONSTRAINT fk_payments_order FOREIGN KEY (order_id) 
+        REFERENCES orders(id) ON DELETE CASCADE;
+END
+GO
+
 PRINT 'Database initialization completed successfully!';
-PRINT 'Total tables created: 13';
+PRINT 'Total tables created: 14';
 GO

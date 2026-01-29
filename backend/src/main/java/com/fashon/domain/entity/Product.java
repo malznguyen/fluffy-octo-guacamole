@@ -19,10 +19,10 @@ import java.util.List;
 @Where(clause = "deleted_at IS NULL")
 public class Product extends BaseEntity {
 
-    @Column(name = "name", nullable = false, columnDefinition = "NVARCHAR(500)")
+    @Column(name = "name", nullable = false, columnDefinition = "NVARCHAR(200)")
     private String name;
 
-    @Column(name = "slug", nullable = false, unique = true, columnDefinition = "NVARCHAR(500)")
+    @Column(name = "slug", nullable = false, unique = true, columnDefinition = "NVARCHAR(200)")
     private String slug;
 
     @Column(name = "description", columnDefinition = "NVARCHAR(MAX)")
@@ -38,15 +38,15 @@ public class Product extends BaseEntity {
     @Column(name = "is_visible", nullable = false)
     private Boolean isVisible = true;
 
+    @Column(name = "sold_count")
+    private Long soldCount = 0L;
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @OrderBy("sortOrder ASC")
     private List<ProductImage> images = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ProductVariant> variants = new ArrayList<>();
-
-    @Column(name = "sold_count")
-    private Long soldCount = 0L;
 
     public Product(String name, String slug, String description, BigDecimal basePrice, Category category) {
         this.name = name;
@@ -74,12 +74,5 @@ public class Product extends BaseEntity {
     public void removeVariant(ProductVariant variant) {
         variants.remove(variant);
         variant.setProduct(null);
-    }
-
-    public BigDecimal getFinalPrice(ProductVariant variant) {
-        if (variant == null || variant.getPriceAdjustment() == null) {
-            return basePrice;
-        }
-        return basePrice.add(variant.getPriceAdjustment());
     }
 }

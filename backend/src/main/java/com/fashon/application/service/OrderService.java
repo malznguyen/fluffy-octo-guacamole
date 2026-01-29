@@ -28,6 +28,7 @@ public class OrderService {
     private final UserRepository userRepository;
     private final ProductVariantRepository productVariantRepository;
     private final InventoryService inventoryService;
+    private final PaymentService paymentService;
 
     @Transactional
     public OrderDTO createOrderFromCart(String userEmail, CreateOrderRequest request) {
@@ -86,6 +87,9 @@ public class OrderService {
             // Deduct stock
             inventoryService.deductStockForOrder(variant, cartItem.getQuantity(), savedOrder);
         }
+
+        // Create payment for the order
+        paymentService.createPaymentForOrder(savedOrder, request.getPaymentMethod(), total);
 
         // Clear cart
         cartItemRepository.deleteAll(cart.getItems());

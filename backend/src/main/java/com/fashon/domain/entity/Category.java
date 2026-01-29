@@ -18,13 +18,13 @@ import java.util.List;
 @Where(clause = "deleted_at IS NULL")
 public class Category extends BaseEntity {
 
-    @Column(name = "name", nullable = false, columnDefinition = "NVARCHAR(255)")
+    @Column(name = "name", nullable = false, columnDefinition = "NVARCHAR(100)")
     private String name;
 
-    @Column(name = "slug", nullable = false, unique = true, columnDefinition = "NVARCHAR(255)")
+    @Column(name = "slug", nullable = false, unique = true, columnDefinition = "NVARCHAR(100)")
     private String slug;
 
-    @Column(name = "description", columnDefinition = "NVARCHAR(1000)")
+    @Column(name = "description", columnDefinition = "NVARCHAR(500)")
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
