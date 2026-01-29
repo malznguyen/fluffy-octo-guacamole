@@ -203,21 +203,26 @@ Completed FASH.ON homepage with hero slideshow and Vietnamese UI:
 - Be Vietnam Pro + Playfair Display fonts (Vietnamese support)
 - 100% Vietnamese text throughout UI (Trang Chủ, Cửa Hàng, Giỏ Hàng, Tìm Kiếm, etc.)
 
-**Files Created:**
-- frontend/src/components/sections/Header.tsx
-- frontend/src/components/sections/HeroSlideshow.tsx
-- frontend/src/components/sections/CategoryGrid.tsx
-- frontend/src/components/sections/ProductGrid.tsx
-- frontend/src/components/sections/ServiceBanner.tsx
-- frontend/src/components/sections/Footer.tsx
-- frontend/src/components/ProductCard.tsx
-- frontend/src/components/QueryProvider.tsx
-- frontend/src/hooks/useAuth.ts
-- frontend/src/hooks/useCart.ts
-- frontend/src/hooks/useCategories.ts
-- frontend/src/hooks/useProducts.ts
-- frontend/src/lib/api/client.ts
-- frontend/src/lib/api/types.ts
-- frontend/src/lib/api/services.ts
+**Files Created/Updated (Refactored Structure):**
+- frontend/src/components/layout/Header.tsx
+- frontend/src/components/layout/Footer.tsx
+- frontend/src/components/home/HeroSlideshow.tsx
+- frontend/src/components/home/CategoryGrid.tsx
+- frontend/src/components/home/BestSellersGrid.tsx
+- frontend/src/components/home/ProductCard.tsx
+- frontend/src/components/home/ServiceBanner.tsx
+- frontend/src/components/ui/button.tsx
+- frontend/src/components/ui/skeleton.tsx
+- frontend/src/components/ui/badge.tsx
+- frontend/src/components/providers/QueryProvider.tsx
+- frontend/src/lib/api.ts
+- frontend/src/lib/hooks/use-products.ts
+- frontend/src/lib/hooks/use-cart.ts (Zustand store)
+- frontend/src/types/index.ts
+- frontend/src/app/san-pham/[slug]/page.tsx (placeholder)
+- frontend/src/app/globals.css (FASH.ON theme)
+- frontend/src/app/layout.tsx (QueryProvider, Sonner, Vietnamese lang)
+- frontend/src/app/page.tsx (Homepage assembly)
+- frontend/next.config.ts (external images)
 
 Commit: "feat: FASH.ON home page with hero slideshow and vietnamese ui"
