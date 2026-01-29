@@ -1,24 +1,19 @@
 import type { Metadata } from "next";
-import { Be_Vietnam_Pro, Playfair_Display } from "next/font/google";
-import { Toaster } from "sonner";
-import { QueryProvider } from "@/components/QueryProvider";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
+import { QueryProvider } from "@/components/providers/QueryProvider";
 
-const beVietnamPro = Be_Vietnam_Pro({
-  variable: "--font-be-vietnam",
-  subsets: ["latin", "vietnamese"],
-  weight: ["300", "400", "500", "600", "700", "800"],
-});
-
-const playfairDisplay = Playfair_Display({
-  variable: "--font-playfair",
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin", "vietnamese"],
   weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
-  title: "FASH.ON - Thỏa Sức Phong Cách Củah Bạn",
-  description: "FASH.ON - Cửa hàng thờI trang hiện đại với những bộ sưu tập mới nhất. Khám phá xu hướng thờI trang đỉnh cao, chất lượng hàng đầu.",
+  title: "FASH.ON - Thời Trang Đỉnh Cao",
+  description: "Khám phá bộ sưu tập thời trang mới nhất với phong cách độc đáo và chất lượng hàng đầu tại FASH.ON",
+  keywords: ["thời trang", "quần áo", "fashion", "FASH.ON", "mua sắm online"],
 };
 
 export default function RootLayout({
@@ -29,19 +24,19 @@ export default function RootLayout({
   return (
     <html lang="vi">
       <body
-        className={`${beVietnamPro.variable} ${playfairDisplay.variable} font-sans antialiased`}
+        className={`${montserrat.variable} font-sans antialiased`}
       >
         <QueryProvider>
           {children}
-          <Toaster 
-            position="top-right"
-            toastOptions={{
-              style: {
-                fontFamily: 'var(--font-be-vietnam), sans-serif',
-              },
-            }}
-          />
         </QueryProvider>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            style: {
+              fontFamily: 'var(--font-montserrat)',
+            },
+          }}
+        />
       </body>
     </html>
   );

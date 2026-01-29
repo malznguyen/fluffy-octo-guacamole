@@ -48,78 +48,6 @@ Completed Product Catalog module:
 
 Note: Run database/04_create_product_tables.sql in SSMS before testing. Uploads stored in backend/uploads/ folder.
 
-## 2026-01-29 (Phase: Trang Chủ FASH.ON Với Hero Slideshow)
-
-Completed FASH.ON homepage with hero slideshow and Vietnamese UI:
-
-**Header Component:**
-- Logo FASH.ON in bold uppercase display font
-- Navigation: Trang Chủ, Cửa Hàng, Danh Mục (with dropdown)
-- Icons: Tìm kiếm (expandable search bar), Yêu thích, Giỏ hàng (with badge counter), User
-- User dropdown when logged in (Tài Khoản, Đơn Hàng, Quản Trị, Đăng Xuất)
-- Redirect to login when not authenticated
-- Mobile responsive hamburger menu with full navigation
-
-**Hero Slideshow:**
-- 4 slides with bold fashion colors (black, red, orange, dark gray)
-- Auto-play every 5 seconds with pause on hover
-- Left/right navigation arrows with smooth transitions
-- Dot indicators and slide counter (01/04 format)
-- Vietnamese headlines and CTAs (Mua Sắm Ngay, Xem Ngay, Khám Phá)
-
-**Danh Mục Nổi Bật:**
-- Grid of 4-5 categories from API categories tree
-- Each card with dynamic background colors and hover effects
-- Loading skeleton for better UX
-- Vietnamese text with "Khám Phá Ngay" hover text
-
-**Sản Phẩm Bán Chạy:**
-- Grid products from API top-selling endpoint
-- ProductCard with image, category, name, price (VND format)
-- Discount badges (red) and New badges (black)
-- Hover actions: Thêm Giỏ, Xem Nhanh, Yêu Thích
-- Loading skeletons
-- Navigation to /san-pham/[slug] on click
-
-**Banner Dịch Vụ:**
-- 3 columns: Giao Hàng Nhanh (Truck icon), Chính Hãng 100% (ShieldCheck icon), Hỗ Trợ 24/7 (Headphones icon)
-- Lucide icons only, no emojis
-- Dark background with hover effects
-
-**Footer:**
-- Newsletter subscription with Sonner toast
-- Contact info: email, phone, address
-- Links: Cửa Hàng, Hỗ Trợ, Công Ty
-- Social links: Facebook, Instagram, Youtube
-- Copyright notice
-
-**Technical Stack:**
-- Next.js 16.1.6 with App Router
-- React Query for data fetching with loading states
-- Tailwind CSS for styling
-- Lucide React for icons
-- Sonner for toast notifications
-- Be Vietnam Pro + Playfair Display fonts (Vietnamese support)
-- 100% Vietnamese text throughout UI (Trang Chủ, Cửa Hàng, Giỏ Hàng, Tìm Kiếm, etc.)
-
-**Files Created:**
-- frontend/src/components/sections/Header.tsx
-- frontend/src/components/sections/HeroSlideshow.tsx
-- frontend/src/components/sections/CategoryGrid.tsx
-- frontend/src/components/sections/ProductGrid.tsx
-- frontend/src/components/sections/ServiceBanner.tsx
-- frontend/src/components/sections/Footer.tsx
-- frontend/src/components/ProductCard.tsx
-- frontend/src/components/QueryProvider.tsx
-- frontend/src/hooks/useAuth.ts
-- frontend/src/hooks/useCart.ts
-- frontend/src/hooks/useCategories.ts
-- frontend/src/hooks/useProducts.ts
-- frontend/src/lib/api/client.ts
-- frontend/src/lib/api/types.ts
-- frontend/src/lib/api/services.ts
-
-Commit: "feat: FASH.ON home page with hero slideshow and vietnamese ui"
 
 ## 2026-01-29 (Phase 4: Order & Inventory Management)
 
@@ -220,3 +148,76 @@ Constraints followed:
 - Soft delete on Payment entity
 - No third-party gateway integration (VNPay/Momo) - simplified for school project
 
+
+## 2026-01-29 (Phase: Trang Chủ FASH.ON Với Hero Slideshow)
+
+Completed FASH.ON homepage with hero slideshow and Vietnamese UI:
+
+**Header Component:**
+- Logo FASH.ON in bold uppercase display font
+- Navigation: Trang Chủ, Cửa Hàng, Danh Mục (with dropdown)
+- Icons: Tìm kiếm (expandable search bar), Yêu thích, Giỏ hàng (with badge counter), User
+- User dropdown when logged in (Tài Khoản, Đơn Hàng, Quản Trị, Đăng Xuất)
+- Redirect to login when not authenticated
+- Mobile responsive hamburger menu with full navigation
+
+**Hero Slideshow:**
+- 4 slides with bold fashion colors (black, red, orange, dark gray)
+- Auto-play every 5 seconds with pause on hover
+- Left/right navigation arrows with smooth transitions
+- Dot indicators and slide counter (01/04 format)
+- Vietnamese headlines and CTAs (Mua Sắm Ngay, Xem Ngay, Khám Phá)
+
+**Danh Mục Nổi Bật:**
+- Grid of 4-5 categories from API categories tree
+- Each card with dynamic background colors and hover effects
+- Loading skeleton for better UX
+- Vietnamese text with "Khám Phá Ngay" hover text
+
+**Sản Phẩm Bán Chạy:**
+- Grid products from API top-selling endpoint
+- ProductCard with image, category, name, price (VND format)
+- Discount badges (red) and New badges (black)
+- Hover actions: Thêm Giỏ, Xem Nhanh, Yêu Thích
+- Loading skeletons
+- Navigation to /san-pham/[slug] on click
+
+**Banner Dịch Vụ:**
+- 3 columns: Giao Hàng Nhanh (Truck icon), Chính Hãng 100% (ShieldCheck icon), Hỗ Trợ 24/7 (Headphones icon)
+- Lucide icons only, no emojis
+- Dark background with hover effects
+
+**Footer:**
+- Newsletter subscription with Sonner toast
+- Contact info: email, phone, address
+- Links: Cửa Hàng, Hỗ Trợ, Công Ty
+- Social links: Facebook, Instagram, Youtube
+- Copyright notice
+
+**Technical Stack:**
+- Next.js 16.1.6 with App Router
+- React Query for data fetching with loading states
+- Tailwind CSS for styling
+- Lucide React for icons
+- Sonner for toast notifications
+- Be Vietnam Pro + Playfair Display fonts (Vietnamese support)
+- 100% Vietnamese text throughout UI (Trang Chủ, Cửa Hàng, Giỏ Hàng, Tìm Kiếm, etc.)
+
+**Files Created:**
+- frontend/src/components/sections/Header.tsx
+- frontend/src/components/sections/HeroSlideshow.tsx
+- frontend/src/components/sections/CategoryGrid.tsx
+- frontend/src/components/sections/ProductGrid.tsx
+- frontend/src/components/sections/ServiceBanner.tsx
+- frontend/src/components/sections/Footer.tsx
+- frontend/src/components/ProductCard.tsx
+- frontend/src/components/QueryProvider.tsx
+- frontend/src/hooks/useAuth.ts
+- frontend/src/hooks/useCart.ts
+- frontend/src/hooks/useCategories.ts
+- frontend/src/hooks/useProducts.ts
+- frontend/src/lib/api/client.ts
+- frontend/src/lib/api/types.ts
+- frontend/src/lib/api/services.ts
+
+Commit: "feat: FASH.ON home page with hero slideshow and vietnamese ui"

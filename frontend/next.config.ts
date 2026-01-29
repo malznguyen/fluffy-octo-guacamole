@@ -5,29 +5,21 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "placehold.co",
+        protocol: 'https',
+        hostname: 'placehold.co',
+        pathname: '/**',
       },
       {
-        protocol: "http",
-        hostname: "localhost",
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        pathname: '/**',
       },
     ],
-    dangerouslyAllowSVG: true,
-    contentDispositionType: "attachment",
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-  },
-  async rewrites() {
-    return [
-      {
-        source: "/cua-hang",
-        destination: "/cua-hang",
-      },
-      {
-        source: "/san-pham/:slug",
-        destination: "/san-pham/:slug",
-      },
-    ];
   },
 };
 
