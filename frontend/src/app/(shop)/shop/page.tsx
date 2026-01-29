@@ -159,7 +159,7 @@ function QuickViewDialog({
             </div>
             <p className="text-muted-foreground">{product.description}</p>
 
-            {product.variants.length > 0 && (
+            {product.variants && product.variants.length > 0 && (
               <div className="space-y-2">
                 <label className="text-sm font-medium">Chọn biến thể:</label>
                 <Select
