@@ -3,14 +3,12 @@ spring:
     name: fashon-backend
 
   datasource:
-    url: jdbc:sqlserver://localhost:1433;databaseName=fashon_db;encrypt=true;trustServerCertificate=true
-    username: sa
-    password: YourStrong@Passw0rd
+    url: jdbc:sqlserver://localhost:1433;databaseName=fashon_db;encrypt=true;trustServerCertificate=true;integratedSecurity=true
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
 
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -19,14 +17,21 @@ spring:
         use_nationalized_character_data: true
 
   flyway:
-    enabled: true
-    locations: classpath:db/migration
-    baseline-on-migrate: true
+    enabled: false
 
 server:
   port: 8080
-  servlet:
-    context-path: /api/v1
+
+jwt:
+  secret: ${JWT_SECRET:fashon-super-secret-key-that-should-be-very-long-for-security}
+  expiration: ${JWT_EXPIRATION:86400000}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+  api-docs:
+    path: /v3/api-docs
 
 logging:
   level:
