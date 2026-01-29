@@ -101,7 +101,7 @@ function QuickViewDialog({
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
-    if (product && product.variants.length > 0) {
+    if (product && product.variants && product.variants.length > 0) {
       setSelectedVariant(product.variants[0].id);
     } else {
       setSelectedVariant(undefined);
