@@ -1,4 +1,4 @@
-import { fetchNewestProducts, fetchTopSellingProducts, fetchCategories } from '@/lib/api';
+import { fetchNewestProducts, fetchTopSellingProducts, fetchCategories } from '@/lib/api/server-api';
 import ProductCard from '@/components/product/ProductCard';
 import HeroSlider from '@/components/home/HeroSlider';
 import Link from 'next/link';
