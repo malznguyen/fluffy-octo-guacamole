@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, ChevronRight, SlidersHorizontal, X } from 'lucide-react';
+import { ChevronDown, SlidersHorizontal, X } from 'lucide-react';
 import Link from 'next/link';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
@@ -68,17 +68,6 @@ function SortDropdown({
   );
 }
 
-function Breadcrumb() {
-  return (
-    <nav className="flex items-center gap-2 text-sm text-neutral-500">
-      <Link href="/" className="hover:text-neutral-900 transition-colors">
-        Trang chủ
-      </Link>
-      <ChevronRight className="h-3 w-3" />
-      <span className="text-neutral-900 font-medium">Cửa Hàng</span>
-    </nav>
-  );
-}
 
 // Mobile Filter Drawer Component
 function MobileFilterDrawer({
@@ -233,20 +222,7 @@ export default function ShopContent() {
   const products = productsData?.content ?? [];
 
   return (
-    <main className="min-h-screen bg-white">
-      {/* Header Section */}
-      <section className="border-b border-neutral-200">
-        <div className="max-w-[1600px] mx-auto px-6 lg:px-12 py-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] as const }}
-          >
-            <Breadcrumb />
-          </motion.div>
-        </div>
-      </section>
-
+    <main className="min-h-screen bg-white pt-20">
       {/* Title Section */}
       <section className="py-12 lg:py-16">
         <div className="max-w-[1600px] mx-auto px-6 lg:px-12">

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Be_Vietnam_Pro, Playfair_Display } from "next/font/google";
 import { QueryProvider } from "@/components/QueryProvider";
+import { ConditionalLayout } from "@/components/layout/ConditionalLayout";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const beVietnamPro = Be_Vietnam_Pro({
@@ -33,8 +35,11 @@ export default function RootLayout({
         className={`${beVietnamPro.variable} ${playfairDisplay.variable} font-sans antialiased`}
       >
         <QueryProvider>
-          {children}
+          <ConditionalLayout>
+            {children}
+          </ConditionalLayout>
         </QueryProvider>
+        <Toaster position="top-center" richColors />
       </body>
     </html>
   );

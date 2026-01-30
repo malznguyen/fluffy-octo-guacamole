@@ -12,8 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -30,9 +29,10 @@ public class OrderController {
     @PostMapping
     @Operation(summary = "Create order from cart", description = "Create a new order from the current shopping cart")
     public ResponseEntity<Map<String, Object>> createOrder(
-            @AuthenticationPrincipal UserDetails userDetails,
+            Authentication authentication,
             @Valid @RequestBody CreateOrderRequest request) {
-        OrderDTO order = orderService.createOrderFromCart(userDetails.getUsername(), request);
+        String email = authentication.getName();
+        OrderDTO order = orderService.createOrderFromCart(email, request);
         return ResponseEntity.ok(Map.of(
                 "success", true,
                 "data", order,
@@ -44,11 +44,12 @@ public class OrderController {
     @GetMapping
     @Operation(summary = "Get my orders", description = "Get order history for the current user with pagination")
     public ResponseEntity<Map<String, Object>> getMyOrders(
-            @AuthenticationPrincipal UserDetails userDetails,
+            Authentication authentication,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        Page<OrderDTO> orders = orderService.getMyOrders(userDetails.getUsername(), pageable);
+        String email = authentication.getName();
+        Pageable pageable = PageRequest.of(page, size);
+        Page<OrderDTO> orders = orderService.getMyOrders(email, pageable);
         return ResponseEntity.ok(Map.of(
                 "success", true,
                 "data", Map.of(
@@ -64,9 +65,10 @@ public class OrderController {
     @GetMapping("/{orderCode}")
     @Operation(summary = "Get order details", description = "Get detailed information about a specific order")
     public ResponseEntity<Map<String, Object>> getOrderByCode(
-            @AuthenticationPrincipal UserDetails userDetails,
+            Authentication authentication,
             @PathVariable String orderCode) {
-        OrderDTO order = orderService.getOrderByCode(userDetails.getUsername(), orderCode);
+        String email = authentication.getName();
+        OrderDTO order = orderService.getOrderByCode(email, orderCode);
         return ResponseEntity.ok(Map.of(
                 "success", true,
                 "data", order
@@ -76,9 +78,10 @@ public class OrderController {
     @PostMapping("/{orderCode}/cancel")
     @Operation(summary = "Cancel order", description = "Cancel an order if it hasn't been shipped yet")
     public ResponseEntity<Map<String, Object>> cancelOrder(
-            @AuthenticationPrincipal UserDetails userDetails,
+            Authentication authentication,
             @PathVariable String orderCode) {
-        OrderDTO order = orderService.cancelOrder(userDetails.getUsername(), orderCode);
+        String email = authentication.getName();
+        OrderDTO order = orderService.cancelOrder(email, orderCode);
         return ResponseEntity.ok(Map.of(
                 "success", true,
                 "data", order,
