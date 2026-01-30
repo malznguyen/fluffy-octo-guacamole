@@ -114,7 +114,7 @@ export default function CheckoutPage() {
         // Redirect to success page with order code
         console.log('[Checkout] Redirecting to success page...');
         router.push(`/checkout/success?orderCode=${orderCode}`);
-
+      }
     } catch (error: any) {
       console.error('[Checkout] Error:', error);
       const status = error.response?.status;
