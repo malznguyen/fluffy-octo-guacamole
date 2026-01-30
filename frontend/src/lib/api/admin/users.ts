@@ -13,13 +13,11 @@ export interface AdminUsersParams {
   role?: Role | 'all';
 }
 
-export interface UsersResponse extends PaginatedResponse<UserDTO> {}
-
 /**
  * Get all users (admin view)
  * GET /api/v1/admin/users
  */
-export async function getAdminUsers(params: AdminUsersParams = {}): Promise<UsersResponse> {
+export async function getAdminUsers(params: AdminUsersParams = {}): Promise<PaginatedResponse<UserDTO>> {
   const queryParams = new URLSearchParams();
   
   if (params.page !== undefined) queryParams.append('page', params.page.toString());
@@ -27,25 +25,13 @@ export async function getAdminUsers(params: AdminUsersParams = {}): Promise<User
   if (params.search) queryParams.append('search', params.search);
   if (params.role && params.role !== 'all') queryParams.append('role', params.role);
   
-  const response = await apiClient.get<ApiResponse<UsersResponse | { data: UserDTO[] }>>(`/admin/users?${queryParams.toString()}`);
+  const response = await apiClient.get<ApiResponse<PaginatedResponse<UserDTO>>>(`/admin/users?${queryParams.toString()}`);
   
-  // Handle both paginated and flat response for robustness
-  const responseData = response.data.data;
-  
-  if ('content' in responseData) {
-    return responseData as UsersResponse;
-  } else if (Array.isArray(responseData)) {
-    // Wrap flat list in paginated structure
-    return {
-      content: responseData,
-      totalElements: responseData.length,
-      totalPages: 1,
-      currentPage: 0,
-      size: responseData.length,
-    };
+  if (!response.data.success) {
+    throw new Error(response.data.message || 'Không thể lấy danh sách ngườí dùng');
   }
   
-  return responseData as UsersResponse;
+  return response.data.data;
 }
 
 /**

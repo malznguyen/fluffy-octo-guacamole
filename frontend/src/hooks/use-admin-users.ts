@@ -2,7 +2,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { toast } from 'sonner';
 import * as userApi from '@/lib/api/admin/users';
-import type { UserDTO, UsersResponse, UpdateUserRequest } from '@/types/user';
+import type { UserDTO, UpdateUserRequest } from '@/types/user';
+import type { PaginatedResponse } from '@/types/product';
 import type { Role } from '@/types/enums';
 import { OrderDTO } from '@/types/order';
 
@@ -32,7 +33,7 @@ interface ApiErrorResponse {
 export const useAdminUsers = (filters: UseAdminUsersFilters = {}) => {
     const { page = 0, size = 10, search = '', role = 'all' } = filters;
     
-    return useQuery<UsersResponse, Error>({
+    return useQuery<PaginatedResponse<UserDTO>, Error>({
         queryKey: [...userKeys.lists(), { page, size, search, role }],
         queryFn: async () => {
             return userApi.getAdminUsers({

@@ -45,7 +45,12 @@ export default function AdminUsersPage() {
 
     // Queries
     // Note: We pass standard params, but if API is flat list, logic below handles client-side filtering
-    const { data: usersResponse, isLoading, error } = useAdminUsers(currentPage - 1, ITEMS_PER_PAGE, searchQuery, roleFilter);
+    const { data: usersResponse, isLoading, error } = useAdminUsers({ 
+        page: currentPage - 1, 
+        size: ITEMS_PER_PAGE, 
+        search: searchQuery, 
+        role: roleFilter 
+    });
 
     // Mutations
     const updateMutation = useUpdateUser();
@@ -53,7 +58,7 @@ export default function AdminUsersPage() {
 
     // Process data (Client-side filtering fallback if API returns flat list or if we want stricter local filter)
     // Assuming the hook might return a structure that needs further filtering if API doesn't handle it perfectly
-    const allUsers = usersResponse?.data?.content || [];
+    const allUsers = usersResponse?.content || [];
 
     // If the API returns a flat list (totalElements matches array length but we want pagination), 
     // or if we rely on client side filtering:
@@ -81,7 +86,7 @@ export default function AdminUsersPage() {
     // Handle client-side pagination if needed. 
     // If API returns paged data (totalElements > size), we use that. 
     // If API returns ALL data in one go (typical for small user bases), we paginate locally.
-    const isClientSidePagination = usersResponse?.data?.totalPages === 1 && usersResponse?.data?.totalElements > ITEMS_PER_PAGE;
+    const isClientSidePagination = usersResponse?.totalPages === 1 && usersResponse?.totalElements > ITEMS_PER_PAGE;
 
     const displayUsers = useMemo(() => {
         if (isClientSidePagination) {
@@ -93,7 +98,7 @@ export default function AdminUsersPage() {
 
     const totalPages = isClientSidePagination
         ? Math.ceil(filteredUsers.length / ITEMS_PER_PAGE)
-        : (usersResponse?.data?.totalPages || 1);
+        : (usersResponse?.totalPages || 1);
 
     // Handlers
     const handleEdit = (user: UserDTO) => {
