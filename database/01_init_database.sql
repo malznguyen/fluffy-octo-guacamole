@@ -425,6 +425,7 @@ BEGIN
         id INT IDENTITY(1,1) PRIMARY KEY,
         variant_id INT NOT NULL,
         qty_change INT NOT NULL,
+        current_stock_after INT NOT NULL DEFAULT 0,
         reason NVARCHAR(200) NOT NULL,
         order_id INT NULL,
         created_at DATETIME2 NOT NULL DEFAULT GETDATE(),

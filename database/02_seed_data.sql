@@ -220,22 +220,22 @@ GO
 -- =============================================
 -- INVENTORY TRANSACTIONS
 -- =============================================
-INSERT INTO inventory_transactions (variant_id, qty_change, reason, order_id, created_at, updated_at)
-VALUES 
+INSERT INTO inventory_transactions (variant_id, qty_change, current_stock_after, reason, order_id, created_at, updated_at)
+VALUES
     -- Initial stock for Product 1 variants
-    (1, 50, N'Nhập kho đầu kỳ', NULL, DATEADD(day, -30, GETDATE()), DATEADD(day, -30, GETDATE())),
-    (2, 45, N'Nhập kho đầu kỳ', NULL, DATEADD(day, -30, GETDATE()), DATEADD(day, -30, GETDATE())),
-    (3, 40, N'Nhập kho đầu kỳ', NULL, DATEADD(day, -30, GETDATE()), DATEADD(day, -30, GETDATE())),
+    (1, 50, 50, N'Nhập kho đầu kỳ', NULL, DATEADD(day, -30, GETDATE()), DATEADD(day, -30, GETDATE())),
+    (2, 45, 45, N'Nhập kho đầu kỳ', NULL, DATEADD(day, -30, GETDATE()), DATEADD(day, -30, GETDATE())),
+    (3, 40, 40, N'Nhập kho đầu kỳ', NULL, DATEADD(day, -30, GETDATE()), DATEADD(day, -30, GETDATE())),
     
     -- Sales from Order 1
-    (1, -2, N'Bán hàng - Đơn hàng ORD-20260129-001', 1, DATEADD(day, -10, GETDATE()), DATEADD(day, -10, GETDATE())),
-    (10, -1, N'Bán hàng - Đơn hàng ORD-20260129-001', 1, DATEADD(day, -10, GETDATE()), DATEADD(day, -10, GETDATE())),
+    (1, -2, 48, N'Bán hàng - Đơn hàng ORD-20260129-001', 1, DATEADD(day, -10, GETDATE()), DATEADD(day, -10, GETDATE())),
+    (10, -1, 49, N'Bán hàng - Đơn hàng ORD-20260129-001', 1, DATEADD(day, -10, GETDATE()), DATEADD(day, -10, GETDATE())),
     
     -- Sales from Order 2
-    (20, -1, N'Bán hàng - Đơn hàng ORD-20260129-002', 2, DATEADD(day, -3, GETDATE()), DATEADD(day, -3, GETDATE())),
+    (20, -1, 49, N'Bán hàng - Đơn hàng ORD-20260129-002', 2, DATEADD(day, -3, GETDATE()), DATEADD(day, -3, GETDATE())),
     
     -- Sales from Order 3
-    (11, -1, N'Bán hàng - Đơn hàng ORD-20260129-003', 3, GETDATE(), GETDATE());
+    (11, -1, 49, N'Bán hàng - Đơn hàng ORD-20260129-003', 3, GETDATE(), GETDATE());
 GO
 
 PRINT 'Seed data inserted successfully!';

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
@@ -16,8 +16,12 @@ import { useAuthStore } from '@/lib/store/use-auth-store';
 
 export default function LoginPage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [isLoading, setIsLoading] = useState(false);
     const { login } = useAuthStore();
+
+    // Get redirect URL from query params, default to home
+    const redirectUrl = searchParams.get('redirect') || '/';
 
     const {
         register,
@@ -37,7 +41,7 @@ export default function LoginPage() {
             const response = await authApi.login(data);
             await login(response);
             toast.success('Đăng nhập thành công');
-            router.push('/');
+            router.push(redirectUrl);
         } catch (error: unknown) {
             const message =
                 (error as { response?: { data?: { message?: string } } })?.response?.data?.message ||

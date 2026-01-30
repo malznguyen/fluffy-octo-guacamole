@@ -11,6 +11,11 @@ import {
   UserResponse,
   PageResponse,
   ProductQueryParams,
+  CreateOrderRequest,
+  CreateOrderResponse,
+  OrderResponse,
+  OrderDTO,
+  UpdateProfileRequest,
 } from './types';
 
 // Public Services
@@ -66,6 +71,24 @@ export const authApi = {
   getProfile: (): Promise<UserResponse> =>
     apiClient.get<UserResponse>('/users/me'),
 
-  updateProfile: (data: Partial<UserResponse>): Promise<UserResponse> =>
-    apiClient.put<UserResponse>('/users/profile', data),
+  updateProfile: (data: UpdateProfileRequest): Promise<UserResponse> =>
+    apiClient.put<UserResponse>('/users/me', data),
+
+  deleteAccount: (): Promise<void> =>
+    apiClient.delete<void>('/users/me'),
+};
+
+// Order Services
+export const orderApi = {
+  createOrder: (data: CreateOrderRequest): Promise<CreateOrderResponse> =>
+    apiClient.post<CreateOrderResponse>('/orders', data),
+
+  getMyOrders: (page = 0, size = 10): Promise<OrderResponse> =>
+    apiClient.get<OrderResponse>('/orders', { page, size }),
+
+  getOrderDetail: (orderCode: string): Promise<OrderDTO> =>
+    apiClient.get<OrderDTO>(`/orders/${orderCode}`),
+
+  cancelOrder: (orderCode: string): Promise<void> =>
+    apiClient.post<void>(`/orders/${orderCode}/cancel`, {}),
 };

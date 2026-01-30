@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Minus, Plus, Trash2, ShoppingBag } from 'lucide-react';
 import Image from 'next/image';
@@ -25,26 +25,62 @@ function CartItem({ item }: CartItemProps) {
   const updateMutation = useUpdateCartItem();
   const removeMutation = useRemoveCartItem();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  
+  // Local state for optimistic UI updates
+  const [localQuantity, setLocalQuantity] = useState(item.quantity);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Sync local quantity with item quantity when item changes (e.g., on refetch)
+  useEffect(() => {
+    setLocalQuantity(item.quantity);
+  }, [item.quantity]);
+  
+  // Debounced update function
+  const debouncedUpdate = useCallback((newQuantity: number) => {
+    // Clear existing timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    
+    // Set new timer for 500ms debounce
+    debounceTimerRef.current = setTimeout(() => {
+      updateMutation.mutate({
+        itemId: item.id,
+        quantity: newQuantity,
+      });
+    }, 500);
+  }, [item.id, updateMutation]);
+  
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
 
   const handleIncrease = () => {
-    updateMutation.mutate({
-      itemId: item.id,
-      quantity: item.quantity + 1,
-    });
+    const newQuantity = localQuantity + 1;
+    setLocalQuantity(newQuantity);
+    debouncedUpdate(newQuantity);
   };
 
   const handleDecrease = () => {
-    if (item.quantity <= 1) {
+    if (localQuantity <= 1) {
       setShowDeleteConfirm(true);
     } else {
-      updateMutation.mutate({
-        itemId: item.id,
-        quantity: item.quantity - 1,
-      });
+      const newQuantity = localQuantity - 1;
+      setLocalQuantity(newQuantity);
+      debouncedUpdate(newQuantity);
     }
   };
 
   const handleDelete = () => {
+    // Clear any pending debounced updates before deleting
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
     removeMutation.mutate(item.id);
     setShowDeleteConfirm(false);
   };
@@ -104,7 +140,7 @@ function CartItem({ item }: CartItemProps) {
               <Minus className="w-4 h-4" />
             </button>
             <span className="w-10 text-center text-sm font-medium">
-              {item.quantity}
+              {localQuantity}
             </span>
             <button
               onClick={handleIncrease}
@@ -117,7 +153,7 @@ function CartItem({ item }: CartItemProps) {
 
           {/* Price & Delete */}
           <div className="flex items-center gap-4">
-            <span className="text-sm font-medium text-neutral-900">
+            <span className="text-sm font-medium text-neutral-900 font-mono">
               {formatVND(item.subtotal)}
             </span>
             <button
@@ -245,7 +281,7 @@ export default function CartPage() {
                 <div className="space-y-4 mb-6">
                   <div className="flex justify-between text-sm">
                     <span className="text-neutral-600">Tạm tính</span>
-                    <span className="font-medium">
+                    <span className="font-medium font-mono">
                       {formatVND(cart?.totalAmount || 0)}
                     </span>
                   </div>
@@ -258,7 +294,7 @@ export default function CartPage() {
                 <div className="border-t border-neutral-200 pt-4 mb-6">
                   <div className="flex justify-between">
                     <span className="text-sm font-medium">TỔNG CỘNG</span>
-                    <span className="text-lg font-medium">
+                    <span className="text-lg font-medium font-mono">
                       {formatVND(cart?.totalAmount || 0)}
                     </span>
                   </div>

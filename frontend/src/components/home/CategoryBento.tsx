@@ -53,7 +53,7 @@ function CategoryCard({ category, index, className = '' }: CategoryCardProps) {
       transition={{ duration: 0.6, delay: index * 0.1 }}
       className={`group relative overflow-hidden ${className}`}
     >
-      <Link href={`/danh-muc/${category.slug}`} className="block h-full">
+      <Link href={`/cua-hang?categoryId=${category.id}`} className="block h-full">
         {/* Background Image */}
         <div className="absolute inset-0 image-zoom bg-neutral-200">
           {category.imageUrl ? (

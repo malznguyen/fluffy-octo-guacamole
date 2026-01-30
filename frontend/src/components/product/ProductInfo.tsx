@@ -115,11 +115,11 @@ export function ProductInfo({ product }: ProductInfoProps) {
 
             {/* Price */}
             <div className="space-y-2">
-                <p className="text-2xl lg:text-3xl font-bold tracking-tight">
+                <p className="text-2xl lg:text-3xl font-bold tracking-tight font-mono">
                     {formatCurrency(displayPrice)}
                 </p>
                 {product.salePrice && product.salePrice < product.basePrice && (
-                    <p className="text-lg text-neutral-400 line-through">
+                    <p className="text-lg text-neutral-400 line-through font-mono">
                         {formatCurrency(product.basePrice)}
                     </p>
                 )}

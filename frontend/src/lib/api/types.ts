@@ -82,7 +82,14 @@ export interface UserResponse {
   email: string;
   fullName?: string;
   phone?: string;
+  avatarUrl?: string;
   role: string;
+}
+
+export interface UpdateProfileRequest {
+  fullName?: string;
+  phone?: string;
+  avatarUrl?: string;
 }
 
 export interface LoginRequest {
@@ -125,4 +132,64 @@ export interface ProductQueryParams {
   maxPrice?: number;
   search?: string;
   [key: string]: unknown;
+}
+
+// Order Types
+export interface CreateOrderRequest {
+  shippingAddress: string;
+  phone: string; // Regex: ^[0-9]{10,15}$
+  note?: string;
+  paymentMethod: 'COD' | 'BANK_TRANSFER';
+}
+
+export interface OrderDTO {
+  id: number;
+  orderCode: string;
+  status: string;
+  totalAmount: number;
+  total?: number;
+  shippingAddress: string;
+  phone: string;
+  note?: string;
+  paymentMethod: string;
+  paymentStatus?: string;
+  recipientName?: string;
+  customerName?: string;
+  customerEmail?: string;
+  createdAt: string;
+  updatedAt?: string;
+  items: OrderItemDTO[];
+  orderItems?: OrderItemDTO[];
+}
+
+export interface OrderItemDTO {
+  id: number;
+  productId?: number;
+  productName?: string;
+  productNameSnapshot?: string;
+  productImage?: string;
+  variantId?: number;
+  size?: string;
+  color?: string;
+  variantInfo?: string;
+  variantInfoSnapshot?: string;
+  quantity: number;
+  unitPrice: number;
+  subtotal: number;
+}
+
+export interface CreateOrderResponse {
+  success: boolean;
+  message: string;
+  orderCode: string; // Backend returns this at top level
+  data: OrderDTO;    // The Order Object
+}
+
+// Order List Response (Paginated)
+export interface OrderResponse {
+  content: OrderDTO[];
+  totalElements: number;
+  totalPages: number;
+  currentPage: number;
+  size: number;
 }

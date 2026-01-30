@@ -128,11 +128,11 @@ function ProductCard({ product }: { product: ProductDTO }) {
 
           {/* Price */}
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-neutral-900">
+            <span className="text-sm font-semibold text-neutral-900 font-mono">
               {formatPrice(displayPrice)}
             </span>
             {originalPrice && (
-              <span className="text-xs text-neutral-400 line-through">
+              <span className="text-xs text-neutral-400 line-through font-mono">
                 {formatPrice(originalPrice)}
               </span>
             )}
