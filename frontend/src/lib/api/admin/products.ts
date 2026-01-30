@@ -74,13 +74,13 @@ export async function deleteProduct(id: number): Promise<void> {
 
 /**
  * Upload product image
- * POST /api/v1/admin/upload
+ * POST /api/v1/admin/products/upload-image
  */
 export async function uploadImage(file: File): Promise<ImageUploadResponse> {
   const formData = new FormData();
   formData.append('file', file);
   
-  const response = await apiClient.post<ApiResponse<ImageUploadResponse>>('/admin/upload', formData, {
+  const response = await apiClient.post<ApiResponse<ImageUploadResponse>>('/admin/products/upload-image', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
