@@ -16,5 +16,8 @@ export * from './cart';
 // Order APIs
 export * from './order';
 
+// Wishlist APIs
+export * from './wishlist';
+
 // Admin APIs (namespace as 'admin')
 export * as admin from './admin';

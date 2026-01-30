@@ -3,9 +3,10 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Search, User, ShoppingBag, X, ChevronDown, Package, LogOut, Shield } from 'lucide-react';
+import { Search, User, ShoppingBag, X, ChevronDown, Package, LogOut, Shield, Heart } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth-store';
 import { useCartStore } from '@/stores/cart-store';
+import { useWishlistStore } from '@/stores/wishlist-store';
 
 export default function Header() {
   const router = useRouter();
@@ -21,12 +22,16 @@ export default function Header() {
   // Cart store
   const { cart, fetchCart } = useCartStore();
 
-  // Fetch cart when authenticated
+  // Wishlist store
+  const { items: wishlistItems, fetchWishlist } = useWishlistStore();
+
+  // Fetch cart and wishlist when authenticated
   useEffect(() => {
     if (isAuthenticated) {
       fetchCart();
+      fetchWishlist();
     }
-  }, [isAuthenticated, fetchCart]);
+  }, [isAuthenticated, fetchCart, fetchWishlist]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -66,6 +71,9 @@ export default function Header() {
 
   // Get cart item count
   const cartItemCount = cart?.totalItems || 0;
+
+  // Get wishlist item count
+  const wishlistCount = wishlistItems.length;
 
   return (
     <>
@@ -221,6 +229,20 @@ export default function Header() {
                   <User className="w-5 h-5 text-neutral-900" />
                 </Link>
               )}
+
+              {/* Wishlist Link with Badge */}
+              <Link
+                href="/wishlist"
+                className="p-2 hover:bg-neutral-100 rounded-full transition-colors relative"
+                aria-label="Danh sách yêu thích"
+              >
+                <Heart className="w-5 h-5 text-neutral-900" />
+                {wishlistCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                    {wishlistCount > 99 ? '99+' : wishlistCount}
+                  </span>
+                )}
+              </Link>
 
               {/* Cart Link with Badge */}
               <Link
