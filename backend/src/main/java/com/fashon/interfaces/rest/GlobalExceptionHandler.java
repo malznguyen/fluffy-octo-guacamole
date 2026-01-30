@@ -1,6 +1,7 @@
 package com.fashon.interfaces.rest;
 
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -49,8 +50,66 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
+        String message = ex.getMessage();
+        String userMessage = "Dữ liệu vi phạm ràng buộc";
+        
+        // Check for duplicate SKU
+        if (message != null && message.contains("product_variants") && message.contains("sku")) {
+            // Extract SKU value from message if possible
+            String sku = extractDuplicateValue(message);
+            userMessage = sku != null 
+                ? "Đã có sản phẩm với SKU '" + sku + "' này rồi"
+                : "Đã có sản phẩm với SKU này rồi";
+        }
+        // Check for duplicate email
+        else if (message != null && message.contains("users") && message.contains("email")) {
+            userMessage = "Email này đã được sử dụng";
+        }
+        // Check for duplicate slug
+        else if (message != null && message.contains("products") && message.contains("slug")) {
+            userMessage = "Slug này đã tồn tại, vui lòng chọn slug khác";
+        }
+        
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                userMessage,
+                null,
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+    
+    private String extractDuplicateValue(String message) {
+        // Try to extract the duplicate value from SQL Server error message
+        // Pattern: "The duplicate key value is (VALUE)."
+        int start = message.indexOf("The duplicate key value is (");
+        if (start != -1) {
+            start += "The duplicate key value is (".length();
+            int end = message.indexOf(").", start);
+            if (end != -1) {
+                return message.substring(start, end);
+            }
+        }
+        return null;
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException ex) {
+        String message = ex.getMessage();
+        
+        // Check for specific business errors
+        if (message != null && message.contains("SKU")) {
+            ErrorResponse response = new ErrorResponse(
+                    HttpStatus.BAD_REQUEST.value(),
+                    "Đã có sản phẩm với SKU này rồi",
+                    null,
+                    LocalDateTime.now()
+            );
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+        
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 ex.getMessage(),

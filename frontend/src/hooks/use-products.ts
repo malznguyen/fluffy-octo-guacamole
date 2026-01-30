@@ -84,8 +84,9 @@ export function useCreateProduct() {
       queryClient.invalidateQueries({ queryKey: productKeys.lists() });
       toast.success('Tạo sản phẩm thành công');
     },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Có lỗi xảy ra khi tạo sản phẩm');
+    onError: (error: any) => {
+      const message = error.response?.data?.message || error.message || 'Có lỗi xảy ra khi tạo sản phẩm';
+      toast.error(message);
     },
   });
 }
@@ -100,8 +101,9 @@ export function useUpdateProduct() {
       queryClient.invalidateQueries({ queryKey: productKeys.detail(variables.id) });
       toast.success('Cập nhật sản phẩm thành công');
     },
-    onError: (error: Error) => {
-      toast.error(error.message || 'Có lỗi xảy ra khi cập nhật sản phẩm');
+    onError: (error: any) => {
+      const message = error.response?.data?.message || error.message || 'Có lỗi xảy ra khi cập nhật sản phẩm';
+      toast.error(message);
     },
   });
 }

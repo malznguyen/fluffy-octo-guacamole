@@ -65,33 +65,5 @@
   - **Frontend**: Header Search Bar chưa hoạt động. Chưa có trang kết quả `/search`.
   - **Backend**: Đã có `PublicProductController.getProducts` support filter, cần tích hợp.
 
-- **[FEAT-004]** User Profile Incomplete | Priority: **MEDIUM**
-  - **Frontend**: Thiếu form đổi mật khẩu, upload avatar ở `/dashboard`.
-  - **Backend**: `UserController` cần API `changePassword`, `uploadAvatar`.
 
-## Part 4: API Contract Drift
-- **[API-001]** `GET /api/v1/wishlist` | Status: Backend 404.
-- **[API-002]** `POST /api/v1/reviews` | Status: Backend 404.
-- **[API-003]** `/api/v1/admin/users` | Status: **MATCHED** (Đã có `AdminUserController`).
-
-## Part 5: Database & Security
-- **DB**: Indexing chưa được kiểm tra kỹ (cần check `slug`, `email`, `order_code` đã index chưa - thường `@Column(unique=true)` sẽ tạo index).
-- **Security**:
-  - `User.java` thiếu Soft Delete (như đã nêu ở [B-HIGH-001]).
-  - `FileStorageService`: Cần verify xem có validate file extension/mime type không (để tránh upload shell).
-
-## Action Plan (Priority)
-
-1.  **Backend Fixes (Immediate)**:
-    -   Thêm `@Where` cho `User.java`.
-    -   Review `FileStorageService` validation.
-    -   Optimize `OrderRepository` query.
-
-2.  **Implement System Features (High Priority)**:
-    -   **Sprint 1**: Backend Wishlist & Review APIs.
-    -   **Sprint 2**: Frontend Wishlist Page & Review Components.
-    -   **Sprint 3**: Search Functionality & Skeleton UI.
-
-3.  **Refactoring & Polish**:
-    -   Clean up `any` types.
-    -   Centralize API calls.
+----- ĐÃ XONG --------
