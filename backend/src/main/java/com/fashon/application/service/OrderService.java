@@ -33,7 +33,7 @@ public class OrderService {
     @Transactional
     public OrderDTO createOrderFromCart(String userEmail, CreateOrderRequest request) {
         User user = getUserByEmail(userEmail);
-        
+
         // Get user's cart with items
         Cart cart = cartRepository.findByUserIdWithItems(user.getId())
                 .orElseThrow(() -> new RuntimeException("Cart is empty"));
@@ -46,10 +46,10 @@ public class OrderService {
         BigDecimal total = BigDecimal.ZERO;
         for (CartItem cartItem : cart.getItems()) {
             ProductVariant variant = cartItem.getVariant();
-            
+
             // Check stock
             if (variant.getStockQuantity() < cartItem.getQuantity()) {
-                throw new RuntimeException("Insufficient stock for: " + variant.getSku() + 
+                throw new RuntimeException("Insufficient stock for: " + variant.getSku() +
                         ". Available: " + variant.getStockQuantity());
             }
 
@@ -79,8 +79,7 @@ public class OrderService {
                     variant.getProduct().getName(),
                     buildVariantInfo(variant),
                     cartItem.getQuantity(),
-                    unitPrice
-            );
+                    unitPrice);
             order.addItem(orderItem);
             orderItemRepository.save(orderItem);
 
@@ -117,19 +116,25 @@ public class OrderService {
     @Transactional(readOnly = true)
     public Page<OrderDTO> getMyOrders(String userEmail, Pageable pageable) {
         User user = getUserByEmail(userEmail);
-        return orderRepository.findByUserIdOrderByCreatedAtDesc(user.getId(), pageable)
+        return orderRepository.findByUserId(user.getId(), pageable)
                 .map(this::mapToOrderDTO);
     }
 
     @Transactional(readOnly = true)
     public Page<OrderDTO> getAllOrders(Pageable pageable) {
-        return orderRepository.findAllByOrderByCreatedAtDesc(pageable)
+        return orderRepository.findAll(pageable)
                 .map(this::mapToOrderDTO);
     }
 
     @Transactional(readOnly = true)
     public Page<OrderDTO> getOrdersByStatus(OrderStatus status, Pageable pageable) {
-        return orderRepository.findByStatusOrderByCreatedAtDesc(status, pageable)
+        return orderRepository.findByStatus(status, pageable)
+                .map(this::mapToOrderDTO);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<OrderDTO> getAllOrdersForAdmin(Pageable pageable, OrderStatus status, Long userId) {
+        return orderRepository.findOrdersForAdmin(status, userId, pageable)
                 .map(this::mapToOrderDTO);
     }
 
@@ -163,7 +168,8 @@ public class OrderService {
         // Return stock for each order item
         for (OrderItem item : order.getItems()) {
             // Find the variant by looking up from the snapshot info
-            // Since we don't have direct reference, we'll find by product name and variant info
+            // Since we don't have direct reference, we'll find by product name and variant
+            // info
             // In a real scenario, we might want to store variant_id in OrderItem
             // For now, we'll skip returning stock if variant not found
         }
@@ -233,7 +239,8 @@ public class OrderService {
             sb.append("Color: ").append(variant.getColor());
         }
         if (variant.getSize() != null && !variant.getSize().isEmpty()) {
-            if (sb.length() > 0) sb.append(", ");
+            if (sb.length() > 0)
+                sb.append(", ");
             sb.append("Size: ").append(variant.getSize());
         }
         if (sb.length() == 0) {

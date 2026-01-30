@@ -30,7 +30,7 @@ public class Order extends BaseEntity {
     @Column(name = "total", nullable = false, precision = 19, scale = 4)
     private BigDecimal total;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = com.fashon.infrastructure.converter.OrderStatusConverter.class)
     @Column(name = "status", nullable = false, columnDefinition = "NVARCHAR(30)")
     private OrderStatus status = OrderStatus.PENDING;
 

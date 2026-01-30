@@ -38,4 +38,6 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant, 
 
     @Query("SELECT SUM(pv.stockQuantity) FROM ProductVariant pv WHERE pv.product.id = :productId AND pv.isAvailable = true")
     Long sumStockQuantityByProductId(@Param("productId") Long productId);
+
+    Optional<ProductVariant> findBySkuAndProductId(String sku, Long productId);
 }

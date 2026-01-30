@@ -28,9 +28,6 @@ public class UserService {
 
         user.setFullName(request.getFullName());
         user.setPhone(request.getPhone());
-        if (request.getAvatarUrl() != null) {
-            user.setAvatarUrl(request.getAvatarUrl());
-        }
 
         userRepository.save(user);
 
@@ -52,7 +49,6 @@ public class UserService {
                 .email(user.getEmail())
                 .fullName(user.getFullName())
                 .phone(user.getPhone())
-                .avatarUrl(user.getAvatarUrl())
                 .role(user.getRole())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())

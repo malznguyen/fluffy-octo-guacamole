@@ -33,23 +33,24 @@ public class AdminOrderController {
     public ResponseEntity<Map<String, Object>> getAllOrders(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) String status) {
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) Long userId) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
-        
+
         Page<OrderDTO> orders;
+        OrderStatus orderStatus = null;
+
         if (status != null && !status.isEmpty()) {
             try {
-                OrderStatus orderStatus = OrderStatus.valueOf(status.toUpperCase());
-                orders = orderService.getOrdersByStatus(orderStatus, pageable);
+                orderStatus = OrderStatus.valueOf(status.toUpperCase());
             } catch (IllegalArgumentException e) {
                 return ResponseEntity.badRequest().body(Map.of(
                         "success", false,
-                        "message", "Invalid status: " + status
-                ));
+                        "message", "Invalid status: " + status));
             }
-        } else {
-            orders = orderService.getAllOrders(pageable);
         }
+
+        orders = orderService.getAllOrdersForAdmin(pageable, orderStatus, userId);
 
         return ResponseEntity.ok(Map.of(
                 "success", true,
@@ -58,9 +59,7 @@ public class AdminOrderController {
                         "totalElements", orders.getTotalElements(),
                         "totalPages", orders.getTotalPages(),
                         "currentPage", orders.getNumber(),
-                        "size", orders.getSize()
-                )
-        ));
+                        "size", orders.getSize())));
     }
 
     @GetMapping("/{orderCode}")
@@ -69,8 +68,7 @@ public class AdminOrderController {
         OrderDTO order = orderService.getOrderByCodeForAdmin(orderCode);
         return ResponseEntity.ok(Map.of(
                 "success", true,
-                "data", order
-        ));
+                "data", order));
     }
 
     @PutMapping("/{orderCode}/status")
@@ -82,8 +80,7 @@ public class AdminOrderController {
         return ResponseEntity.ok(Map.of(
                 "success", true,
                 "data", order,
-                "message", "Order status updated to " + order.getStatus()
-        ));
+                "message", "Order status updated to " + order.getStatus()));
     }
 
     @PostMapping("/{orderCode}/cancel")
@@ -93,7 +90,6 @@ public class AdminOrderController {
         return ResponseEntity.ok(Map.of(
                 "success", true,
                 "data", order,
-                "message", "Order cancelled successfully"
-        ));
+                "message", "Order cancelled successfully"));
     }
 }

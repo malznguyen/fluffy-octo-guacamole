@@ -23,107 +23,98 @@ import java.util.Map;
 @PreAuthorize("hasRole('ADMIN')")
 public class AdminProductController {
 
-    private final ProductService productService;
-    private final FileStorageService fileStorageService;
+        private final ProductService productService;
+        private final FileStorageService fileStorageService;
 
-    @PostMapping
-    @Operation(summary = "Create product", description = "Create a new product with variants and images")
-    public ResponseEntity<Map<String, Object>> createProduct(@Valid @RequestBody CreateProductRequest request) {
-        ProductDTO product = productService.createProduct(request);
-        return ResponseEntity.ok(Map.of(
-                "success", true,
-                "data", product,
-                "message", "Product created successfully"
-        ));
-    }
+        @PostMapping
+        @Operation(summary = "Create product", description = "Create a new product with variants and images")
+        public ResponseEntity<Map<String, Object>> createProduct(@Valid @RequestBody CreateProductRequest request) {
+                ProductDTO product = productService.createProduct(request);
+                return ResponseEntity.ok(Map.of(
+                                "success", true,
+                                "data", product,
+                                "message", "Product created successfully"));
+        }
 
-    @PutMapping("/{id}")
-    @Operation(summary = "Update product", description = "Update an existing product")
-    public ResponseEntity<Map<String, Object>> updateProduct(
-            @PathVariable Long id,
-            @Valid @RequestBody UpdateProductRequest request) {
-        ProductDTO product = productService.updateProduct(id, request);
-        return ResponseEntity.ok(Map.of(
-                "success", true,
-                "data", product,
-                "message", "Product updated successfully"
-        ));
-    }
+        @PutMapping("/{id}")
+        @Operation(summary = "Update product", description = "Update an existing product")
+        public ResponseEntity<Map<String, Object>> updateProduct(
+                        @PathVariable Long id,
+                        @Valid @RequestBody UpdateProductRequest request) {
+                ProductDTO product = productService.updateProduct(id, request);
+                return ResponseEntity.ok(Map.of(
+                                "success", true,
+                                "data", product,
+                                "message", "Product updated successfully"));
+        }
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete product", description = "Soft delete a product and its variants/images")
-    public ResponseEntity<Map<String, Object>> deleteProduct(@PathVariable Long id) {
-        productService.deleteProduct(id);
-        return ResponseEntity.ok(Map.of(
-                "success", true,
-                "message", "Product deleted successfully"
-        ));
-    }
+        @DeleteMapping("/{id}")
+        @Operation(summary = "Delete product", description = "Soft delete a product and its variants/images")
+        public ResponseEntity<Map<String, Object>> deleteProduct(@PathVariable Long id) {
+                productService.deleteProduct(id);
+                return ResponseEntity.ok(Map.of(
+                                "success", true,
+                                "message", "Product deleted successfully"));
+        }
 
-    @GetMapping
-    @Operation(summary = "Get all products", description = "Get all products (including hidden ones)")
-    public ResponseEntity<Map<String, Object>> getAllProducts() {
-        List<ProductDTO> products = productService.getAllProducts(org.springframework.data.domain.Pageable.unpaged()).getContent();
-        return ResponseEntity.ok(Map.of(
-                "success", true,
-                "data", products
-        ));
-    }
+        @GetMapping
+        @Operation(summary = "Get all products", description = "Get all products (including hidden ones)")
+        public ResponseEntity<Map<String, Object>> getAllProducts() {
+                List<ProductDTO> products = productService.getAllProductsForAdmin();
+                return ResponseEntity.ok(Map.of(
+                                "success", true,
+                                "data", products));
+        }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Get product by ID", description = "Get a specific product by its ID")
-    public ResponseEntity<Map<String, Object>> getProductById(@PathVariable Long id) {
-        ProductDTO product = productService.getProductById(id);
-        return ResponseEntity.ok(Map.of(
-                "success", true,
-                "data", product
-        ));
-    }
+        @GetMapping("/{id}")
+        @Operation(summary = "Get product by ID", description = "Get a specific product by its ID")
+        public ResponseEntity<Map<String, Object>> getProductById(@PathVariable Long id) {
+                ProductDTO product = productService.getProductById(id);
+                return ResponseEntity.ok(Map.of(
+                                "success", true,
+                                "data", product));
+        }
 
-    @PostMapping("/{productId}/variants")
-    @Operation(summary = "Add variant", description = "Add a new variant to an existing product")
-    public ResponseEntity<Map<String, Object>> addVariant(
-            @PathVariable Long productId,
-            @Valid @RequestBody CreateVariantRequest request) {
-        Product product = new Product();
-        product.setId(productId);
-        productService.createVariant(product, request);
-        ProductDTO updatedProduct = productService.getProductById(productId);
-        return ResponseEntity.ok(Map.of(
-                "success", true,
-                "data", updatedProduct,
-                "message", "Variant added successfully"
-        ));
-    }
+        @PostMapping("/{productId}/variants")
+        @Operation(summary = "Add variant", description = "Add a new variant to an existing product")
+        public ResponseEntity<Map<String, Object>> addVariant(
+                        @PathVariable Long productId,
+                        @Valid @RequestBody CreateVariantRequest request) {
+                Product product = new Product();
+                product.setId(productId);
+                productService.createVariant(product, request);
+                ProductDTO updatedProduct = productService.getProductById(productId);
+                return ResponseEntity.ok(Map.of(
+                                "success", true,
+                                "data", updatedProduct,
+                                "message", "Variant added successfully"));
+        }
 
-    @PostMapping("/{productId}/images")
-    @Operation(summary = "Add image", description = "Add a new image to an existing product")
-    public ResponseEntity<Map<String, Object>> addImage(
-            @PathVariable Long productId,
-            @Valid @RequestBody CreateImageRequest request) {
-        Product product = new Product();
-        product.setId(productId);
-        productService.createImage(product, request);
-        ProductDTO updatedProduct = productService.getProductById(productId);
-        return ResponseEntity.ok(Map.of(
-                "success", true,
-                "data", updatedProduct,
-                "message", "Image added successfully"
-        ));
-    }
+        @PostMapping("/{productId}/images")
+        @Operation(summary = "Add image", description = "Add a new image to an existing product")
+        public ResponseEntity<Map<String, Object>> addImage(
+                        @PathVariable Long productId,
+                        @Valid @RequestBody CreateImageRequest request) {
+                Product product = new Product();
+                product.setId(productId);
+                productService.createImage(product, request);
+                ProductDTO updatedProduct = productService.getProductById(productId);
+                return ResponseEntity.ok(Map.of(
+                                "success", true,
+                                "data", updatedProduct,
+                                "message", "Image added successfully"));
+        }
 
-    @PostMapping("/upload-image")
-    @Operation(summary = "Upload image", description = "Upload an image file and return the file path")
-    public ResponseEntity<Map<String, Object>> uploadImage(@RequestParam("file") MultipartFile file) {
-        String filename = fileStorageService.storeFile(file);
-        String fileUrl = fileStorageService.getFileUrl(filename);
-        return ResponseEntity.ok(Map.of(
-                "success", true,
-                "data", Map.of(
-                        "filename", filename,
-                        "url", fileUrl
-                ),
-                "message", "Image uploaded successfully"
-        ));
-    }
+        @PostMapping("/upload-image")
+        @Operation(summary = "Upload image", description = "Upload an image file and return the file path")
+        public ResponseEntity<Map<String, Object>> uploadImage(@RequestParam("file") MultipartFile file) {
+                String filename = fileStorageService.storeFile(file);
+                String fileUrl = fileStorageService.getFileUrl(filename);
+                return ResponseEntity.ok(Map.of(
+                                "success", true,
+                                "data", Map.of(
+                                                "filename", filename,
+                                                "url", fileUrl),
+                                "message", "Image uploaded successfully"));
+        }
 }

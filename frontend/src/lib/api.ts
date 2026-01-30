@@ -145,3 +145,46 @@ export async function fetchProducts(params: {
     };
   }
 }
+
+/**
+ * Fetch all products at once for client-side filtering
+ * GET /api/v1/public/products?size=100&sortBy=createdAt&sortDir=desc
+ */
+export async function fetchAllProducts(): Promise<ProductDTO[]> {
+  try {
+    const response = await apiClient.get<ApiResponse<{
+      content: ProductDTO[];
+      totalElements: number;
+      totalPages: number;
+      currentPage: number;
+      size: number;
+    }>>(`/public/products?size=100&sortBy=createdAt&sortDir=desc`);
+
+    if (response.data.success) {
+      return response.data.data.content;
+    }
+    throw new Error(response.data.message || 'Failed to fetch products');
+  } catch (error) {
+    console.error('Error fetching all products:', error);
+    return [];
+  }
+}
+
+/**
+ * Fetch single product by slug
+ * GET /api/v1/public/products/{slug}
+ */
+export async function fetchProductBySlug(slug: string): Promise<ProductDTO | null> {
+  try {
+    const response = await apiClient.get<ApiResponse<ProductDTO>>(
+      `/public/products/${slug}`
+    );
+    if (response.data.success) {
+      return response.data.data;
+    }
+    throw new Error(response.data.message || 'Failed to fetch product');
+  } catch (error) {
+    console.error('Error fetching product by slug:', error);
+    return null;
+  }
+}

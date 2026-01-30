@@ -6,9 +6,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "users")
+@Where(clause = "deleted_at IS NULL")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,10 +28,7 @@ public class User extends BaseEntity {
     @Column(name = "phone", columnDefinition = "NVARCHAR(20)")
     private String phone;
 
-    @Column(name = "avatar_url", columnDefinition = "NVARCHAR(500)")
-    private String avatarUrl;
-
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = com.fashon.infrastructure.converter.RoleConverter.class)
     @Column(name = "role", nullable = false, columnDefinition = "NVARCHAR(50)")
     private Role role = Role.CUSTOMER;
 

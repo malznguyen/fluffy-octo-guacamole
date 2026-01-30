@@ -31,19 +31,19 @@ export interface CategoryDTO {
 
 // Product Image DTO
 export interface ProductImageDTO {
-  id: number;
+  id: number | null;
   imageUrl: string;
-  altText?: string;
-  sortOrder: number;
-  isPrimary: boolean;
+  altText: string | null;
+  sortOrder: number | null;
+  isPrimary: boolean | null;
 }
 
 // Product Variant DTO
 export interface ProductVariantDTO {
   id: number;
   sku: string;
-  color: string;
-  size: string;
+  color: string | null;
+  size: string | null;
   stockQuantity: number;
   priceAdjustment: number;
   finalPrice: number;
@@ -66,6 +66,54 @@ export interface ProductDTO {
   updatedAt: string;
   images: ProductImageDTO[];
   variants: ProductVariantDTO[];
+}
+
+// Create Product Request
+export interface CreateProductRequest {
+  name: string;
+  slug: string;
+  description?: string;
+  basePrice: number;
+  categoryId: number;
+  isVisible: boolean;
+  variants: CreateVariantRequest[];
+  images: CreateImageRequest[];
+}
+
+// Update Product Request
+export interface UpdateProductRequest {
+  name?: string;
+  slug?: string;
+  description?: string;
+  basePrice?: number;
+  categoryId?: number;
+  isVisible?: boolean;
+  variants?: CreateVariantRequest[];
+  images?: CreateImageRequest[];
+}
+
+// Create Variant Request
+export interface CreateVariantRequest {
+  sku: string;
+  color?: string;
+  size?: string;
+  stockQuantity: number;
+  priceAdjustment: number;
+  isAvailable: boolean;
+}
+
+// Create Image Request
+export interface CreateImageRequest {
+  imageUrl: string;
+  altText?: string;
+  sortOrder: number;
+  isPrimary: boolean;
+}
+
+// Image Upload Response
+export interface ImageUploadResponse {
+  filename: string;
+  url: string;
 }
 
 // Legacy types for backward compatibility

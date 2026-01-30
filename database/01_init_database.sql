@@ -256,6 +256,7 @@ BEGIN
             CHECK (status IN ('pending', 'confirmed', 'shipped', 'delivered', 'cancelled')),
         shipping_address NVARCHAR(500) NOT NULL,
         phone NVARCHAR(20) NOT NULL,
+        note NVARCHAR(500) NULL,
         created_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         updated_at DATETIME2 NOT NULL DEFAULT GETDATE(),
         deleted_at DATETIME2 NULL,
