@@ -2,9 +2,18 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, useMotionValue, useSpring } from 'framer-motion';
-import { Search, User, ShoppingBag } from 'lucide-react';
-import { useCart } from '@/hooks/useCart';
+import { Search, User, ShoppingBag, ChevronDown } from 'lucide-react';
+import { useCart } from '@/lib/hooks/use-cart';
+import { useAuthStore } from '@/lib/store/use-auth-store';
 import Link from 'next/link';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const navItems = [
   { label: 'TRANG CHỦ', href: '/' },
@@ -58,7 +67,19 @@ function MagneticButton({ children, className = '', onClick }: MagneticButtonPro
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const { data: cart } = useCart();
+  const { user, isAuthenticated, logout } = useAuthStore();
+
+  // FIX HYDRATION: Wait until client mounts before checking auth state
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Check auth on mount
+  useEffect(() => {
+    useAuthStore.getState().checkAuth();
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -68,6 +89,9 @@ export function Header() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Debugging logic
+  console.log('HEADER STATE:', { isMounted, isAuthenticated, user });
 
   const cartItemCount = cart?.totalItems || 0;
 
@@ -124,28 +148,80 @@ export function Header() {
               <Search className="w-5 h-5 text-neutral-700" />
             </MagneticButton>
 
-            <MagneticButton
-              className="p-3 rounded-full hover:bg-neutral-100/50 transition-colors"
-              aria-label="Tài khoản"
-            >
-              <User className="w-5 h-5 text-neutral-700" />
-            </MagneticButton>
-
-            <MagneticButton
-              className="relative p-3 rounded-full hover:bg-neutral-100/50 transition-colors"
-              aria-label="Giỏ hàng"
-            >
-              <ShoppingBag className="w-5 h-5 text-neutral-700" />
-              {cartItemCount > 0 && (
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center bg-neutral-900 text-white text-[10px] font-medium rounded-full"
+            {/* User Icon / Dropdown */}
+            {!isMounted ? (
+              // While loading/hydrating, show a skeleton (safe default to prevent layout shift)
+              <div className="p-3 rounded-full">
+                <User className="w-5 h-5 text-neutral-400" />
+              </div>
+            ) : isAuthenticated ? (
+              // AUTHENTICATED STATE: DROPDOWN ONLY - NO LINK WRAPPER
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="p-3 rounded-full hover:bg-neutral-100/50 transition-colors flex items-center gap-1 outline-none focus:outline-none">
+                    <User className="w-5 h-5 text-neutral-900" />
+                    <ChevronDown className="w-3 h-3 text-neutral-500" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel>
+                    <p className="font-semibold text-neutral-900">
+                      {user?.fullName || user?.email}
+                    </p>
+                    <p className="text-xs text-neutral-500 font-normal">{user?.email}</p>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/tai-khoan" className="cursor-pointer">
+                      Tài Khoản
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/don-hang" className="cursor-pointer">
+                      Đơn Hàng
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => {
+                      logout();
+                      window.location.href = '/';
+                    }}
+                    className="cursor-pointer text-red-600 focus:text-red-600"
+                  >
+                    Đăng Xuất
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              // GUEST STATE: LINK TO LOGIN
+              <Link href="/dang-nhap">
+                <MagneticButton
+                  className="p-3 rounded-full hover:bg-neutral-100/50 transition-colors"
+                  aria-label="Tài khoản"
                 >
-                  {cartItemCount > 9 ? '9+' : cartItemCount}
-                </motion.span>
-              )}
-            </MagneticButton>
+                  <User className="w-5 h-5 text-neutral-700" />
+                </MagneticButton>
+              </Link>
+            )}
+
+            <Link href="/gio-hang">
+              <MagneticButton
+                className="relative p-3 rounded-full hover:bg-neutral-100/50 transition-colors"
+                aria-label="Giỏ hàng"
+              >
+                <ShoppingBag className="w-5 h-5 text-neutral-700" />
+                {cartItemCount > 0 && (
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center bg-neutral-900 text-white text-[10px] font-medium rounded-full"
+                  >
+                    {cartItemCount > 9 ? '9+' : cartItemCount}
+                  </motion.span>
+                )}
+              </MagneticButton>
+            </Link>
           </div>
         </div>
       </div>
