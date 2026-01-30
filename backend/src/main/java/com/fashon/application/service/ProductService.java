@@ -318,7 +318,7 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    private ProductDTO mapToDTO(Product product) {
+    public ProductDTO mapToDTO(Product product) {
         List<ProductImageDTO> imageDTOs = product.getImages() != null ? product.getImages().stream()
                 .filter(img -> img.getDeletedAt() == null)
                 .sorted((a, b) -> Integer.compare(a.getSortOrder(), b.getSortOrder()))
