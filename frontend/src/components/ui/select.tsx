@@ -212,13 +212,16 @@ const SelectItem = React.forwardRef<
       label = children
     } else if (React.isValidElement(children)) {
       // If children is a span with flex/items-center, try to get text from deeper
-      const childProps = children.props as any
+      interface ReactElementProps {
+        children?: string | React.ReactNode | Array<string | React.ReactNode>;
+      }
+      const childProps = children.props as ReactElementProps;
       if (childProps?.children) {
         if (typeof childProps.children === 'string') {
           label = childProps.children
         } else if (Array.isArray(childProps.children)) {
-          // Find string child
-          const textChild = childProps.children.find((c: any) => typeof c === 'string')
+          // Find string child using type predicate
+          const textChild = childProps.children.find((c): c is string => typeof c === 'string');
           if (textChild) label = textChild
         }
       }

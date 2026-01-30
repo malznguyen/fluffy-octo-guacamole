@@ -1,34 +1,10 @@
 import { create } from 'zustand';
-import apiClient from '@/lib/axios';
+import * as cartApi from '@/lib/api/cart';
+import type { CartDTO, CartItemDTO } from '@/lib/api/cart';
 import { useAuthStore } from './auth-store';
 
-// Types
-export interface CartItemDTO {
-  id: number;
-  variantId: number;
-  productName: string;
-  color: string;
-  size: string;
-  sku: string;
-  quantity: number;
-  unitPrice: number;
-  subtotal: number;
-  imageUrl: string;
-  createdAt: string;
-  updatedAt: string;
-  isDeleting?: boolean; // For animation state
-  isUpdating?: boolean; // For loading state
-}
-
-export interface CartDTO {
-  id: number;
-  userId: number;
-  items: CartItemDTO[];
-  totalItems: number;
-  totalAmount: number;
-  createdAt: string;
-  updatedAt: string;
-}
+// Re-export types for convenience
+export type { CartDTO, CartItemDTO };
 
 interface CartState {
   cart: CartDTO | null;
@@ -58,12 +34,10 @@ export const useCartStore = create<CartState>((set, get) => ({
     }
 
     try {
-      const response = await apiClient.get('/cart');
-      if (response.data.success) {
-        set({ cart: response.data.data, isInitialized: true });
-      }
-    } catch (error: any) {
-      console.error('[CartStore] Failed to fetch:', error.response?.status);
+      const cart = await cartApi.getCart();
+      set({ cart, isInitialized: true });
+    } catch (error) {
+      console.error('[CartStore] Failed to fetch:', error);
       set({ isInitialized: true });
       throw error;
     }
@@ -77,13 +51,8 @@ export const useCartStore = create<CartState>((set, get) => ({
 
     set({ isLoading: true });
     try {
-      const response = await apiClient.post('/cart/items', {
-        variantId,
-        quantity,
-      });
-      if (response.data.success) {
-        set({ cart: response.data.data });
-      }
+      const cart = await cartApi.addToCart({ variantId, quantity });
+      set({ cart });
     } catch (error) {
       console.error('[CartStore] Add item failed:', error);
       throw error;
@@ -100,10 +69,8 @@ export const useCartStore = create<CartState>((set, get) => ({
     }
 
     try {
-      const response = await apiClient.put(`/cart/items/${itemId}`, { quantity });
-      if (response.data.success) {
-        set({ cart: response.data.data });
-      }
+      const cart = await cartApi.updateCartItem(itemId, { quantity });
+      set({ cart });
     } catch (error) {
       console.error('[CartStore] Failed to update item:', error);
       throw error;
@@ -150,24 +117,20 @@ export const useCartStore = create<CartState>((set, get) => ({
 
     // 2. Call API in background
     try {
-      const response = await apiClient.put(`/cart/items/${itemId}`, {
-        quantity: newQuantity,
+      const updatedCart = await cartApi.updateCartItem(itemId, { quantity: newQuantity });
+
+      // 3. Update with server response (to ensure consistency)
+      const finalItems = updatedCart.items.map((item) => ({
+        ...item,
+        isUpdating: false,
+      }));
+
+      set({
+        cart: {
+          ...updatedCart,
+          items: finalItems,
+        },
       });
-
-      if (response.data.success) {
-        // 3. Update with server response (to ensure consistency)
-        const finalItems = response.data.data.items.map((item: CartItemDTO) => ({
-          ...item,
-          isUpdating: false,
-        }));
-
-        set({
-          cart: {
-            ...response.data.data,
-            items: finalItems,
-          },
-        });
-      }
     } catch (error) {
       // 4. Rollback on error
       console.error('[CartStore] Update failed, rollback');
@@ -211,11 +174,8 @@ export const useCartStore = create<CartState>((set, get) => ({
 
     // 3. Call API
     try {
-      const response = await apiClient.delete(`/cart/items/${itemId}`);
-
-      if (response.data.success) {
-        set({ cart: response.data.data });
-      }
+      const updatedCart = await cartApi.removeCartItem(itemId);
+      set({ cart: updatedCart });
     } catch (error) {
       // 4. Rollback on error
       console.error('[CartStore] Remove failed, rollback');

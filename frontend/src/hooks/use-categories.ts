@@ -1,7 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import apiClient from '@/lib/axios';
-import { CategoryDTO, CreateCategoryRequest, UpdateCategoryRequest } from '@/types/category';
+import { AxiosError } from 'axios';
+import * as categoryApi from '@/lib/api/admin/categories';
+import type { CategoryDTO, CreateCategoryRequest, UpdateCategoryRequest } from '@/lib/api/admin/categories';
+
+// Interface cho error response từ API
+interface ApiErrorResponse {
+    message?: string;
+}
 
 // Query Keys
 export const categoryKeys = {
@@ -12,56 +18,33 @@ export const categoryKeys = {
     detail: (id: number) => [...categoryKeys.details(), id] as const,
 };
 
-// API Functions
-const categoryApi = {
-    getAll: async () => {
-        const response = await apiClient.get<{ data: CategoryDTO[] }>('/admin/categories');
-        return response.data.data;
-    },
-    getTree: async () => {
-        const response = await apiClient.get<{ data: CategoryDTO[] }>('/admin/categories/tree');
-        return response.data.data;
-    },
-    create: async (data: CreateCategoryRequest) => {
-        const response = await apiClient.post<{ data: CategoryDTO }>('/admin/categories', data);
-        return response.data.data;
-    },
-    update: async ({ id, data }: { id: number; data: UpdateCategoryRequest }) => {
-        const response = await apiClient.put<{ data: CategoryDTO }>(`/admin/categories/${id}`, data);
-        return response.data.data;
-    },
-    delete: async (id: number) => {
-        await apiClient.delete(`/admin/categories/${id}`);
-        return id;
-    },
-};
-
 // Hooks
 export function useCategories() {
-    return useQuery({
+    return useQuery<CategoryDTO[], Error>({
         queryKey: categoryKeys.lists(),
-        queryFn: categoryApi.getAll,
+        queryFn: categoryApi.getAdminCategories,
     });
 }
 
 export function useCategoryTree() {
-    return useQuery({
+    return useQuery<CategoryDTO[], Error>({
         queryKey: categoryKeys.tree(),
-        queryFn: categoryApi.getTree,
+        queryFn: categoryApi.getAdminCategoryTree,
     });
 }
 
 export function useCreateCategory() {
     const queryClient = useQueryClient();
 
-    return useMutation({
-        mutationFn: categoryApi.create,
+    return useMutation<CategoryDTO, AxiosError<ApiErrorResponse>, CreateCategoryRequest>({
+        mutationFn: categoryApi.createCategory,
         onSuccess: () => {
             toast.success('Tạo danh mục thành công');
             queryClient.invalidateQueries({ queryKey: categoryKeys.all });
         },
-        onError: (error: any) => {
-            toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi tạo danh mục');
+        onError: (error) => {
+            const message = error.response?.data?.message || 'Có lỗi xảy ra khi tạo danh mục';
+            toast.error(message);
         },
     });
 }
@@ -69,14 +52,15 @@ export function useCreateCategory() {
 export function useUpdateCategory() {
     const queryClient = useQueryClient();
 
-    return useMutation({
-        mutationFn: categoryApi.update,
+    return useMutation<CategoryDTO, AxiosError<ApiErrorResponse>, { id: number; data: UpdateCategoryRequest }>({
+        mutationFn: ({ id, data }) => categoryApi.updateCategory(id, data),
         onSuccess: () => {
             toast.success('Cập nhật danh mục thành công');
             queryClient.invalidateQueries({ queryKey: categoryKeys.all });
         },
-        onError: (error: any) => {
-            toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi cập nhật danh mục');
+        onError: (error) => {
+            const message = error.response?.data?.message || 'Có lỗi xảy ra khi cập nhật danh mục';
+            toast.error(message);
         },
     });
 }
@@ -84,14 +68,15 @@ export function useUpdateCategory() {
 export function useDeleteCategory() {
     const queryClient = useQueryClient();
 
-    return useMutation({
-        mutationFn: categoryApi.delete,
+    return useMutation<void, AxiosError<ApiErrorResponse>, number>({
+        mutationFn: categoryApi.deleteCategory,
         onSuccess: () => {
             toast.success('Xóa danh mục thành công');
             queryClient.invalidateQueries({ queryKey: categoryKeys.all });
         },
-        onError: (error: any) => {
-            toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi xóa danh mục');
+        onError: (error) => {
+            const message = error.response?.data?.message || 'Có lỗi xảy ra khi xóa danh mục';
+            toast.error(message);
         },
     });
 }

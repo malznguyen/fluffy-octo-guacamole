@@ -2,17 +2,12 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import apiClient from '@/lib/axios';
-import {
-  ProductDTO,
-  CategoryDTO,
-  CreateProductRequest,
-  UpdateProductRequest,
-  ImageUploadResponse,
-  ApiResponse,
-} from '@/types/product';
+import * as productApi from '@/lib/api/admin/products';
+import * as publicApi from '@/lib/api/public';
+import type { ProductDTO, CategoryDTO, CreateProductRequest, UpdateProductRequest } from '@/types/product';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080/api/v1';
+// Re-export types
+export type { ProductDTO, CategoryDTO, CreateProductRequest, UpdateProductRequest };
 
 // Query keys
 export const productKeys = {
@@ -29,119 +24,60 @@ export const categoryKeys = {
   tree: () => [...categoryKeys.all, 'tree'] as const,
 };
 
-// Fetch all products (admin)
-async function fetchAdminProducts(): Promise<ProductDTO[]> {
-  const response = await apiClient.get<ApiResponse<ProductDTO[]>>('/admin/products');
-  if (response.data.success) {
-    // Đảm bảo variants và images luôn là mảng
-    return (response.data.data || []).map(product => ({
-      ...product,
-      variants: product.variants || [],
-      images: product.images || [],
-    }));
-  }
-  throw new Error(response.data.message || 'Không thể tải danh sách sản phẩm');
-}
-
-// Fetch single product (admin)
-async function fetchAdminProduct(id: number): Promise<ProductDTO> {
-  const response = await apiClient.get<ApiResponse<ProductDTO>>(`/admin/products/${id}`);
-  if (response.data.success) {
-    const product = response.data.data;
-    // Đảm bảo variants và images luôn là mảng
-    return {
-      ...product,
-      variants: product.variants || [],
-      images: product.images || [],
-    };
-  }
-  throw new Error(response.data.message || 'Không thể tải thông tin sản phẩm');
-}
-
-// Create product
-async function createProduct(data: CreateProductRequest): Promise<ProductDTO> {
-  const response = await apiClient.post<ApiResponse<ProductDTO>>('/admin/products', data);
-  if (response.data.success) {
-    return response.data.data;
-  }
-  throw new Error(response.data.message || 'Không thể tạo sản phẩm');
-}
-
-// Update product
-async function updateProduct(id: number, data: UpdateProductRequest): Promise<ProductDTO> {
-  const response = await apiClient.put<ApiResponse<ProductDTO>>(`/admin/products/${id}`, data);
-  if (response.data.success) {
-    return response.data.data;
-  }
-  throw new Error(response.data.message || 'Không thể cập nhật sản phẩm');
-}
-
-// Delete product (soft delete)
-async function deleteProduct(id: number): Promise<void> {
-  const response = await apiClient.delete<ApiResponse<void>>(`/admin/products/${id}`);
-  if (!response.data.success) {
-    throw new Error(response.data.message || 'Không thể xóa sản phẩm');
-  }
-}
-
-// Upload image
-async function uploadImage(file: File): Promise<ImageUploadResponse> {
-  const formData = new FormData();
-  formData.append('file', file);
-
-  const response = await apiClient.post<ApiResponse<ImageUploadResponse>>(
-    '/admin/products/upload-image',
-    formData,
-    {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    }
-  );
-
-  if (response.data.success) {
-    return response.data.data;
-  }
-  throw new Error(response.data.message || 'Không thể tải ảnh lên');
-}
-
-// Fetch categories
-async function fetchCategories(): Promise<CategoryDTO[]> {
-  const response = await apiClient.get<ApiResponse<CategoryDTO[]>>('/public/categories');
-  if (response.data.success) {
-    return (response.data.data || []).filter((cat) => cat.isActive);
-  }
-  throw new Error(response.data.message || 'Không thể tải danh sách danh mục');
-}
-
-// Hooks
+// Hooks for admin products
 export function useAdminProducts() {
-  return useQuery({
+  return useQuery<ProductDTO[], Error>({
     queryKey: productKeys.lists(),
-    queryFn: fetchAdminProducts,
+    queryFn: async () => {
+      const products = await productApi.getAdminProducts();
+      // Đảm bảo variants và images luôn là mảng
+      return products.map(product => ({
+        ...product,
+        variants: product.variants || [],
+        images: product.images || [],
+      }));
+    },
   });
 }
 
 export function useAdminProduct(id: number) {
-  return useQuery({
+  return useQuery<ProductDTO, Error>({
     queryKey: productKeys.detail(id),
-    queryFn: () => fetchAdminProduct(id),
+    queryFn: async () => {
+      const product = await productApi.getAdminProduct(id);
+      // Đảm bảo variants và images luôn là mảng
+      return {
+        ...product,
+        variants: product.variants || [],
+        images: product.images || [],
+      };
+    },
     enabled: id > 0,
   });
 }
 
+// Hook for public categories
 export function useCategories() {
-  return useQuery({
+  return useQuery<CategoryDTO[], Error>({
     queryKey: categoryKeys.lists(),
-    queryFn: fetchCategories,
+    queryFn: publicApi.fetchCategories,
   });
 }
 
+// Hook for category tree
+export function useCategoryTree() {
+  return useQuery<CategoryDTO[], Error>({
+    queryKey: categoryKeys.tree(),
+    queryFn: publicApi.fetchCategoryTree,
+  });
+}
+
+// Mutations
 export function useCreateProduct() {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: createProduct,
+  return useMutation<ProductDTO, Error, CreateProductRequest>({
+    mutationFn: productApi.createProduct,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: productKeys.lists() });
       toast.success('Tạo sản phẩm thành công');
@@ -155,9 +91,8 @@ export function useCreateProduct() {
 export function useUpdateProduct() {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: ({ id, data }: { id: number; data: UpdateProductRequest }) =>
-      updateProduct(id, data),
+  return useMutation<ProductDTO, Error, { id: number; data: UpdateProductRequest }>({
+    mutationFn: ({ id, data }) => productApi.updateProduct(id, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: productKeys.lists() });
       queryClient.invalidateQueries({ queryKey: productKeys.detail(variables.id) });
@@ -172,8 +107,8 @@ export function useUpdateProduct() {
 export function useDeleteProduct() {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: deleteProduct,
+  return useMutation<void, Error, number>({
+    mutationFn: productApi.deleteProduct,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: productKeys.lists() });
       toast.success('Xóa sản phẩm thành công');
@@ -185,8 +120,8 @@ export function useDeleteProduct() {
 }
 
 export function useUploadImage() {
-  return useMutation({
-    mutationFn: uploadImage,
+  return useMutation<{ filename: string; url: string }, Error, File>({
+    mutationFn: productApi.uploadImage,
     onError: (error: Error) => {
       toast.error(error.message || 'Có lỗi xảy ra khi tải ảnh lên');
     },

@@ -6,38 +6,15 @@ import Link from 'next/link';
 import { toast } from 'sonner';
 import { Package, ChevronRight, Loader2 } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth-store';
-import apiClient from '@/lib/axios';
+import { getOrders, cancelOrder } from '@/lib/api/order';
+import type { OrderDTO, OrderItemDTO } from '@/lib/api/order';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 
-// Types
-interface OrderItemDTO {
-  id: number;
-  productNameSnapshot: string;
-  variantInfoSnapshot: string;
-  quantity: number;
-  unitPrice: number;
-  subtotal: number;
-}
+// Types - re-export from API for local usage
+type OrderStatusLocal = 'ALL' | 'PENDING' | 'CONFIRMED' | 'SHIPPED' | 'DELIVERED' | 'COMPLETED' | 'CANCELLED';
 
-interface OrderDTO {
-  id: number;
-  orderCode: string;
-  userId: number;
-  customerName: string;
-  customerEmail: string;
-  total: number;
-  status: 'PENDING' | 'CONFIRMED' | 'SHIPPED' | 'DELIVERED' | 'COMPLETED' | 'CANCELLED';
-  shippingAddress: string;
-  phone: string;
-  note?: string;
-  items: OrderItemDTO[];
-  totalItems: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-type OrderStatus = 'ALL' | 'PENDING' | 'CONFIRMED' | 'SHIPPED' | 'DELIVERED' | 'COMPLETED' | 'CANCELLED';
+type OrderStatus = OrderStatusLocal;
 
 const statusLabels: Record<OrderStatus, string> = {
   ALL: 'TẤT CẢ',
@@ -121,24 +98,13 @@ export default function OrdersPage() {
   const fetchOrders = async () => {
     setIsLoading(true);
     try {
-      const response = await apiClient.get('/orders', {
-        params: { page: currentPage, size: 10 },
-      });
-      
-      if (response.data.success) {
-        const ordersData = response.data.data.content;
-        setOrders(ordersData);
-        setFilteredOrders(ordersData);
-        setTotalPages(response.data.data.totalPages);
-      }
-    } catch (error: any) {
-      console.error('[Orders] Failed to fetch orders:', error.response?.status);
-      
-      if (error.response?.status === 401 || error.response?.status === 403) {
-        toast.error('Phiên đăng nhập hết hạn, vui lòng đăng nhập lại');
-      } else {
-        toast.error('Không thể tải danh sách đơn hàng');
-      }
+      const ordersData = await getOrders(currentPage, 10);
+      setOrders(ordersData.content);
+      setFilteredOrders(ordersData.content);
+      setTotalPages(ordersData.totalPages);
+    } catch (error) {
+      console.error('[Orders] Failed to fetch orders:', error);
+      toast.error('Không thể tải danh sách đơn hàng');
     } finally {
       setIsLoading(false);
     }
@@ -148,14 +114,11 @@ export default function OrdersPage() {
     if (!confirm('Bạn có chắc muốn hủy đơn hàng này?')) return;
 
     try {
-      const response = await apiClient.post(`/orders/${orderCode}/cancel`);
-      if (response.data.success) {
-        toast.success('Đã hủy đơn hàng');
-        fetchOrders(); // Refresh list
-      }
-    } catch (error: any) {
-      const message = error.response?.data?.message || 'Không thể hủy đơn hàng';
-      toast.error(message);
+      await cancelOrder(orderCode);
+      toast.success('Đã hủy đơn hàng');
+      fetchOrders(); // Refresh list
+    } catch (error) {
+      toast.error('Không thể hủy đơn hàng');
     }
   };
 

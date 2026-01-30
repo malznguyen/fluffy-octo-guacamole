@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth-store';
 import { useCartStore } from '@/stores/cart-store';
-import apiClient from '@/lib/axios';
+import { createOrder } from '@/lib/api/order';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 
@@ -92,17 +92,17 @@ export default function CheckoutPage() {
     try {
       console.log('[Checkout] Submitting order...', data);
 
-      const response = await apiClient.post('/orders', {
+      const order = await createOrder({
         shippingAddress: data.shippingAddress,
         phone: data.phone,
         note: data.note,
-        paymentMethod: data.paymentMethod,
+        paymentMethod: data.paymentMethod as import('@/types/enums').PaymentMethod,
       });
 
-      console.log('[Checkout] API Response:', response.data);
+      console.log('[Checkout] Order created:', order);
 
-      if (response.data.success) {
-        const orderCode = response.data.data.orderCode;
+      if (order) {
+        const orderCode = order.orderCode;
         console.log('[Checkout] Order created:', orderCode);
 
         // Mark as submitted to prevent cart empty redirect
@@ -114,9 +114,7 @@ export default function CheckoutPage() {
         // Redirect to success page with order code
         console.log('[Checkout] Redirecting to success page...');
         router.push(`/checkout/success?orderCode=${orderCode}`);
-      } else {
-        toast.error(response.data.message || 'Có lỗi xảy ra');
-      }
+
     } catch (error: any) {
       console.error('[Checkout] Error:', error);
       const status = error.response?.status;

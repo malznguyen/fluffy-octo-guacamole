@@ -1,8 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import apiClient from '@/lib/axios';
-import { UserDTO, UsersResponse, UpdateUserRequest, UserResponse } from '@/types/user';
-import { OrderDTO } from '@/types/order';
+import { AxiosError } from 'axios';
 import { toast } from 'sonner';
+import * as userApi from '@/lib/api/admin/users';
+import type { UserDTO, UsersResponse, UpdateUserRequest, Role } from '@/lib/api/admin/users';
+import { OrderDTO } from '@/types/order';
+
+// Re-export types
+export type { UserDTO, UpdateUserRequest, Role };
 
 // Keys
 export const userKeys = {
@@ -12,54 +16,41 @@ export const userKeys = {
     orders: (id: number) => [...userKeys.all, 'orders', id] as const,
 };
 
-// Fetch all users (with optional pagination/search if API supports it, currently assuming flat or simple)
-// Updating to match potential API pattern of page/size params
-export const useAdminUsers = (page = 0, size = 10, search = '', role = 'all') => {
-    return useQuery({
+interface UseAdminUsersFilters {
+    page?: number;
+    size?: number;
+    search?: string;
+    role?: string;
+}
+
+// Interface cho error response từ API
+interface ApiErrorResponse {
+    message?: string;
+}
+
+export const useAdminUsers = (filters: UseAdminUsersFilters = {}) => {
+    const { page = 0, size = 10, search = '', role = 'all' } = filters;
+    
+    return useQuery<UsersResponse, Error>({
         queryKey: [...userKeys.lists(), { page, size, search, role }],
         queryFn: async () => {
-            // Construct query params
-            const params = new URLSearchParams();
-            params.append('page', page.toString());
-            params.append('size', size.toString());
-            if (search) params.append('search', search);
-            if (role !== 'all') params.append('role', role);
-
-            // Note: Assuming API supports these params based on standard patterns. 
-            // If flat list, filter client side in component. 
-            // Based on instructions: "GET /api/v1/admin/users - Lay tat ca users (flat list, co the co pagination nhu orders)"
-            const { data } = await apiClient.get<UsersResponse | { data: UserDTO[] }>(`/admin/users?${params.toString()}`);
-
-            // Handle both paginated and flat response for robustness
-            if ('content' in data.data) {
-                return data as UsersResponse;
-            } else if (Array.isArray(data.data)) {
-                // Wrap flat list in paginated structure for consistent UI consumption
-                // Client-side pagination logic handles this if needed, but here we return standard structure
-                return {
-                    success: true,
-                    data: {
-                        content: data.data,
-                        totalElements: data.data.length,
-                        totalPages: 1,
-                        currentPage: 0,
-                        size: data.data.length
-                    },
-                    message: 'Success'
-                } as UsersResponse;
-            }
-            return data as UsersResponse;
+            return userApi.getAdminUsers({
+                page,
+                size,
+                search: search || undefined,
+                role: (role === 'all' ? undefined : role) as Role | undefined,
+            });
         },
     });
 };
 
 // Get single user
 export const useUser = (id: number | null) => {
-    return useQuery({
-        queryKey: userKeys.detail(id!),
+    return useQuery<UserDTO, Error>({
+        queryKey: userKeys.detail(id || 0),
         queryFn: async () => {
-            const { data } = await apiClient.get<UserResponse>(`/admin/users/${id}`);
-            return data.data;
+            if (!id) throw new Error('User ID is required');
+            return userApi.getAdminUser(id);
         },
         enabled: !!id,
     });
@@ -69,17 +60,15 @@ export const useUser = (id: number | null) => {
 export const useUpdateUser = () => {
     const queryClient = useQueryClient();
 
-    return useMutation({
-        mutationFn: async ({ id, data }: { id: number; data: UpdateUserRequest }) => {
-            const response = await apiClient.put<UserResponse>(`/admin/users/${id}`, data);
-            return response.data;
-        },
+    return useMutation<UserDTO, AxiosError<ApiErrorResponse>, { id: number; data: UpdateUserRequest }>({
+        mutationFn: ({ id, data }) => userApi.updateUser(id, data),
         onSuccess: (data) => {
-            toast.success(`Cập nhật user ${data.data.fullName} thành công`);
+            toast.success(`Cập nhật user ${data.fullName} thành công`);
             queryClient.invalidateQueries({ queryKey: userKeys.all });
         },
-        onError: (error: any) => {
-            toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi cập nhật user');
+        onError: (error) => {
+            const message = error.response?.data?.message || 'Có lỗi xảy ra khi cập nhật user';
+            toast.error(message);
         },
     });
 };
@@ -88,31 +77,26 @@ export const useUpdateUser = () => {
 export const useDeleteUser = () => {
     const queryClient = useQueryClient();
 
-    return useMutation({
-        mutationFn: async (id: number) => {
-            await apiClient.delete(`/admin/users/${id}`);
-        },
+    return useMutation<void, AxiosError<ApiErrorResponse>, number>({
+        mutationFn: userApi.deleteUser,
         onSuccess: () => {
             toast.success('Xóa user thành công');
             queryClient.invalidateQueries({ queryKey: userKeys.all });
         },
-        onError: (error: any) => {
-            toast.error(error.response?.data?.message || 'Có lỗi xảy ra khi xóa user');
+        onError: (error) => {
+            const message = error.response?.data?.message || 'Có lỗi xảy ra khi xóa user';
+            toast.error(message);
         },
     });
 };
 
 // Get user orders
 export const useUserOrders = (userId: number | null) => {
-    return useQuery({
-        queryKey: userKeys.orders(userId!),
+    return useQuery<OrderDTO[], Error>({
+        queryKey: userKeys.orders(userId || 0),
         queryFn: async () => {
-            // Use the existing orders endpoint with filter
-            // If query param specific for userId exists: /admin/orders?userId=1
-            // Else fetch all and filter client side (fallback)
-            // Trying direct filter param first as per instructions
-            const { data } = await apiClient.get<{ data: { content: OrderDTO[] } }>(`/admin/orders?userId=${userId}&size=100`);
-            return data.data.content || [];
+            if (!userId) throw new Error('User ID is required');
+            return userApi.getUserOrders(userId);
         },
         enabled: !!userId,
     });

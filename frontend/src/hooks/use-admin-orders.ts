@@ -1,35 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import {
-    OrderDTO,
-    OrderListResponse,
-    UpdateOrderStatusRequest
-} from '@/types/order';
-import { OrderStatus } from '@/types/enums';
-import { useAuthStore } from '@/stores/auth-store';
+import * as orderApi from '@/lib/api/admin/orders';
+import type { OrderDTO, OrderListResponse, OrderStatus } from '@/lib/api/admin/orders';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080/api/v1';
-
-async function fetchWithAuth(url: string, options: RequestInit = {}) {
-    const token = useAuthStore.getState().token;
-    const headers = {
-        'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        ...options.headers,
-    };
-
-    const response = await fetch(`${API_BASE_URL}${url}`, {
-        ...options,
-        headers,
-    });
-
-    if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'An error occurred');
-    }
-
-    return response.json();
-}
+// Re-export types
+export type { OrderDTO, OrderStatus };
 
 interface UseAdminOrdersParams {
     page: number; // 0-based
@@ -38,42 +13,34 @@ interface UseAdminOrdersParams {
     search?: string;
 }
 
+const adminOrderKeys = {
+    all: ['admin-orders'] as const,
+    lists: () => [...adminOrderKeys.all, 'list'] as const,
+    list: (filters: { page: number; size: number; status?: string; search?: string }) =>
+        [...adminOrderKeys.lists(), filters] as const,
+    detail: (orderCode: string) => [...adminOrderKeys.all, 'detail', orderCode] as const,
+};
+
 export function useAdminOrders({ page, size, status, search }: UseAdminOrdersParams) {
-    return useQuery<OrderListResponse>({
-        queryKey: ['admin-orders', page, size, status, search],
+    return useQuery<OrderListResponse, Error>({
+        queryKey: adminOrderKeys.list({ page, size, status, search }),
         queryFn: async () => {
-            const params = new URLSearchParams();
-            params.append('page', page.toString());
-            params.append('size', size.toString());
-
-            if (status && status !== 'all') {
-                params.append('status', status);
-            }
-
-            if (search) {
-                // API docs don't explicitly list 'search' query param for GET /orders
-                // But the prompt REQUIREMENTS say: "Search theo orderCode hoac customerName (query param)"
-                // I will assume the param name is 'search' or 'keyword'. 
-                // Docs for public products use 'search'. 
-                // Docs for Admin Orders Section 5.3 say: "Pagination (page, size, status filter)".
-                // Requirements say: "Search theo orderCode hoac customerName (query param)".
-                // I'll assume 'search' is the param name.
-                params.append('search', search);
-            }
-
-            const response = await fetchWithAuth(`/admin/orders?${params.toString()}`);
-            return response.data;
+            return orderApi.getAdminOrders({
+                page,
+                size,
+                status: (status === 'all' ? undefined : status) as OrderStatus | undefined,
+                search: search || undefined,
+            });
         },
     });
 }
 
 export function useAdminOrder(orderCode: string | null) {
-    return useQuery<OrderDTO>({
-        queryKey: ['admin-order', orderCode],
+    return useQuery<OrderDTO, Error>({
+        queryKey: adminOrderKeys.detail(orderCode || ''),
         queryFn: async () => {
             if (!orderCode) throw new Error('Order code is required');
-            const response = await fetchWithAuth(`/admin/orders/${orderCode}`);
-            return response.data;
+            return orderApi.getAdminOrder(orderCode);
         },
         enabled: !!orderCode,
     });
@@ -82,18 +49,11 @@ export function useAdminOrder(orderCode: string | null) {
 export function useUpdateOrderStatus() {
     const queryClient = useQueryClient();
 
-    return useMutation({
-        mutationFn: async ({ orderCode, status }: { orderCode: string; status: OrderStatus }) => {
-            const body: UpdateOrderStatusRequest = { status };
-            return fetchWithAuth(`/admin/orders/${orderCode}/status`, {
-                method: 'PUT',
-                body: JSON.stringify(body),
-            });
-        },
-        onSuccess: (data, variables) => {
+    return useMutation<OrderDTO, Error, { orderCode: string; status: OrderStatus }>({
+        mutationFn: ({ orderCode, status }) => orderApi.updateOrderStatus(orderCode, status),
+        onSuccess: (_, variables) => {
             toast.success(`Cập nhật trạng thái đơn hàng ${variables.orderCode} thành công`);
-            queryClient.invalidateQueries({ queryKey: ['admin-orders'] });
-            queryClient.invalidateQueries({ queryKey: ['admin-order', variables.orderCode] });
+            queryClient.invalidateQueries({ queryKey: adminOrderKeys.all });
         },
         onError: (error: Error) => {
             toast.error(`Lỗi cập nhật: ${error.message}`);
@@ -104,16 +64,11 @@ export function useUpdateOrderStatus() {
 export function useCancelOrder() {
     const queryClient = useQueryClient();
 
-    return useMutation({
-        mutationFn: async (orderCode: string) => {
-            return fetchWithAuth(`/admin/orders/${orderCode}/cancel`, {
-                method: 'POST',
-            });
-        },
-        onSuccess: (data, variables) => {
-            toast.success(`Đã hủy đơn hàng ${variables}`);
-            queryClient.invalidateQueries({ queryKey: ['admin-orders'] });
-            queryClient.invalidateQueries({ queryKey: ['admin-order', variables] });
+    return useMutation<OrderDTO, Error, string>({
+        mutationFn: orderApi.cancelOrderAdmin,
+        onSuccess: (_, orderCode) => {
+            toast.success(`Đã hủy đơn hàng ${orderCode}`);
+            queryClient.invalidateQueries({ queryKey: adminOrderKeys.all });
         },
         onError: (error: Error) => {
             toast.error(`Lỗi hủy đơn: ${error.message}`);
