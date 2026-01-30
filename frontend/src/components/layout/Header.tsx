@@ -10,7 +10,6 @@ import { useWishlistStore } from '@/stores/wishlist-store';
 
 export default function Header() {
   const router = useRouter();
-  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   
   const userMenuRef = useRef<HTMLDivElement>(null);
@@ -97,23 +96,6 @@ export default function Header() {
             >
               SẢN PHẨM
             </Link>
-            <div
-              className="relative"
-              onMouseEnter={() => setIsCategoriesOpen(true)}
-              onMouseLeave={() => setIsCategoriesOpen(false)}
-            >
-              <button className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors flex items-center">
-                DANH MỤC
-              </button>
-              {/* Categories Dropdown - Placeholder for future implementation */}
-              {isCategoriesOpen && (
-                <div className="absolute top-full left-0 mt-2 w-48 bg-white border border-neutral-200 rounded-md shadow-lg py-2">
-                  <div className="px-4 py-2 text-sm text-neutral-500">
-                    Tải danh mục...
-                  </div>
-                </div>
-              )}
-            </div>
             <Link
               href="/contact"
               className="text-sm font-medium text-neutral-600 hover:text-neutral-900 transition-colors"
