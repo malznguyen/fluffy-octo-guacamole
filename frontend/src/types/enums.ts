@@ -19,11 +19,8 @@ export enum OrderStatus {
 
 // Payment method
 export enum PaymentMethod {
-  CREDIT_CARD = 'CREDIT_CARD',
-  DEBIT_CARD = 'DEBIT_CARD',
-  PAYPAL = 'PAYPAL',
+  COD = 'COD',
   BANK_TRANSFER = 'BANK_TRANSFER',
-  CASH_ON_DELIVERY = 'CASH_ON_DELIVERY',
 }
 
 // Payment status

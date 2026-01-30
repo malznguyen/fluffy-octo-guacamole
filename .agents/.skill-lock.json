@@ -1,0 +1,72 @@
+{
+  "version": 3,
+  "skills": {
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
+      "skillFolderHash": "",
+      "installedAt": "2026-01-26T11:03:32.893Z",
+      "updatedAt": "2026-01-26T21:34:17.857Z"
+    },
+    "web-design-guidelines": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-skills.git",
+      "skillFolderHash": "",
+      "installedAt": "2026-01-26T11:03:52.352Z",
+      "updatedAt": "2026-01-26T21:48:16.421Z"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/anthropics/skills.git",
+      "skillFolderHash": "",
+      "installedAt": "2026-01-26T11:04:20.770Z",
+      "updatedAt": "2026-01-26T11:04:20.770Z"
+    },
+    "agent-browser": {
+      "source": "vercel-labs/agent-browser",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/agent-browser.git",
+      "skillFolderHash": "",
+      "installedAt": "2026-01-26T11:05:35.199Z",
+      "updatedAt": "2026-01-26T11:05:35.199Z"
+    },
+    "brainstorming": {
+      "source": "obra/superpowers",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/obra/superpowers.git",
+      "skillFolderHash": "",
+      "installedAt": "2026-01-26T11:06:17.480Z",
+      "updatedAt": "2026-01-26T11:06:17.480Z"
+    },
+    "audit-website": {
+      "source": "squirrelscan/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/squirrelscan/skills.git",
+      "skillFolderHash": "",
+      "installedAt": "2026-01-26T15:25:36.218Z",
+      "updatedAt": "2026-01-26T15:25:36.218Z"
+    },
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/skills.git",
+      "skillFolderHash": "",
+      "installedAt": "2026-01-26T21:34:24.853Z",
+      "updatedAt": "2026-01-26T21:34:24.853Z"
+    },
+    "senior-fullstack": {
+      "source": "sickn33/antigravity-awesome-skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/sickn33/antigravity-awesome-skills.git",
+      "skillFolderHash": "",
+      "installedAt": "2026-01-28T13:27:41.464Z",
+      "updatedAt": "2026-01-28T13:27:41.464Z"
+    }
+  },
+  "dismissed": {
+    "findSkillsPrompt": true
+  }
+}

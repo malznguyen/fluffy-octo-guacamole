@@ -2,10 +2,8 @@
 
 import apiClient from '../client';
 import { ApiResponse, PaginatedResponse } from '@/types/product';
-import { OrderDTO, UpdateOrderStatusRequest } from '@/types/order';
-import { OrderStatus } from '@/types/enums';
-
-export type { OrderDTO, OrderStatus };
+import type { OrderDTO, UpdateOrderStatusRequest } from '@/types/order';
+import type { OrderStatus } from '@/types/enums';
 
 export interface AdminOrdersParams {
   page?: number;

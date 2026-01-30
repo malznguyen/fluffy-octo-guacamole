@@ -2,10 +2,8 @@
 
 import apiClient from './client';
 import { ApiResponse, PaginatedResponse } from '@/types/product';
-import { OrderDTO, OrderItemDTO } from '@/types/order';
-import { PaymentMethod } from '@/types/enums';
-
-export { OrderDTO, OrderItemDTO };
+import type { OrderDTO, OrderItemDTO } from '@/types/order';
+import type { PaymentMethod } from '@/types/enums';
 
 export interface CreateOrderData {
   shippingAddress: string;

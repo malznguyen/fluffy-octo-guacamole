@@ -1,10 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import * as orderApi from '@/lib/api/admin/orders';
-import type { OrderDTO, OrderListResponse, OrderStatus } from '@/lib/api/admin/orders';
+import type { OrderDTO, OrderListResponse } from '@/types/order';
+import type { OrderStatus } from '@/types/enums';
 
-// Re-export types
-export type { OrderDTO, OrderStatus };
+// Re-export types for convenience
+export type { OrderDTO, OrderListResponse } from '@/types/order';
+export type { OrderStatus } from '@/types/enums';
 
 interface UseAdminOrdersParams {
     page: number; // 0-based

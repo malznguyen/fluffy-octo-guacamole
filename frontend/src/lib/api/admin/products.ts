@@ -1,9 +1,8 @@
 // Admin Products API
 
 import apiClient from '../client';
-import { ApiResponse, ProductDTO, CreateProductRequest, UpdateProductRequest, ImageUploadResponse } from '@/types/product';
-
-export type { ProductDTO, CreateProductRequest, UpdateProductRequest };
+import { ApiResponse } from '@/types/product';
+import type { ProductDTO, CreateProductRequest, UpdateProductRequest, ImageUploadResponse } from '@/types/product';
 
 /**
  * Get all products (admin view)

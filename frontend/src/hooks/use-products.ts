@@ -6,8 +6,10 @@ import * as productApi from '@/lib/api/admin/products';
 import * as publicApi from '@/lib/api/public';
 import type { ProductDTO, CategoryDTO, CreateProductRequest, UpdateProductRequest } from '@/types/product';
 
-// Re-export types
-export type { ProductDTO, CategoryDTO, CreateProductRequest, UpdateProductRequest };
+// Re-export types for convenience
+export type { ProductDTO, CategoryDTO, CreateProductRequest, UpdateProductRequest } from '@/types/product';
+
+
 
 // Query keys
 export const productKeys = {

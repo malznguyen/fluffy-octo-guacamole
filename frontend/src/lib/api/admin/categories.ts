@@ -1,10 +1,9 @@
 // Admin Categories API
 
 import apiClient from '../client';
-import { ApiResponse, CategoryDTO } from '@/types/product';
-import { CreateCategoryRequest, UpdateCategoryRequest } from '@/types/category';
-
-export type { CategoryDTO, CreateCategoryRequest, UpdateCategoryRequest };
+import { ApiResponse } from '@/types/product';
+import type { CategoryDTO } from '@/types/product';
+import type { CreateCategoryRequest, UpdateCategoryRequest } from '@/types/category';
 
 /**
  * Get all categories (admin view)

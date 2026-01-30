@@ -2,7 +2,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { toast } from 'sonner';
 import * as userApi from '@/lib/api/admin/users';
-import type { UserDTO, UsersResponse, UpdateUserRequest, Role } from '@/lib/api/admin/users';
+import type { UserDTO, UsersResponse, UpdateUserRequest } from '@/types/user';
+import type { Role } from '@/types/enums';
 import { OrderDTO } from '@/types/order';
 
 // Re-export types

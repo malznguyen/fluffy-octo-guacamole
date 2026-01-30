@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import { Package, ChevronRight, Loader2 } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth-store';
 import { getOrders, cancelOrder } from '@/lib/api/order';
-import type { OrderDTO, OrderItemDTO } from '@/lib/api/order';
+import type { OrderDTO, OrderItemDTO } from '@/types/order';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 

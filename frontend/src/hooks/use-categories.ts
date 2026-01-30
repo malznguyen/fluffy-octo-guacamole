@@ -2,7 +2,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { AxiosError } from 'axios';
 import * as categoryApi from '@/lib/api/admin/categories';
-import type { CategoryDTO, CreateCategoryRequest, UpdateCategoryRequest } from '@/lib/api/admin/categories';
+import type { CategoryDTO } from '@/types/product';
+import type { CreateCategoryRequest, UpdateCategoryRequest } from '@/types/category';
 
 // Interface cho error response từ API
 interface ApiErrorResponse {

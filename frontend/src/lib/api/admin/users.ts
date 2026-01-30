@@ -2,11 +2,9 @@
 
 import apiClient from '../client';
 import { ApiResponse, PaginatedResponse } from '@/types/product';
-import { UserDTO, UpdateUserRequest } from '@/types/user';
-import { Role } from '@/types/enums';
-import { OrderDTO } from '@/types/order';
-
-export type { UserDTO, UpdateUserRequest, Role };
+import type { UserDTO, UpdateUserRequest } from '@/types/user';
+import type { Role } from '@/types/enums';
+import type { OrderDTO } from '@/types/order';
 
 export interface AdminUsersParams {
   page?: number;
