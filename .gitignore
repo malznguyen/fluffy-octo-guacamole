@@ -31,7 +31,6 @@ Thumbs.db
 
 # Excluded directories
 .kilocode/
-docs/
 .agent/
 
 # Database (local only)

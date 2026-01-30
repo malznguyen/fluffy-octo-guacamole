@@ -1,27 +1,16 @@
 import type { Metadata } from "next";
-import { Be_Vietnam_Pro, Playfair_Display } from "next/font/google";
-import { QueryProvider } from "@/components/QueryProvider";
-import { ConditionalLayout } from "@/components/layout/ConditionalLayout";
-import { Toaster } from "sonner";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-const beVietnamPro = Be_Vietnam_Pro({
-  variable: "--font-be-vietnam-pro",
+const inter = Inter({
   subsets: ["latin", "vietnamese"],
-  weight: ["300", "400", "500", "600", "700"],
-  display: "swap",
-});
-
-const playfairDisplay = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-inter",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "FASH.ON - Thoi Trang Cao Cap",
-  description: "Kham pha bo suu tap thoi trang moi nhat tai FASH.ON. Phong cach hien dai, chat luong cao cap.",
+  title: "FASH.ON - Thời trang cao cấp",
+  description: "Thời trang cao cấp cho phong cách của bạn. Khám phá những thiết kế mới nhất với chất liệu cao cấp và phong cách hiện đại.",
 };
 
 export default function RootLayout({
@@ -31,15 +20,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi">
-      <body
-        className={`${beVietnamPro.variable} ${playfairDisplay.variable} font-sans antialiased`}
-      >
-        <QueryProvider>
-          <ConditionalLayout>
-            {children}
-          </ConditionalLayout>
-        </QueryProvider>
-        <Toaster position="top-center" richColors />
+      <body className={`${inter.variable} font-sans antialiased`}>
+        {children}
       </body>
     </html>
   );
