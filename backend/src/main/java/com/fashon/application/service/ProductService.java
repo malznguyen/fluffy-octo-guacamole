@@ -5,10 +5,7 @@ import com.fashon.domain.entity.Category;
 import com.fashon.domain.entity.Product;
 import com.fashon.domain.entity.ProductImage;
 import com.fashon.domain.entity.ProductVariant;
-import com.fashon.infrastructure.repository.CategoryRepository;
-import com.fashon.infrastructure.repository.ProductImageRepository;
-import com.fashon.infrastructure.repository.ProductRepository;
-import com.fashon.infrastructure.repository.ProductVariantRepository;
+import com.fashon.infrastructure.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +25,7 @@ public class ProductService {
     private final CategoryRepository categoryRepository;
     private final ProductVariantRepository productVariantRepository;
     private final ProductImageRepository productImageRepository;
+    private final ReviewRepository reviewRepository;
 
     @Transactional
     public ProductDTO createProduct(CreateProductRequest request) {
@@ -330,6 +328,10 @@ public class ProductService {
                 .map(this::mapVariantToDTO)
                 .collect(Collectors.toList()) : new ArrayList<>();
 
+        // Lấy thông tin rating
+        Double averageRating = reviewRepository.calculateAverageRating(product.getId());
+        Long reviewCount = reviewRepository.countByProductId(product.getId());
+
         return ProductDTO.builder()
                 .id(product.getId())
                 .name(product.getName())
@@ -344,6 +346,8 @@ public class ProductService {
                 .updatedAt(product.getUpdatedAt())
                 .images(imageDTOs)
                 .variants(variantDTOs)
+                .averageRating(averageRating != null ? averageRating : 0.0)
+                .reviewCount(reviewCount != null ? reviewCount : 0L)
                 .build();
     }
 
@@ -371,6 +375,10 @@ public class ProductService {
                 .map(this::mapVariantToDTO)
                 .collect(Collectors.toList()) : new ArrayList<>();
 
+        // Lấy thông tin rating
+        Double averageRating = reviewRepository.calculateAverageRating(product.getId());
+        Long reviewCount = reviewRepository.countByProductId(product.getId());
+
         ProductDTO dto = ProductDTO.builder()
                 .id(product.getId())
                 .name(product.getName())
@@ -382,6 +390,8 @@ public class ProductService {
                 .soldCount(product.getSoldCount())
                 .createdAt(product.getCreatedAt())
                 .variants(variantDTOs)
+                .averageRating(averageRating != null ? averageRating : 0.0)
+                .reviewCount(reviewCount != null ? reviewCount : 0L)
                 .build();
 
         if (primaryImageUrl != null) {

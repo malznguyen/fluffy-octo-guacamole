@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Heart } from 'lucide-react';
+import { Heart, Star } from 'lucide-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ProductDTO } from '@/types/product';
@@ -103,6 +103,25 @@ export default function ProductCard({ product, showNewBadge = false, showHotBadg
           <h3 className="text-sm font-medium text-neutral-900 uppercase truncate">
             {product.name}
           </h3>
+          
+          {/* Rating */}
+          {product.reviewCount && product.reviewCount > 0 ? (
+            <div className="flex items-center gap-1 mt-1">
+              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+              <span className="text-xs text-neutral-600">
+                {product.averageRating?.toFixed(1) || '0.0'}
+              </span>
+              <span className="text-xs text-neutral-400">
+                ({product.reviewCount})
+              </span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1 mt-1">
+              <Star className="w-3.5 h-3.5 text-neutral-300" />
+              <span className="text-xs text-neutral-400">Chưa có đánh giá</span>
+            </div>
+          )}
+          
           <p className="text-base font-bold text-neutral-900 mt-1">
             {formatPrice(price)}
           </p>

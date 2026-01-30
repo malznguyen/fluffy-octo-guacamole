@@ -66,6 +66,9 @@ export interface ProductDTO {
   updatedAt: string;
   images: ProductImageDTO[];
   variants: ProductVariantDTO[];
+  // Rating fields
+  averageRating?: number;
+  reviewCount?: number;
 }
 
 // Create Product Request

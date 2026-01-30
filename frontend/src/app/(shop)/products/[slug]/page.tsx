@@ -8,7 +8,6 @@ import { toast } from 'sonner';
 import {
   ChevronLeft,
   ChevronRight,
-  Star,
   ShoppingBag,
   Truck,
   Shield,
@@ -26,13 +25,8 @@ import { useCartStore } from '@/stores/cart-store';
 import { useWishlistStore } from '@/stores/wishlist-store';
 import { useAuthStore } from '@/stores/auth-store';
 import ProductCard from '@/components/product/ProductCard';
-
-// Mock reviews data
-const mockReviews = [
-  { id: 1, userName: 'Nguyễn Văn A', rating: 5, date: '2026-01-15', content: 'Sản phẩm rất đẹp, chất lượng tốt, giao hàng nhanh!', avatar: 'NA' },
-  { id: 2, userName: 'Trần Thị B', rating: 4, date: '2026-01-10', content: 'Đúng như mô tả, size vừa vặn. Sẽ mua thêm lần sau.', avatar: 'TB' },
-  { id: 3, userName: 'Lê Văn C', rating: 5, date: '2026-01-05', content: 'Chất liệu cao cấp, đáng đồng tiền bát gạo.', avatar: 'LC' },
-];
+import { ProductReviewsSection } from '@/components/product/reviews';
+import { StarRating } from '@/components/product/reviews/star-rating';
 
 // Get image URL with base URL
 const getImageUrl = (imagePath: string): string => {
@@ -70,9 +64,7 @@ export default function ProductDetailPage() {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedVariant, setSelectedVariant] = useState<ProductVariantDTO | null>(null);
   const [quantity, setQuantity] = useState(1);
-  const [activeTab, setActiveTab] = useState<'description' | 'details'>('description');
-  const [reviewRating, setReviewRating] = useState(0);
-  const [reviewContent, setReviewContent] = useState('');
+  const [activeTab, setActiveTab] = useState<'description' | 'details' | 'reviews'>('description');
   // Auth store
   const { isAuthenticated } = useAuthStore();
   
@@ -300,18 +292,7 @@ export default function ProductDetailPage() {
     }
   };
 
-  // Handle review submit
-  const handleReviewSubmit = () => {
-    alert('Cảm ơn bạn đã đánh giá! Tính năng đang được phát triển.');
-    setReviewRating(0);
-    setReviewContent('');
-  };
 
-  // Calculate average rating
-  const averageRating = useMemo(() => {
-    const total = mockReviews.reduce((sum, r) => sum + r.rating, 0);
-    return (total / mockReviews.length).toFixed(1);
-  }, []);
 
   // Get current price
   const currentPrice = selectedVariant?.finalPrice || product?.basePrice || 0;
@@ -685,7 +666,7 @@ export default function ProductDetailPage() {
         </div>
       </section>
 
-      {/* Product Description Tabs */}
+      {/* Product Description & Reviews Tabs */}
       <section className="py-12 bg-neutral-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Tabs */}
@@ -714,16 +695,30 @@ export default function ProductDetailPage() {
                 <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-neutral-900" />
               )}
             </button>
+            <button
+              onClick={() => setActiveTab('reviews')}
+              className={`pb-4 text-sm font-bold uppercase tracking-wider transition-colors relative ${activeTab === 'reviews'
+                ? 'text-neutral-900'
+                : 'text-neutral-500 hover:text-neutral-900'
+                }`}
+            >
+              Đánh giá ({product.reviewCount || 0})
+              {activeTab === 'reviews' && (
+                <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-neutral-900" />
+              )}
+            </button>
           </div>
 
           {/* Tab Content */}
-          {activeTab === 'description' ? (
+          {activeTab === 'description' && (
             <div className="prose max-w-none">
               <p className="text-neutral-700 leading-relaxed whitespace-pre-line">
                 {product.description}
               </p>
             </div>
-          ) : (
+          )}
+
+          {activeTab === 'details' && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-4">
                 <div className="flex justify-between py-3 border-b border-neutral-200">
@@ -752,116 +747,24 @@ export default function ProductDetailPage() {
                   <span className="text-neutral-600">Đã bán</span>
                   <span className="font-medium">{product.soldCount} sản phẩm</span>
                 </div>
+                {(product.averageRating || 0) > 0 && (
+                  <div className="flex justify-between py-3 border-b border-neutral-200">
+                    <span className="text-neutral-600">Đánh giá</span>
+                    <div className="flex items-center gap-2">
+                      <StarRating rating={product.averageRating || 0} size="sm" />
+                      <span className="text-sm text-neutral-600">
+                        ({product.reviewCount || 0} đánh giá)
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
-        </div>
-      </section>
 
-      {/* Reviews Section */}
-      <section className="py-12 border-t border-neutral-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl font-bold uppercase tracking-tight text-neutral-900">
-              Đánh giá sản phẩm
-            </h2>
-            <span className="text-neutral-600">({mockReviews.length} đánh giá)</span>
-          </div>
-
-          {/* Rating Summary */}
-          <div className="flex items-center gap-4 mb-8 pb-8 border-b border-neutral-200">
-            <span className="text-5xl font-black text-neutral-900">{averageRating}</span>
-            <div>
-              <div className="flex gap-1">
-                {[1, 2, 3, 4, 5].map(star => (
-                  <Star
-                    key={star}
-                    className={`w-5 h-5 ${star <= Math.round(parseFloat(averageRating))
-                      ? 'fill-yellow-400 text-yellow-400'
-                      : 'text-neutral-300'
-                      }`}
-                  />
-                ))}
-              </div>
-              <p className="text-sm text-neutral-600 mt-1">Dựa trên {mockReviews.length} đánh giá</p>
-            </div>
-          </div>
-
-          {/* Review List */}
-          <div className="space-y-6 mb-12">
-            {mockReviews.map(review => (
-              <div key={review.id} className="flex gap-4 pb-6 border-b border-neutral-200 last:border-0">
-                <div className="w-12 h-12 rounded-full bg-neutral-200 flex items-center justify-center flex-shrink-0">
-                  <span className="text-sm font-bold text-neutral-600">{review.avatar}</span>
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="font-bold text-neutral-900">{review.userName}</span>
-                    <span className="text-xs text-neutral-500">{review.date}</span>
-                  </div>
-                  <div className="flex gap-1 mb-2">
-                    {[1, 2, 3, 4, 5].map(star => (
-                      <Star
-                        key={star}
-                        className={`w-4 h-4 ${star <= review.rating
-                          ? 'fill-yellow-400 text-yellow-400'
-                          : 'text-neutral-300'
-                          }`}
-                      />
-                    ))}
-                  </div>
-                  <p className="text-neutral-700">{review.content}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Review Form */}
-          <div className="bg-neutral-50 p-8">
-            <h3 className="text-lg font-bold uppercase tracking-wider mb-6">Viết đánh giá</h3>
-
-            {/* Star Rating Input */}
-            <div className="mb-6">
-              <label className="text-sm text-neutral-600 mb-2 block">Đánh giá của bạn</label>
-              <div className="flex gap-2">
-                {[1, 2, 3, 4, 5].map(star => (
-                  <button
-                    key={star}
-                    onClick={() => setReviewRating(star)}
-                    onMouseEnter={() => setReviewRating(star)}
-                    className="transition-colors"
-                  >
-                    <Star
-                      className={`w-6 h-6 ${star <= reviewRating
-                        ? 'fill-yellow-400 text-yellow-400'
-                        : 'text-neutral-300'
-                        }`}
-                    />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Review Content */}
-            <div className="mb-6">
-              <label className="text-sm text-neutral-600 mb-2 block">Nội dung đánh giá</label>
-              <textarea
-                value={reviewContent}
-                onChange={(e) => setReviewContent(e.target.value)}
-                rows={4}
-                className="w-full px-4 py-3 border border-neutral-300 focus:border-neutral-900 focus:outline-none transition-colors"
-                placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm..."
-              />
-            </div>
-
-            <button
-              onClick={handleReviewSubmit}
-              className="px-8 py-3 bg-neutral-900 text-white font-bold uppercase tracking-wider hover:bg-neutral-800 transition-colors"
-            >
-              Gửi đánh giá
-            </button>
-          </div>
+          {activeTab === 'reviews' && (
+            <ProductReviewsSection productId={product.id} />
+          )}
         </div>
       </section>
 

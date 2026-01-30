@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -34,8 +33,8 @@ public class WishlistController {
     // Lấy danh sách wishlist của user
     @GetMapping
     @Operation(summary = "Get user wishlist", description = "Get all products in user's wishlist")
-    public ResponseEntity<Map<String, Object>> getWishlist(@AuthenticationPrincipal UserDetails userDetails) {
-        Long userId = getUserIdFromToken(userDetails);
+    public ResponseEntity<Map<String, Object>> getWishlist(@AuthenticationPrincipal String email) {
+        Long userId = getUserIdFromEmail(email);
         List<ProductDTO> products = wishlistService.getUserWishlist(userId);
         
         Map<String, Object> response = new HashMap<>();
@@ -50,10 +49,10 @@ public class WishlistController {
     @PostMapping
     @Operation(summary = "Add to wishlist", description = "Add a product to user's wishlist")
     public ResponseEntity<Map<String, Object>> addToWishlist(
-            @AuthenticationPrincipal UserDetails userDetails,
+            @AuthenticationPrincipal String email,
             @RequestBody Map<String, Long> request) {
         
-        Long userId = getUserIdFromToken(userDetails);
+        Long userId = getUserIdFromEmail(email);
         Long productId = request.get("productId");
         
         if (productId == null) {
@@ -77,10 +76,10 @@ public class WishlistController {
     @DeleteMapping("/{productId}")
     @Operation(summary = "Remove from wishlist", description = "Remove a product from user's wishlist")
     public ResponseEntity<Map<String, Object>> removeFromWishlist(
-            @AuthenticationPrincipal UserDetails userDetails,
+            @AuthenticationPrincipal String email,
             @PathVariable Long productId) {
         
-        Long userId = getUserIdFromToken(userDetails);
+        Long userId = getUserIdFromEmail(email);
         wishlistService.removeFromWishlist(userId, productId);
         
         Map<String, Object> response = new HashMap<>();
@@ -94,10 +93,10 @@ public class WishlistController {
     @GetMapping("/check/{productId}")
     @Operation(summary = "Check wishlist status", description = "Check if a product is in user's wishlist")
     public ResponseEntity<Map<String, Object>> checkWishlistStatus(
-            @AuthenticationPrincipal UserDetails userDetails,
+            @AuthenticationPrincipal String email,
             @PathVariable Long productId) {
         
-        Long userId = getUserIdFromToken(userDetails);
+        Long userId = getUserIdFromEmail(email);
         boolean isInWishlist = wishlistService.isInWishlist(userId, productId);
         long count = wishlistService.getWishlistCount(userId);
         
@@ -113,9 +112,9 @@ public class WishlistController {
     @GetMapping("/count")
     @Operation(summary = "Get wishlist count", description = "Get total number of items in wishlist")
     public ResponseEntity<Map<String, Object>> getWishlistCount(
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal String email) {
         
-        Long userId = getUserIdFromToken(userDetails);
+        Long userId = getUserIdFromEmail(email);
         long count = wishlistService.getWishlistCount(userId);
         
         Map<String, Object> response = new HashMap<>();
@@ -125,12 +124,11 @@ public class WishlistController {
         return ResponseEntity.ok(response);
     }
 
-    // Helper method để lấy userId từ token (username là email)
-    private Long getUserIdFromToken(UserDetails userDetails) {
-        if (userDetails == null) {
+    // Helper method để lấy userId từ email (principal là email string)
+    private Long getUserIdFromEmail(String email) {
+        if (email == null || email.isEmpty()) {
             throw new RuntimeException("Unauthorized - Please login");
         }
-        String email = userDetails.getUsername();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return user.getId();

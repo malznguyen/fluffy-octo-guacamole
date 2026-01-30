@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -57,4 +58,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT o FROM Order o WHERE (:status IS NULL OR o.status = :status) AND (:userId IS NULL OR o.user.id = :userId)")
     Page<Order> findOrdersForAdmin(@Param("status") OrderStatus status, @Param("userId") Long userId,
             Pageable pageable);
+
+    // Lấy tất cả orders của user (không pagination) để check purchase history
+    @Query("SELECT DISTINCT o FROM Order o LEFT JOIN FETCH o.items WHERE o.user.id = :userId AND o.deletedAt IS NULL")
+    List<Order> findAllByUserId(@Param("userId") Long userId);
 }

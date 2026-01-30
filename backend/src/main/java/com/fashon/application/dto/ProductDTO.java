@@ -28,4 +28,8 @@ public class ProductDTO {
     private LocalDateTime updatedAt;
     private List<ProductImageDTO> images = new ArrayList<>();
     private List<ProductVariantDTO> variants = new ArrayList<>();
+    
+    // Rating fields
+    private Double averageRating;
+    private Long reviewCount;
 }
