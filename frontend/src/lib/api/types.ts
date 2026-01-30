@@ -45,6 +45,8 @@ export interface ProductVariantDTO {
   size?: string;
   color?: string;
   stockQuantity: number;
+  finalPrice: number;
+  isAvailable: boolean;
 }
 
 // Cart Types
@@ -92,12 +94,18 @@ export interface RegisterRequest {
   email: string;
   password: string;
   fullName?: string;
+  phone?: string;
 }
 
-export interface AuthResponse {
+export interface AuthPayload {
+  id: number;
+  email: string;
+  fullName?: string;
+  role: string;
   token: string;
-  user: UserResponse;
 }
+
+export type AuthResponse = AuthPayload;
 
 // Pagination Types
 export interface PageResponse<T> {

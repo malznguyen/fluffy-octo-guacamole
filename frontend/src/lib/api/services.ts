@@ -64,7 +64,7 @@ export const authApi = {
     apiClient.post<AuthResponse>('/auth/register', request),
 
   getProfile: (): Promise<UserResponse> =>
-    apiClient.get<UserResponse>('/users/profile'),
+    apiClient.get<UserResponse>('/users/me'),
 
   updateProfile: (data: Partial<UserResponse>): Promise<UserResponse> =>
     apiClient.put<UserResponse>('/users/profile', data),

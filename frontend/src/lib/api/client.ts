@@ -18,7 +18,9 @@ class ApiClient {
     // Request interceptor
     this.client.interceptors.request.use(
       (config) => {
-        const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+        const token = typeof window !== 'undefined'
+          ? localStorage.getItem('accessToken')
+          : null;
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
@@ -32,7 +34,8 @@ class ApiClient {
       (response) => response,
       (error: AxiosError<ApiResponse<unknown>>) => {
         if (error.response?.status === 401) {
-          localStorage.removeItem('token');
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('auth-storage');
           if (typeof window !== 'undefined') {
             window.location.href = '/login';
           }
