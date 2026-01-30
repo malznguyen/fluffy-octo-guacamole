@@ -18,21 +18,42 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Optional<Order> findByOrderCodeAndUserId(String orderCode, Long userId);
 
+    @Query(value = "SELECT DISTINCT o FROM Order o LEFT JOIN FETCH o.items LEFT JOIN FETCH o.user WHERE o.user.id = :userId AND o.deletedAt IS NULL",
+           countQuery = "SELECT COUNT(o) FROM Order o WHERE o.user.id = :userId AND o.deletedAt IS NULL")
+    Page<Order> findByUserIdWithItems(@Param("userId") Long userId, Pageable pageable);
+
+    // Deprecated: use findAllWithItems to avoid N+1 query
     Page<Order> findByUserId(Long userId, Pageable pageable);
 
+    @Query(value = "SELECT DISTINCT o FROM Order o LEFT JOIN FETCH o.items LEFT JOIN FETCH o.user WHERE o.deletedAt IS NULL",
+           countQuery = "SELECT COUNT(o) FROM Order o WHERE o.deletedAt IS NULL")
+    Page<Order> findAllWithItems(Pageable pageable);
+
+    // Deprecated: use findAllWithItems to avoid N+1 query
     Page<Order> findAll(Pageable pageable);
 
+    @Query(value = "SELECT DISTINCT o FROM Order o LEFT JOIN FETCH o.items LEFT JOIN FETCH o.user WHERE o.status = :status AND o.deletedAt IS NULL",
+           countQuery = "SELECT COUNT(o) FROM Order o WHERE o.status = :status AND o.deletedAt IS NULL")
+    Page<Order> findByStatusWithItems(@Param("status") OrderStatus status, Pageable pageable);
+
+    // Deprecated: use findByStatusWithItems to avoid N+1 query
     Page<Order> findByStatus(OrderStatus status, Pageable pageable);
 
     boolean existsByOrderCode(String orderCode);
 
-    @Query("SELECT o FROM Order o LEFT JOIN FETCH o.items WHERE o.orderCode = :orderCode")
+    @Query("SELECT o FROM Order o LEFT JOIN FETCH o.items LEFT JOIN FETCH o.user WHERE o.orderCode = :orderCode")
     Optional<Order> findByOrderCodeWithItems(@Param("orderCode") String orderCode);
 
     @Query("SELECT o FROM Order o LEFT JOIN FETCH o.items WHERE o.orderCode = :orderCode AND o.user.id = :userId")
     Optional<Order> findByOrderCodeAndUserIdWithItems(@Param("orderCode") String orderCode,
             @Param("userId") Long userId);
 
+    @Query(value = "SELECT DISTINCT o FROM Order o LEFT JOIN FETCH o.items LEFT JOIN FETCH o.user WHERE (:status IS NULL OR o.status = :status) AND (:userId IS NULL OR o.user.id = :userId) AND o.deletedAt IS NULL",
+           countQuery = "SELECT COUNT(o) FROM Order o WHERE (:status IS NULL OR o.status = :status) AND (:userId IS NULL OR o.user.id = :userId) AND o.deletedAt IS NULL")
+    Page<Order> findOrdersForAdminWithItems(@Param("status") OrderStatus status, @Param("userId") Long userId,
+            Pageable pageable);
+
+    // Deprecated: use findOrdersForAdminWithItems to avoid N+1 query
     @Query("SELECT o FROM Order o WHERE (:status IS NULL OR o.status = :status) AND (:userId IS NULL OR o.user.id = :userId)")
     Page<Order> findOrdersForAdmin(@Param("status") OrderStatus status, @Param("userId") Long userId,
             Pageable pageable);

@@ -116,25 +116,29 @@ public class OrderService {
     @Transactional(readOnly = true)
     public Page<OrderDTO> getMyOrders(String userEmail, Pageable pageable) {
         User user = getUserByEmail(userEmail);
-        return orderRepository.findByUserId(user.getId(), pageable)
+        // Sử dụng findByUserIdWithItems để tránh N+1 query problem (B-MED-001)
+        return orderRepository.findByUserIdWithItems(user.getId(), pageable)
                 .map(this::mapToOrderDTO);
     }
 
     @Transactional(readOnly = true)
     public Page<OrderDTO> getAllOrders(Pageable pageable) {
-        return orderRepository.findAll(pageable)
+        // Sử dụng findAllWithItems để tránh N+1 query problem (B-MED-001)
+        return orderRepository.findAllWithItems(pageable)
                 .map(this::mapToOrderDTO);
     }
 
     @Transactional(readOnly = true)
     public Page<OrderDTO> getOrdersByStatus(OrderStatus status, Pageable pageable) {
-        return orderRepository.findByStatus(status, pageable)
+        // Sử dụng findByStatusWithItems để tránh N+1 query problem (B-MED-001)
+        return orderRepository.findByStatusWithItems(status, pageable)
                 .map(this::mapToOrderDTO);
     }
 
     @Transactional(readOnly = true)
     public Page<OrderDTO> getAllOrdersForAdmin(Pageable pageable, OrderStatus status, Long userId) {
-        return orderRepository.findOrdersForAdmin(status, userId, pageable)
+        // Sử dụng findOrdersForAdminWithItems để tránh N+1 query problem (B-MED-001)
+        return orderRepository.findOrdersForAdminWithItems(status, userId, pageable)
                 .map(this::mapToOrderDTO);
     }
 
