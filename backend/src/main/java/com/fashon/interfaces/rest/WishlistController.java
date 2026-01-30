@@ -127,6 +127,9 @@ public class WishlistController {
 
     // Helper method để lấy userId từ token (username là email)
     private Long getUserIdFromToken(UserDetails userDetails) {
+        if (userDetails == null) {
+            throw new RuntimeException("Unauthorized - Please login");
+        }
         String email = userDetails.getUsername();
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
