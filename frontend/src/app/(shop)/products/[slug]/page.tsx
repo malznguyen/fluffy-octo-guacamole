@@ -23,6 +23,8 @@ import { fetchProductBySlug, fetchAllProducts } from '@/lib/api';
 import { ProductDTO, ProductVariantDTO, ProductImageDTO } from '@/types/product';
 import { formatPrice } from '@/lib/utils';
 import { useCartStore } from '@/stores/cart-store';
+import { useWishlistStore } from '@/stores/wishlist-store';
+import { useAuthStore } from '@/stores/auth-store';
 import ProductCard from '@/components/product/ProductCard';
 
 // Mock reviews data
@@ -71,9 +73,14 @@ export default function ProductDetailPage() {
   const [activeTab, setActiveTab] = useState<'description' | 'details'>('description');
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewContent, setReviewContent] = useState('');
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  // Auth store
+  const { isAuthenticated } = useAuthStore();
+  
+  // Wishlist store
+  const { isInWishlist, toggleWishlist, fetchWishlist } = useWishlistStore();
+  const [isWishlistLoading, setIsWishlistLoading] = useState(false);
 
-  // Fetch product data
+  // Fetch product data and wishlist
   useEffect(() => {
     const loadProduct = async () => {
       setLoading(true);
@@ -109,6 +116,13 @@ export default function ProductDetailPage() {
       loadProduct();
     }
   }, [slug]);
+
+  // Fetch wishlist when authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchWishlist();
+    }
+  }, [isAuthenticated, fetchWishlist]);
 
   // Sort images by sortOrder
   const sortedImages = useMemo(() => {
@@ -245,6 +259,31 @@ export default function ProductDetailPage() {
       } else {
         toast.error(message);
       }
+    }
+  };
+
+  // Handle wishlist toggle
+  const handleWishlistToggle = async () => {
+    if (!isAuthenticated) {
+      toast.error('Vui lòng đăng nhập để thêm vào yêu thích');
+      router.push('/login?redirect=/products/' + slug);
+      return;
+    }
+
+    if (!product) return;
+
+    setIsWishlistLoading(true);
+    try {
+      await toggleWishlist(product.id);
+      if (isInWishlist(product.id)) {
+        toast.success('Đã xóa khỏi danh sách yêu thích');
+      } else {
+        toast.success('Đã thêm vào danh sách yêu thích');
+      }
+    } catch (error) {
+      toast.error('Có lỗi xảy ra, vui lòng thử lại');
+    } finally {
+      setIsWishlistLoading(false);
     }
   };
 
@@ -617,12 +656,20 @@ export default function ProductDetailPage() {
                 {/* Wishlist/Share */}
                 <div className="flex gap-4">
                   <button
-                    onClick={() => setIsWishlisted(!isWishlisted)}
-                    className={`flex items-center gap-2 text-sm transition-colors ${isWishlisted ? 'text-red-600' : 'text-neutral-600 hover:text-neutral-900'
-                      }`}
+                    onClick={handleWishlistToggle}
+                    disabled={isWishlistLoading}
+                    className={`flex items-center gap-2 text-sm transition-colors ${
+                      product && isInWishlist(product.id) 
+                        ? 'text-red-600' 
+                        : 'text-neutral-600 hover:text-neutral-900'
+                    } disabled:opacity-50`}
                   >
-                    <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-current' : ''}`} />
-                    Yêu thích
+                    <Heart 
+                      className={`w-5 h-5 transition-transform ${
+                        product && isInWishlist(product.id) ? 'fill-current' : ''
+                      } ${isWishlistLoading ? 'animate-pulse' : ''}`} 
+                    />
+                    {product && isInWishlist(product.id) ? 'Đã yêu thích' : 'Yêu thích'}
                   </button>
                   <button
                     onClick={handleShare}
