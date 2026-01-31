@@ -1,0 +1,20 @@
+Fash.On - Test Accounts
+=======================
+
+Admin Account
+-------------
+Email: admin@fashon.vn
+Password: 123456
+Role: ADMIN
+
+Customer Accounts
+-----------------
+1. Nguyễn Văn A
+   Email: nguyenvana@gmail.com
+   Password: 123456
+   Role: CUSTOMER
+
+2. Trần Thị B
+   Email: tranthib@gmail.com
+   Password: 123456
+   Role: CUSTOMER
