@@ -64,7 +64,7 @@ function CategoryRow({ category, level, onEdit, onDelete, isTree }: TreeRowProps
 
     return (
         <>
-            <TableRow className="group hover:bg-slate-50">
+            <TableRow className="group hover:bg-neutral-50">
                 {/* Name + Slug */}
                 <TableCell>
                     <div
@@ -74,7 +74,7 @@ function CategoryRow({ category, level, onEdit, onDelete, isTree }: TreeRowProps
                         {isTree && hasChildren ? (
                             <button
                                 onClick={toggleExpand}
-                                className="p-0.5 hover:bg-slate-200 rounded text-slate-500 transition-colors"
+                                className="p-0.5 hover:bg-neutral-200 rounded text-neutral-500 transition-colors"
                             >
                                 {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
                             </button>
@@ -84,16 +84,16 @@ function CategoryRow({ category, level, onEdit, onDelete, isTree }: TreeRowProps
                         ) : null}
 
                         {isTree && level > 0 && !hasChildren && (
-                            <CornerDownRight className="w-4 h-4 text-slate-300 -ml-1" />
+                            <CornerDownRight className="w-4 h-4 text-neutral-300 -ml-1" />
                         )}
 
-                        <Folder className={cn("w-4 h-4 text-slate-400", isTree && level > 0 && "text-slate-300")} />
+                        <Folder className={cn("w-4 h-4 text-neutral-400", isTree && level > 0 && "text-neutral-300")} />
 
                         <div>
-                            <div className="font-medium text-slate-900">
+                            <div className="font-medium text-neutral-900">
                                 {category.name}
                             </div>
-                            <div className="text-xs text-slate-500 font-mono">
+                            <div className="text-xs text-neutral-500 font-mono">
                                 {category.slug}
                             </div>
                         </div>
@@ -108,17 +108,17 @@ function CategoryRow({ category, level, onEdit, onDelete, isTree }: TreeRowProps
                 */}
                 <TableCell>
                     {category.parentName ? (
-                        <span className="inline-flex items-center px-2 py-1 rounded bg-slate-100 text-slate-600 text-xs font-medium">
+                        <span className="inline-flex items-center px-2 py-1 rounded bg-neutral-100 text-neutral-600 text-xs font-medium">
                             {category.parentName}
                         </span>
                     ) : (
-                        <span className="text-slate-400 text-sm italic">--</span>
+                        <span className="text-neutral-400 text-sm italic">--</span>
                     )}
                 </TableCell>
 
                 {/* Sort Order */}
                 <TableCell className="text-center">
-                    <span className="font-mono text-slate-600">
+                    <span className="font-mono text-neutral-600">
                         {category.sortOrder}
                     </span>
                 </TableCell>
@@ -130,7 +130,7 @@ function CategoryRow({ category, level, onEdit, onDelete, isTree }: TreeRowProps
                         className={
                             category.isActive
                                 ? 'bg-green-100 text-green-800 hover:bg-green-200 border-green-200'
-                                : 'bg-slate-100 text-slate-600 hover:bg-slate-200 border-slate-200'
+                                : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200 border-neutral-200'
                         }
                     >
                         {category.isActive ? 'Đang hoạt động' : 'Tạm ẩn'}
@@ -139,7 +139,7 @@ function CategoryRow({ category, level, onEdit, onDelete, isTree }: TreeRowProps
 
                 {/* Description */}
                 <TableCell>
-                    <div className="max-w-[200px] truncate text-slate-600 text-sm" title={category.description || ''}>
+                    <div className="max-w-[200px] truncate text-neutral-600 text-sm" title={category.description || ''}>
                         {category.description || '--'}
                     </div>
                 </TableCell>
@@ -209,7 +209,7 @@ export function CategoryTable({
 
     const SortIcon = ({ field }: { field: SortField }) => {
         if (sortField !== field) {
-            return <ArrowUpDown className="w-4 h-4 text-slate-400" />;
+            return <ArrowUpDown className="w-4 h-4 text-neutral-400" />;
         }
         return sortOrder === 'asc' ? (
             <ArrowUp className="w-4 h-4 text-blue-500" />
@@ -219,24 +219,24 @@ export function CategoryTable({
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden">
             <div className="overflow-x-auto">
                 <Table>
                     <TableHeader>
-                        <TableRow className="bg-slate-50">
+                        <TableRow className="bg-neutral-50">
                             <TableHead
-                                className="cursor-pointer hover:bg-slate-100 w-[30%]"
+                                className="cursor-pointer hover:bg-neutral-100 w-[30%]"
                                 onClick={() => onSort('name')}
                             >
                                 <div className="flex items-center gap-1">
                                     Tên danh mục
                                     {!isTree && <SortIcon field="name" />}
-                                    {isTree && <span className="text-xs font-normal text-slate-400 ml-1">(Phân cấp)</span>}
+                                    {isTree && <span className="text-xs font-normal text-neutral-400 ml-1">(Phân cấp)</span>}
                                 </div>
                             </TableHead>
                             <TableHead className="w-[20%]">Danh mục cha</TableHead>
                             <TableHead
-                                className="cursor-pointer hover:bg-slate-100 text-center w-[15%]"
+                                className="cursor-pointer hover:bg-neutral-100 text-center w-[15%]"
                                 onClick={() => onSort('sortOrder')}
                             >
                                 <div className="flex items-center justify-center gap-1">
@@ -245,7 +245,7 @@ export function CategoryTable({
                                 </div>
                             </TableHead>
                             <TableHead
-                                className="cursor-pointer hover:bg-slate-100 w-[15%]"
+                                className="cursor-pointer hover:bg-neutral-100 w-[15%]"
                                 onClick={() => onSort('isActive')}
                             >
                                 <div className="flex items-center gap-1">
@@ -264,7 +264,7 @@ export function CategoryTable({
                                 <TableRow key={i}>
                                     {Array.from({ length: 6 }).map((_, j) => (
                                         <TableCell key={j}>
-                                            <div className="h-4 bg-slate-200 rounded animate-pulse" />
+                                            <div className="h-4 bg-neutral-200 rounded animate-pulse" />
                                         </TableCell>
                                     ))}
                                 </TableRow>
@@ -272,11 +272,11 @@ export function CategoryTable({
                         ) : categories.length === 0 ? (
                             <TableRow>
                                 <TableCell colSpan={6} className="py-16 text-center">
-                                    <Folder className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                                    <h3 className="text-lg font-semibold text-slate-700 mb-2">
+                                    <Folder className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
+                                    <h3 className="text-lg font-semibold text-neutral-700 mb-2">
                                         Chưa có danh mục nào
                                     </h3>
-                                    <p className="text-slate-500">
+                                    <p className="text-neutral-500">
                                         {isTree ? "Chưa có danh mục gốc" : "Không tìm thấy danh mục phù hợp"}
                                     </p>
                                 </TableCell>

@@ -103,7 +103,7 @@ export function StatusUpdateDialog({
                 <DialogHeader>
                     <DialogTitle>Cập nhật trạng thái</DialogTitle>
                     <DialogDescription>
-                        Thay đổi trạng thái cho đơn hàng <span className="font-mono font-bold text-slate-900">{order.orderCode}</span>
+                        Thay đổi trạng thái cho đơn hàng <span className="font-mono font-bold text-neutral-900">{order.orderCode}</span>
                     </DialogDescription>
                 </DialogHeader>
 
@@ -112,7 +112,7 @@ export function StatusUpdateDialog({
                         <Label htmlFor="current-status" className="text-right">
                             Hiện tại
                         </Label>
-                        <div className="col-span-3 font-medium text-slate-700">
+                        <div className="col-span-3 font-medium text-neutral-700">
                             {STATUS_LABELS[currentStatus]}
                         </div>
                     </div>

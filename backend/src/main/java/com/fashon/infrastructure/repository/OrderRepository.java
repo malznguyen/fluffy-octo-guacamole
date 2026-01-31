@@ -49,10 +49,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Optional<Order> findByOrderCodeAndUserIdWithItems(@Param("orderCode") String orderCode,
             @Param("userId") Long userId);
 
-    @Query(value = "SELECT DISTINCT o FROM Order o LEFT JOIN FETCH o.items LEFT JOIN FETCH o.user WHERE (:status IS NULL OR o.status = :status) AND (:userId IS NULL OR o.user.id = :userId) AND o.deletedAt IS NULL",
-           countQuery = "SELECT COUNT(o) FROM Order o WHERE (:status IS NULL OR o.status = :status) AND (:userId IS NULL OR o.user.id = :userId) AND o.deletedAt IS NULL")
-    Page<Order> findOrdersForAdminWithItems(@Param("status") OrderStatus status, @Param("userId") Long userId,
+    // Query lấy IDs trước (để tránh lỗi Hibernate với DISTINCT + FETCH JOIN + Pagination)
+    @Query("SELECT o.id FROM Order o WHERE (:status IS NULL OR o.status = :status) AND (:userId IS NULL OR o.user.id = :userId) AND o.deletedAt IS NULL")
+    Page<Long> findOrderIdsForAdmin(@Param("status") OrderStatus status, @Param("userId") Long userId,
             Pageable pageable);
+
+    // Query fetch full data sau
+    @Query("SELECT DISTINCT o FROM Order o LEFT JOIN FETCH o.items LEFT JOIN FETCH o.user WHERE o.id IN :orderIds AND o.deletedAt IS NULL")
+    List<Order> findOrdersWithItemsByIds(@Param("orderIds") List<Long> orderIds);
 
     // Deprecated: use findOrdersForAdminWithItems to avoid N+1 query
     @Query("SELECT o FROM Order o WHERE (:status IS NULL OR o.status = :status) AND (:userId IS NULL OR o.user.id = :userId)")

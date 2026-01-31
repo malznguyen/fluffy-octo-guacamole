@@ -43,7 +43,7 @@ const TabsList = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      "inline-flex h-9 items-center justify-center rounded-lg bg-slate-100 p-1 text-slate-500",
+      "inline-flex h-9 items-center justify-center rounded-lg bg-neutral-100 p-1 text-neutral-500",
       className
     )}
     {...props}
@@ -64,10 +64,10 @@ const TabsTrigger = React.forwardRef<
       type="button"
       onClick={() => onValueChange?.(value)}
       className={cn(
-        "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+        "inline-flex items-center justify-center whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium ring-offset-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
         isActive
-          ? "bg-white text-slate-950 shadow"
-          : "hover:bg-slate-100 hover:text-slate-900",
+          ? "bg-white text-neutral-950 shadow"
+          : "hover:bg-neutral-100 hover:text-neutral-900",
         className
       )}
       {...props}
@@ -89,7 +89,7 @@ const TabsContent = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "mt-2 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2",
+        "mt-2 ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-950 focus-visible:ring-offset-2",
         className
       )}
       {...props}

@@ -36,16 +36,16 @@ export function DeleteDialog({
                     <AlertDialogTitle>Xác nhận xóa danh mục</AlertDialogTitle>
                     <AlertDialogDescription>
                         Bạn có chắc muốn xóa danh mục{' '}
-                        <span className="font-semibold text-slate-900">&quot;{categoryName}&quot;</span>?{' '}
+                        <span className="font-semibold text-neutral-900">&quot;{categoryName}&quot;</span>?{' '}
                         Hành động này không thể hoàn tác.
                         <br />
-                        <span className="text-sm text-slate-500">
+                        <span className="text-sm text-neutral-500">
                             (Danh mục sẽ được ẩn khỏi hệ thống nhưng vẫn giữ lại trong cơ sở dữ liệu)
                         </span>
                     </AlertDialogDescription>
 
                     {hasChildren && (
-                        <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md flex items-start gap-3">
+                        <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3">
                             <AlertTriangle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
                             <div>
                                 <p className="font-medium text-red-800 text-sm">Cảnh báo quan trọng</p>

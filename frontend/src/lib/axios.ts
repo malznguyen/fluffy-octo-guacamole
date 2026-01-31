@@ -24,7 +24,7 @@ apiClient.interceptors.request.use(
     // Add auth token if available
     if (typeof window !== 'undefined') {
       const token = useAuthStore.getState().token;
-      
+
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       } else {
@@ -57,13 +57,13 @@ apiClient.interceptors.response.use(
   (error) => {
     const status = error.response?.status;
     const url = error.config?.url;
-    
+
     // Only log client errors (4xx), don't spam console with server errors (5xx)
     // as those are backend issues that should be handled by the UI
     if (status && status >= 400 && status < 500) {
       console.error(`[API Client Error] ${status} ${url}`, error.response?.data);
     }
-    
+
     // Log 500 errors only in development with minimal info
     if (status === 500 && process.env.NODE_ENV === 'development') {
       console.warn(`[API Server Error] 500 ${url} - Backend issue, check server logs`);
@@ -72,6 +72,13 @@ apiClient.interceptors.response.use(
     // Handle auth errors
     if (status === 401) {
       console.warn('[API] Unauthorized - Token may be expired');
+      if (typeof window !== 'undefined') {
+        useAuthStore.getState().logout();
+        // Redirect to login if not already there
+        if (!window.location.pathname.startsWith('/login')) {
+          window.location.href = '/login';
+        }
+      }
     } else if (status === 403) {
       console.warn('[API] Forbidden - Check token validity');
     }

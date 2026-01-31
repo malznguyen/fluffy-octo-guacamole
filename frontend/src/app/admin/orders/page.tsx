@@ -139,21 +139,21 @@ export default function AdminOrdersPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-black uppercase tracking-wider text-slate-800">
+          <h1 className="text-3xl font-bold tracking-tight text-neutral-800">
             Quản lý đơn hàng
           </h1>
-          <p className="text-slate-500 mt-1">
+          <p className="text-neutral-500 mt-1">
             {isLoading ? 'Đang tải...' : `${data?.totalElements || 0} đơn hàng`}
           </p>
         </div>
       </div>
 
       {/* Toolbar */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-6">
+      <div className="bg-white rounded-xl shadow-sm border border-neutral-200 p-4 mb-6">
         <form onSubmit={handleSearch} className="flex flex-col lg:flex-row gap-4">
           {/* Search */}
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
             <Input
               placeholder="Tìm kiếm mã đơn, tên khách hàng..."
               value={searchQuery}
@@ -172,7 +172,7 @@ export default function AdminOrdersPage() {
               }}
             >
               <SelectTrigger>
-                <Filter className="w-4 h-4 mr-2 text-slate-400" />
+                <Filter className="w-4 h-4 mr-2 text-neutral-400" />
                 <SelectValue placeholder="Trạng thái" />
               </SelectTrigger>
               <SelectContent>
@@ -200,8 +200,8 @@ export default function AdminOrdersPage() {
 
       {/* Pagination */}
       {!isLoading && totalPages > 1 && (
-        <div className="mt-6 flex items-center justify-between bg-white px-4 py-3 border border-slate-200 rounded-lg shadow-sm">
-          <div className="text-sm text-slate-500">
+        <div className="mt-6 flex items-center justify-between bg-white px-4 py-3 border border-neutral-200 rounded-lg shadow-sm">
+          <div className="text-sm text-neutral-500">
             Trang {page + 1} / {totalPages}
           </div>
           <div className="flex gap-2">

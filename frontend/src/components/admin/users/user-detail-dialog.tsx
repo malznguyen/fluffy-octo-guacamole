@@ -61,17 +61,17 @@ export function UserDetailDialog({
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 py-4">
                         {/* Left Column: Avatar & Basic Identity */}
-                        <div className="flex flex-col items-center text-center space-y-4 md:border-r md:pr-6 border-slate-100">
-                            <Avatar className="w-24 h-24 border-4 border-slate-50">
+                        <div className="flex flex-col items-center text-center space-y-4 md:border-r md:pr-6 border-neutral-100">
+                            <Avatar className="w-24 h-24 border-4 border-neutral-50">
                                 <AvatarImage src={user.avatarUrl || ''} />
-                                <AvatarFallback className="text-2xl bg-slate-100 text-slate-400">
+                                <AvatarFallback className="text-2xl bg-neutral-100 text-neutral-400">
                                     {user.fullName.charAt(0).toUpperCase()}
                                 </AvatarFallback>
                             </Avatar>
 
                             <div>
-                                <h3 className="font-bold text-lg text-slate-900">{user.fullName}</h3>
-                                <p className="text-sm text-slate-500">ID: #{user.id}</p>
+                                <h3 className="font-bold text-lg text-neutral-900">{user.fullName}</h3>
+                                <p className="text-sm text-neutral-500">ID: #{user.id}</p>
                             </div>
 
                             <Badge
@@ -91,20 +91,20 @@ export function UserDetailDialog({
                         <div className="md:col-span-2 space-y-6">
                             {/* Contact Info */}
                             <div className="space-y-4">
-                                <h4 className="text-sm font-semibold text-slate-900 uppercase tracking-wider">Thông tin liên hệ</h4>
+                                <h4 className="text-sm font-semibold text-neutral-900 uppercase tracking-wider">Thông tin liên hệ</h4>
                                 <div className="grid grid-cols-1 gap-3">
-                                    <div className="flex items-center gap-3 text-slate-600 bg-slate-50 p-2.5 rounded-lg">
-                                        <Mail className="w-4 h-4 text-slate-400" />
+                                    <div className="flex items-center gap-3 text-neutral-600 bg-neutral-50 p-2.5 rounded-lg">
+                                        <Mail className="w-4 h-4 text-neutral-400" />
                                         <span className="text-sm">{user.email}</span>
                                     </div>
-                                    <div className="flex items-center gap-3 text-slate-600 bg-slate-50 p-2.5 rounded-lg">
-                                        <Phone className="w-4 h-4 text-slate-400" />
+                                    <div className="flex items-center gap-3 text-neutral-600 bg-neutral-50 p-2.5 rounded-lg">
+                                        <Phone className="w-4 h-4 text-neutral-400" />
                                         <span className="text-sm">{user.phone || 'Chưa cập nhật'}</span>
                                     </div>
-                                    <div className="flex items-center gap-3 text-slate-600 bg-slate-50 p-2.5 rounded-lg">
-                                        <Calendar className="w-4 h-4 text-slate-400" />
+                                    <div className="flex items-center gap-3 text-neutral-600 bg-neutral-50 p-2.5 rounded-lg">
+                                        <Calendar className="w-4 h-4 text-neutral-400" />
                                         <div className="flex flex-col">
-                                            <span className="text-xs text-slate-400">Ngày tham gia</span>
+                                            <span className="text-xs text-neutral-400">Ngày tham gia</span>
                                             <span className="text-sm">{formatDate(user.createdAt)}</span>
                                         </div>
                                     </div>
@@ -115,7 +115,7 @@ export function UserDetailDialog({
 
                             {/* Stats */}
                             <div className="space-y-4">
-                                <h4 className="text-sm font-semibold text-slate-900 uppercase tracking-wider">Thống kê mua sắm</h4>
+                                <h4 className="text-sm font-semibold text-neutral-900 uppercase tracking-wider">Thống kê mua sắm</h4>
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="bg-blue-50 p-4 rounded-xl">
                                         <div className="flex items-center gap-2 text-blue-600 mb-1">

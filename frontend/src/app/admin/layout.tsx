@@ -52,10 +52,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   // Hiển thị loading trong khi check auth
   if (!isHydrated || isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-neutral-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-8 h-8 border-2 border-slate-300 border-t-blue-600 rounded-full animate-spin mx-auto mb-4" />
-          <p className="font-bold uppercase tracking-wider text-sm text-slate-600">Đang tải...</p>
+          <div className="w-8 h-8 border-2 border-neutral-300 border-t-blue-600 rounded-full animate-spin mx-auto mb-4" />
+          <p className="font-semibold text-sm text-neutral-600">Đang tải...</p>
         </div>
       </div>
     );
@@ -64,23 +64,23 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (!isAuthenticated || user?.role !== 'ADMIN') return null;
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
+    <div className="min-h-screen bg-neutral-50 flex">
       {/* SIDEBAR - Fixed */}
-      <aside className="fixed left-0 top-0 h-screen w-64 bg-slate-900 text-white overflow-y-auto z-50 flex flex-col">
+      <aside className="fixed left-0 top-0 h-screen w-64 bg-neutral-900 text-white overflow-y-auto z-50 flex flex-col">
         {/* Logo */}
-        <div className="p-6 border-b border-slate-700">
+        <div className="p-6 border-b border-neutral-700">
           <Link href="/admin" className="text-2xl font-black tracking-widest">
             FASH.ON
           </Link>
-          <p className="text-xs text-slate-400 uppercase tracking-wider mt-1">
+          <p className="text-xs text-neutral-400 mt-1">
             Trang quản trị
           </p>
         </div>
 
         {/* Admin Info */}
-        <div className="p-4 border-b border-slate-700">
-          <p className="text-sm font-bold uppercase text-white">{user.fullName}</p>
-          <p className="text-xs text-slate-400">Quản trị viên</p>
+        <div className="p-4 border-b border-neutral-700">
+          <p className="text-sm font-semibold text-white">{user.fullName}</p>
+          <p className="text-xs text-neutral-400">Quản trị viên</p>
         </div>
 
         {/* Navigation */}
@@ -93,10 +93,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </nav>
 
         {/* Footer Actions */}
-        <div className="border-t border-slate-700 p-4">
+        <div className="border-t border-neutral-700 p-4">
           <Link
             href="/"
-            className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-slate-300 hover:bg-slate-800 transition-colors rounded-lg"
+            className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-neutral-300 hover:bg-neutral-800 transition-colors rounded-lg"
           >
             <ArrowLeft className="w-4 h-4" />
             Quay lại shop
@@ -112,7 +112,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       </aside>
 
       {/* MAIN CONTENT - Scrollable */}
-      <main className="ml-64 flex-1 min-h-screen bg-slate-50">
+      <main className="ml-64 flex-1 min-h-screen bg-neutral-50">
         {children}
       </main>
     </div>
@@ -124,7 +124,7 @@ function NavItem({ href, icon: Icon, label }: { href: string; icon: React.Elemen
   return (
     <Link
       href={href}
-      className="flex items-center gap-3 px-6 py-3 text-sm font-medium uppercase tracking-wider text-slate-300 hover:bg-slate-800 hover:text-white transition-colors border-l-4 border-transparent hover:border-blue-500"
+      className="flex items-center gap-3 px-6 py-3 text-sm font-medium text-neutral-300 hover:bg-neutral-800 hover:text-white transition-colors border-l-4 border-transparent hover:border-blue-500"
     >
       <Icon className="w-4 h-4" />
       {label}

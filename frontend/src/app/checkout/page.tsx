@@ -166,7 +166,7 @@ export default function CheckoutPage() {
 
           {/* Page Title */}
           <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-black uppercase text-neutral-900">THANH TOÁN</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-neutral-900">Thanh toán</h1>
             <Link
               href="/cart"
               className="flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
@@ -186,7 +186,7 @@ export default function CheckoutPage() {
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 {/* Full Name */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-[0.1em] text-neutral-600 mb-2">
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">
                     Họ và tên người nhận
                   </label>
                   <input
@@ -202,7 +202,7 @@ export default function CheckoutPage() {
 
                 {/* Phone */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-[0.1em] text-neutral-600 mb-2">
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">
                     Số điện thoại
                   </label>
                   <input
@@ -218,7 +218,7 @@ export default function CheckoutPage() {
 
                 {/* Address */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-[0.1em] text-neutral-600 mb-2">
+                  <label className="block text-sm font-medium text-neutral-700 mb-2">
                     Địa chỉ giao hàng
                   </label>
                   <textarea
@@ -250,7 +250,7 @@ export default function CheckoutPage() {
 
                 {/* Payment Method */}
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-[0.1em] text-neutral-600 mb-4">
+                  <label className="block text-sm font-medium text-neutral-700 mb-4">
                     Phương thức thanh toán
                   </label>
                   <div className="space-y-3">
@@ -309,7 +309,7 @@ export default function CheckoutPage() {
             {/* Right: Order Summary */}
             <div>
               <div className="bg-white border border-neutral-200 p-6 sticky top-24">
-                <h2 className="text-lg font-bold uppercase tracking-wider text-neutral-900 mb-6">
+                <h2 className="text-lg font-semibold text-neutral-900 mb-6">
                   Đơn hàng của bạn
                 </h2>
 
@@ -358,7 +358,7 @@ export default function CheckoutPage() {
                   </div>
                   <div className="border-t border-neutral-200 pt-3">
                     <div className="flex justify-between items-center">
-                      <span className="font-bold uppercase">Tổng cộng</span>
+                      <span className="font-semibold">Tổng cộng</span>
                       <span className="text-xl font-black text-neutral-900">
                         {formatPrice(cart.totalAmount)}
                       </span>

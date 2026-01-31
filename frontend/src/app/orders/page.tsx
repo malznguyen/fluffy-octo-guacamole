@@ -143,8 +143,8 @@ export default function OrdersPage() {
       <main className="flex-1 pt-24 pb-12">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Heading */}
-          <h1 className="text-3xl font-black uppercase text-neutral-900 mb-8">
-            ĐƠN HÀNG CỦA TÔI
+          <h1 className="text-3xl font-bold tracking-tight text-neutral-900 mb-8">
+            Đơn hàng của tôi
           </h1>
 
           {orders.length === 0 ? (
@@ -154,9 +154,9 @@ export default function OrdersPage() {
               <p className="text-lg text-neutral-600 mb-8">Bạn chưa có đơn hàng nào</p>
               <Link
                 href="/products"
-                className="px-8 py-4 bg-black text-white text-sm font-bold uppercase tracking-wider hover:bg-neutral-800 transition-colors"
+                className="px-8 py-4 bg-black text-white text-sm font-semibold rounded-lg hover:bg-neutral-800 transition-colors"
               >
-                MUA SẮM NGAY
+                Mua sắm ngay
               </Link>
             </div>
           ) : (
@@ -167,7 +167,7 @@ export default function OrdersPage() {
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`px-4 py-2 text-xs font-bold uppercase tracking-wider transition-colors ${
+                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                       activeTab === tab
                         ? 'bg-black text-white'
                         : 'bg-white border border-neutral-200 text-neutral-700 hover:bg-neutral-100'
@@ -193,7 +193,7 @@ export default function OrdersPage() {
                       {/* Header */}
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
                         <div>
-                          <p className="font-bold text-neutral-900 uppercase">
+                          <p className="font-semibold text-neutral-900">
                             Mã đơn: {order.orderCode}
                           </p>
                           <p className="text-sm text-neutral-500 mt-1">
@@ -201,7 +201,7 @@ export default function OrdersPage() {
                           </p>
                         </div>
                         <span
-                          className={`inline-block px-3 py-1 text-xs font-bold uppercase tracking-wider ${
+                          className={`inline-block px-3 py-1 text-xs font-semibold rounded-full ${
                             statusBadgeStyles[order.status]
                           }`}
                         >
@@ -224,16 +224,16 @@ export default function OrdersPage() {
                         {order.status === 'PENDING' && (
                           <button
                             onClick={() => handleCancelOrder(order.orderCode)}
-                            className="text-sm font-bold text-red-600 hover:text-red-700 transition-colors"
+                            className="text-sm font-medium text-red-600 hover:text-red-700 transition-colors"
                           >
-                            HỦY ĐƠN
+                            Hủy đơn
                           </button>
                         )}
                         <Link
                           href={`/orders/${order.orderCode}`}
-                          className="inline-flex items-center gap-1 px-4 py-2 border border-neutral-900 text-neutral-900 text-xs font-bold uppercase tracking-wider hover:bg-neutral-900 hover:text-white transition-colors"
+                          className="inline-flex items-center gap-1 px-4 py-2 border border-neutral-900 text-neutral-900 text-sm font-medium rounded-lg hover:bg-neutral-900 hover:text-white transition-colors"
                         >
-                          CHI TIẾT
+                          Chi tiết
                           <ChevronRight className="w-4 h-4" />
                         </Link>
                       </div>

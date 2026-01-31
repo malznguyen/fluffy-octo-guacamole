@@ -24,7 +24,13 @@ public class ReviewService {
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
 
-    // Lấy danh sách review và stats của sản phẩm
+    /**
+     * Lấy danh sách review và stats của sản phẩm
+     * 
+     * @param productId ID của sản phẩm
+     * @param currentUserId ID của user hiện tại (null nếu chưa đăng nhập)
+     * @return ProductReviewStats chứa danh sách review, rating trung bình, v.v.
+     */
     public ProductReviewStats getProductReviews(Long productId, Long currentUserId) {
         // Check product tồn tại
         Product product = productRepository.findById(productId)
@@ -38,10 +44,13 @@ public class ReviewService {
         Double averageRating = reviewRepository.calculateAverageRating(productId);
         Long totalReviews = reviewRepository.countByProductId(productId);
 
-        // Check xem user hiện tại đã review chưa
+        // Check xem user hiện tại đã review chưa (chỉ khi đã đăng nhập)
         boolean hasUserReviewed = false;
         ReviewDTO userReview = null;
+        boolean canReview = false;
+        
         if (currentUserId != null) {
+            // User đã đăng nhập -> check xem đã review chưa
             hasUserReviewed = reviewRepository.existsByUserIdAndProductId(currentUserId, productId);
             if (hasUserReviewed) {
                 Review review = reviewRepository.findByUserIdAndProductId(currentUserId, productId).orElse(null);
@@ -49,6 +58,8 @@ public class ReviewService {
                     userReview = mapToDTO(review, currentUserId);
                 }
             }
+            // Check xem user có thể review không (đã mua hàng chưa)
+            canReview = checkUserHasPurchasedProduct(currentUserId, productId);
         }
 
         return ProductReviewStats.builder()
@@ -57,7 +68,16 @@ public class ReviewService {
                 .totalReviews(totalReviews != null ? totalReviews : 0L)
                 .hasUserReviewed(hasUserReviewed)
                 .userReview(userReview)
+                .canReview(canReview)
                 .build();
+    }
+
+    /**
+     * Lấy reviews cho public API (không cần authentication)
+     * Tương đương với getProductReviews(productId, null)
+     */
+    public ProductReviewStats getPublicProductReviews(Long productId) {
+        return getProductReviews(productId, null);
     }
 
     // Tạo review mới
@@ -116,6 +136,10 @@ public class ReviewService {
 
     // Check xem user đã mua sản phẩm chưa
     private boolean checkUserHasPurchasedProduct(Long userId, Long productId) {
+        if (userId == null) {
+            return false;
+        }
+        
         // Lấy tất cả orders của user có status COMPLETED hoặc DELIVERED
         List<Order> orders = orderRepository.findAllByUserId(userId).stream()
                 .filter(o -> o.getStatus() == OrderStatus.COMPLETED || o.getStatus() == OrderStatus.DELIVERED)
@@ -137,6 +161,8 @@ public class ReviewService {
 
     // Map Review to DTO
     private ReviewDTO mapToDTO(Review review, Long currentUserId) {
+        boolean isOwner = currentUserId != null && review.getUser().getId().equals(currentUserId);
+        
         return ReviewDTO.builder()
                 .id(review.getId())
                 .rating(review.getRating())
@@ -144,7 +170,7 @@ public class ReviewService {
                 .userName(review.getUser().getFullName())
                 .userAvatar(null) // Chưa có avatar field trong User entity
                 .createdAt(review.getCreatedAt())
-                .isOwner(review.getUser().getId().equals(currentUserId))
+                .isOwner(isOwner)
                 .build();
     }
 }

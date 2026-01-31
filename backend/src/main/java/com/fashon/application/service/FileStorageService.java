@@ -27,7 +27,7 @@ public class FileStorageService {
     private String uploadDir;
 
     private static final List<String> ALLOWED_EXTENSIONS = Arrays.asList("jpg", "jpeg", "png", "gif", "webp");
-    private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    private static final long MAX_FILE_SIZE = 25 * 1024 * 1024; // 25MB
 
     @PostConstruct
     public void init() {
@@ -93,7 +93,7 @@ public class FileStorageService {
 
     private void validateFile(MultipartFile file) {
         if (file.getSize() > MAX_FILE_SIZE) {
-            throw new RuntimeException("File size exceeds maximum limit of 5MB");
+            throw new RuntimeException("File size exceeds maximum limit of 25MB");
         }
 
         String originalFilename = file.getOriginalFilename();

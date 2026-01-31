@@ -94,21 +94,21 @@ export function UserFormDialog({
                     {/* Email (Read only) */}
                     <div className="space-y-2">
                         <Label htmlFor="email" className="flex items-center gap-2">
-                            <Mail className="w-4 h-4 text-slate-500" />
+                            <Mail className="w-4 h-4 text-neutral-500" />
                             Email
                         </Label>
                         <Input
                             id="email"
                             value={user.email}
                             disabled
-                            className="bg-slate-50 text-slate-500 border-slate-200"
+                            className="bg-neutral-50 text-neutral-500 border-neutral-200"
                         />
                     </div>
 
                     {/* Full Name */}
                     <div className="space-y-2">
                         <Label htmlFor="fullName" className="flex items-center gap-2">
-                            <User className="w-4 h-4 text-slate-500" />
+                            <User className="w-4 h-4 text-neutral-500" />
                             Họ và tên <span className="text-red-500">*</span>
                         </Label>
                         <Input
@@ -126,7 +126,7 @@ export function UserFormDialog({
                     {/* Phone */}
                     <div className="space-y-2">
                         <Label htmlFor="phone" className="flex items-center gap-2">
-                            <Phone className="w-4 h-4 text-slate-500" />
+                            <Phone className="w-4 h-4 text-neutral-500" />
                             Số điện thoại
                         </Label>
                         <Input
@@ -145,7 +145,7 @@ export function UserFormDialog({
                     {/* Role */}
                     <div className="space-y-2">
                         <Label htmlFor="role" className="flex items-center gap-2">
-                            <Shield className="w-4 h-4 text-slate-500" />
+                            <Shield className="w-4 h-4 text-neutral-500" />
                             Vai trò
                         </Label>
                         <Select

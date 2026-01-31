@@ -17,4 +17,5 @@ public class ProductReviewStats {
     private Long totalReviews;
     private boolean hasUserReviewed;
     private ReviewDTO userReview;
+    private boolean canReview; // true nếu user đã đăng nhập và đã mua sản phẩm
 }

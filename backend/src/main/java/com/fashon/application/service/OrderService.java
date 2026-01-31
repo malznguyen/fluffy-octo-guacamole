@@ -137,9 +137,23 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public Page<OrderDTO> getAllOrdersForAdmin(Pageable pageable, OrderStatus status, Long userId) {
-        // Sử dụng findOrdersForAdminWithItems để tránh N+1 query problem (B-MED-001)
-        return orderRepository.findOrdersForAdminWithItems(status, userId, pageable)
-                .map(this::mapToOrderDTO);
+        // Sử dụng 2-query approach để tránh lỗi Hibernate với DISTINCT + FETCH JOIN + Pagination
+        // Query 1: Lấy IDs với pagination
+        Page<Long> orderIdPage = orderRepository.findOrderIdsForAdmin(status, userId, pageable);
+        
+        if (orderIdPage.getContent().isEmpty()) {
+            return Page.empty(pageable);
+        }
+        
+        // Query 2: Fetch full data
+        List<Order> orders = orderRepository.findOrdersWithItemsByIds(orderIdPage.getContent());
+        
+        // Map to DTOs
+        List<OrderDTO> orderDTOs = orders.stream()
+                .map(this::mapToOrderDTO)
+                .collect(Collectors.toList());
+        
+        return new org.springframework.data.domain.PageImpl<>(orderDTOs, pageable, orderIdPage.getTotalElements());
     }
 
     @Transactional
@@ -267,12 +281,26 @@ public class OrderService {
                 .mapToInt(OrderItemDTO::getQuantity)
                 .sum();
 
+        // Handle user soft delete - user có thể null nếu đã bị soft delete
+        User user = order.getUser();
+        Long userId = null;
+        String customerName = "Người dùng đã bị xóa";
+        String customerEmail = "N/A";
+        boolean userDeleted = true;
+
+        if (user != null) {
+            userId = user.getId();
+            customerName = user.getFullName();
+            customerEmail = user.getEmail();
+            userDeleted = false;
+        }
+
         return OrderDTO.builder()
                 .id(order.getId())
                 .orderCode(order.getOrderCode())
-                .userId(order.getUser().getId())
-                .customerName(order.getUser().getFullName())
-                .customerEmail(order.getUser().getEmail())
+                .userId(userId)
+                .customerName(customerName)
+                .customerEmail(customerEmail)
                 .total(order.getTotal())
                 .status(order.getStatus())
                 .shippingAddress(order.getShippingAddress())
@@ -282,6 +310,7 @@ public class OrderService {
                 .totalItems(totalItems)
                 .createdAt(order.getCreatedAt())
                 .updatedAt(order.getUpdatedAt())
+                .userDeleted(userDeleted)
                 .build();
     }
 

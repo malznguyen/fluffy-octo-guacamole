@@ -196,7 +196,7 @@ function ProductsPageContent() {
       <div className="border-b border-neutral-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Breadcrumb */}
-          <nav className="text-sm uppercase tracking-wider text-neutral-600 mb-4">
+          <nav className="text-sm text-neutral-600 mb-4">
             <a href="/" className="hover:text-neutral-900 transition-colors">
               Trang chủ
             </a>

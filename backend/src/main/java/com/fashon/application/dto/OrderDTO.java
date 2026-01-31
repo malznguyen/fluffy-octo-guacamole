@@ -30,4 +30,8 @@ public class OrderDTO {
     private Integer totalItems;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    
+    // Flag để UI biết user đã bị soft delete
+    @Builder.Default
+    private boolean userDeleted = false;
 }

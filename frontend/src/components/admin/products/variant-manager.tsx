@@ -89,15 +89,15 @@ export function VariantManager({ variants: rawVariants, basePrice, onChange }: V
   return (
     <div className="space-y-4">
       {/* Summary */}
-      <div className="flex items-center justify-between bg-slate-50 p-4 rounded-lg">
+      <div className="flex items-center justify-between bg-neutral-50 p-4 rounded-lg">
         <div className="flex gap-6">
           <div>
-            <p className="text-sm text-slate-500">Tổng biến thể</p>
-            <p className="text-lg font-semibold text-slate-800">{variants.length}</p>
+            <p className="text-sm text-neutral-500">Tổng biến thể</p>
+            <p className="text-lg font-semibold text-neutral-800">{variants.length}</p>
           </div>
           <div>
-            <p className="text-sm text-slate-500">Tổng tồn kho</p>
-            <p className="text-lg font-semibold text-slate-800">{totalStock}</p>
+            <p className="text-sm text-neutral-500">Tổng tồn kho</p>
+            <p className="text-lg font-semibold text-neutral-800">{totalStock}</p>
           </div>
         </div>
         <Button type="button" onClick={addVariant} size="sm">
@@ -108,9 +108,9 @@ export function VariantManager({ variants: rawVariants, basePrice, onChange }: V
 
       {/* Variant List */}
       {variants.length === 0 ? (
-        <div className="text-center py-8 border-2 border-dashed border-slate-200 rounded-lg">
-          <p className="text-slate-500">Chưa có biến thể nào</p>
-          <p className="text-sm text-slate-400 mt-1">
+        <div className="text-center py-8 border-2 border-dashed border-neutral-200 rounded-lg">
+          <p className="text-neutral-500">Chưa có biến thể nào</p>
+          <p className="text-sm text-neutral-400 mt-1">
             Click "Thêm biến thể" để tạo các phiên bản khác nhau của sản phẩm
           </p>
         </div>
@@ -118,7 +118,7 @@ export function VariantManager({ variants: rawVariants, basePrice, onChange }: V
         <div className="border rounded-lg overflow-hidden">
           <Table>
             <TableHeader>
-              <TableRow className="bg-slate-50">
+              <TableRow className="bg-neutral-50">
                 <TableHead className="w-10"></TableHead>
                 <TableHead>SKU</TableHead>
                 <TableHead>Màu sắc</TableHead>
@@ -140,7 +140,7 @@ export function VariantManager({ variants: rawVariants, basePrice, onChange }: V
                         type="button"
                         onClick={() => moveVariant(index, 'up')}
                         disabled={index === 0}
-                        className="p-0.5 hover:bg-slate-200 rounded disabled:opacity-30"
+                        className="p-0.5 hover:bg-neutral-200 rounded disabled:opacity-30"
                       >
                         <GripVertical className="w-3 h-3 -rotate-90" />
                       </button>
@@ -148,7 +148,7 @@ export function VariantManager({ variants: rawVariants, basePrice, onChange }: V
                         type="button"
                         onClick={() => moveVariant(index, 'down')}
                         disabled={index === variants.length - 1}
-                        className="p-0.5 hover:bg-slate-200 rounded disabled:opacity-30"
+                        className="p-0.5 hover:bg-neutral-200 rounded disabled:opacity-30"
                       >
                         <GripVertical className="w-3 h-3 rotate-90" />
                       </button>
@@ -247,8 +247,8 @@ export function VariantManager({ variants: rawVariants, basePrice, onChange }: V
 
       {/* Quick Generate Variants */}
       {variants.length === 0 && (
-        <div className="bg-slate-50 p-4 rounded-lg">
-          <p className="text-sm font-medium text-slate-700 mb-2">Tạo nhanh biến thể</p>
+        <div className="bg-neutral-50 p-4 rounded-lg">
+          <p className="text-sm font-medium text-neutral-700 mb-2">Tạo nhanh biến thể</p>
           <div className="flex gap-2">
             <Button
               type="button"

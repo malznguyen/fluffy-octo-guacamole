@@ -34,10 +34,10 @@ export function DeleteDialog({
           <AlertDialogTitle>Xác nhận xóa sản phẩm</AlertDialogTitle>
           <AlertDialogDescription>
             Bạn có chắc muốn xóa sản phẩm{' '}
-            <span className="font-semibold text-slate-900">&quot;{productName}&quot;</span>?{' '}
+            <span className="font-semibold text-neutral-900">&quot;{productName}&quot;</span>?{' '}
             Hành động này không thể hoàn tác.
             <br />
-            <span className="text-sm text-slate-500">
+            <span className="text-sm text-neutral-500">
               (Sản phẩm sẽ được ẩn khỏi hệ thống nhưng vẫn giữ lại trong cơ sở dữ liệu)
             </span>
           </AlertDialogDescription>

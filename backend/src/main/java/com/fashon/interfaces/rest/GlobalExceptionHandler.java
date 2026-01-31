@@ -24,13 +24,12 @@ public class GlobalExceptionHandler {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        
+
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "Validation failed",
                 errors,
-                LocalDateTime.now()
-        );
+                LocalDateTime.now());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -40,13 +39,12 @@ public class GlobalExceptionHandler {
         ex.getConstraintViolations().forEach(violation -> {
             errors.put(violation.getPropertyPath().toString(), violation.getMessage());
         });
-        
+
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "Constraint violation",
                 errors,
-                LocalDateTime.now()
-        );
+                LocalDateTime.now());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -54,14 +52,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleDataIntegrityViolation(DataIntegrityViolationException ex) {
         String message = ex.getMessage();
         String userMessage = "Dữ liệu vi phạm ràng buộc";
-        
+
         // Check for duplicate SKU
         if (message != null && message.contains("product_variants") && message.contains("sku")) {
             // Extract SKU value from message if possible
             String sku = extractDuplicateValue(message);
-            userMessage = sku != null 
-                ? "Đã có sản phẩm với SKU '" + sku + "' này rồi"
-                : "Đã có sản phẩm với SKU này rồi";
+            userMessage = sku != null
+                    ? "Đã có sản phẩm với SKU '" + sku + "' này rồi"
+                    : "Đã có sản phẩm với SKU này rồi";
         }
         // Check for duplicate email
         else if (message != null && message.contains("users") && message.contains("email")) {
@@ -71,16 +69,15 @@ public class GlobalExceptionHandler {
         else if (message != null && message.contains("products") && message.contains("slug")) {
             userMessage = "Slug này đã tồn tại, vui lòng chọn slug khác";
         }
-        
+
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.CONFLICT.value(),
                 userMessage,
                 null,
-                LocalDateTime.now()
-        );
+                LocalDateTime.now());
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
-    
+
     private String extractDuplicateValue(String message) {
         // Try to extract the duplicate value from SQL Server error message
         // Pattern: "The duplicate key value is (VALUE)."
@@ -98,24 +95,34 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException ex) {
         String message = ex.getMessage();
-        
+
         // Check for specific business errors
-        if (message != null && message.contains("SKU")) {
-            ErrorResponse response = new ErrorResponse(
-                    HttpStatus.BAD_REQUEST.value(),
-                    "Đã có sản phẩm với SKU này rồi",
-                    null,
-                    LocalDateTime.now()
-            );
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        if (message != null) {
+            if (message.contains("SKU")) {
+                ErrorResponse response = new ErrorResponse(
+                        HttpStatus.BAD_REQUEST.value(),
+                        "Đã có sản phẩm với SKU này rồi",
+                        null,
+                        LocalDateTime.now());
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+
+            // Handle stale token / user not found
+            if (message.equals("User not found")) {
+                ErrorResponse response = new ErrorResponse(
+                        HttpStatus.UNAUTHORIZED.value(),
+                        "Tài khoản không tồn tại hoặc đã bị xóa",
+                        null,
+                        LocalDateTime.now());
+                return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+            }
         }
-        
+
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 ex.getMessage(),
                 null,
-                LocalDateTime.now()
-        );
+                LocalDateTime.now());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -125,8 +132,7 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "An unexpected error occurred",
                 null,
-                LocalDateTime.now()
-        );
+                LocalDateTime.now());
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

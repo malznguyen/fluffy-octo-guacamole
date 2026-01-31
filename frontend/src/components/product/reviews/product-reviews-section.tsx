@@ -80,9 +80,9 @@ export function ProductReviewsSection({ productId }: ProductReviewsSectionProps)
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <Skeleton className="h-20 w-full" />
-        <Skeleton className="h-32 w-full" />
-        <Skeleton className="h-32 w-full" />
+        <Skeleton className="h-24 w-full rounded-xl" />
+        <Skeleton className="h-32 w-full rounded-xl" />
+        <Skeleton className="h-32 w-full rounded-xl" />
       </div>
     );
   }

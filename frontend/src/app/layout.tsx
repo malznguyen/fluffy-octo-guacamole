@@ -27,14 +27,24 @@ export default function RootLayout({
           {children}
         </ClientProvider>
         <Toaster 
-          position="top-right" 
+          position="bottom-right"
           toastOptions={{
-            style: {
-              background: '#171717',
-              color: '#fff',
-              border: 'none',
+            className: "bg-white text-neutral-900 border border-rose-200 shadow-xl rounded-xl",
+            success: {
+              iconTheme: {
+                primary: "#E11D48", // rose-600
+                secondary: "white"
+              }
             },
+            error: {
+              iconTheme: {
+                primary: "#DC2626", // red-600
+                secondary: "white"
+              }
+            }
           }}
+          expand={true}
+          gap={8}
         />
       </body>
     </html>

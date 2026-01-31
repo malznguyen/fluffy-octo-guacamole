@@ -17,6 +17,8 @@ import {
   PackageX,
   ArrowRight,
   Loader2,
+  BadgeCheck,
+  ShieldCheck,
 } from 'lucide-react';
 import { fetchProductBySlug, fetchAllProducts } from '@/lib/api';
 import { ProductDTO, ProductVariantDTO, ProductImageDTO } from '@/types/product';
@@ -435,7 +437,7 @@ export default function ProductDetailPage() {
             {/* Right: Product Info */}
             <div className="lg:sticky lg:top-24 lg:self-start">
               {/* Product Name */}
-              <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-neutral-900 mb-4">
+              <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-neutral-900 mb-4">
                 {product.name}
               </h1>
 
@@ -458,7 +460,7 @@ export default function ProductDetailPage() {
                 </span>
                 {selectedVariant && (
                   <span
-                    className={`text-sm font-bold uppercase ${selectedVariant.inStock && selectedVariant.stockQuantity > 0
+                    className={`text-sm font-semibold ${selectedVariant.inStock && selectedVariant.stockQuantity > 0
                       ? 'text-green-600'
                       : 'text-red-600'
                       }`}
@@ -477,19 +479,42 @@ export default function ProductDetailPage() {
                   : product.description}
               </p>
 
-              {/* Trust Badges */}
-              <div className="flex flex-wrap gap-6 mb-8 py-4 border-y border-neutral-200">
-                <div className="flex items-center gap-2 text-xs text-neutral-600">
-                  <Truck className="w-5 h-5" />
-                  <span>Giao hàng toàn quốc</span>
+              {/* Trust Badges - 2x2 Grid */}
+              <div className="grid grid-cols-2 gap-2 mb-8">
+                {/* Authentic Badge */}
+                <div className="flex flex-col items-center text-center p-2 md:p-3 bg-neutral-50 rounded-xl border border-neutral-100">
+                  <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center mb-2">
+                    <BadgeCheck className="h-5 w-5 text-emerald-600" />
+                  </div>
+                  <h4 className="text-xs font-bold text-neutral-900 mb-0.5">Chính hãng 100%</h4>
+                  <p className="text-[10px] text-neutral-500 leading-relaxed">Cam kết chất lượng</p>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-neutral-600">
-                  <Shield className="w-5 h-5" />
-                  <span>Bảo hành 30 ngày</span>
+
+                {/* Free Shipping Badge */}
+                <div className="flex flex-col items-center text-center p-2 md:p-3 bg-neutral-50 rounded-xl border border-neutral-100">
+                  <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mb-2">
+                    <Truck className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <h4 className="text-xs font-bold text-neutral-900 mb-0.5">Miễn phí vận chuyển</h4>
+                  <p className="text-[10px] text-neutral-500 leading-relaxed">Đơn từ 500K</p>
                 </div>
-                <div className="flex items-center gap-2 text-xs text-neutral-600">
-                  <RotateCcw className="w-5 h-5" />
-                  <span>Đổi trả miễn phí</span>
+
+                {/* Return Policy Badge */}
+                <div className="flex flex-col items-center text-center p-2 md:p-3 bg-neutral-50 rounded-xl border border-neutral-100">
+                  <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center mb-2">
+                    <RotateCcw className="h-5 w-5 text-amber-600" />
+                  </div>
+                  <h4 className="text-xs font-bold text-neutral-900 mb-0.5">Đổi trả 7 ngày</h4>
+                  <p className="text-[10px] text-neutral-500 leading-relaxed">Nhanh chóng, dễ dàng</p>
+                </div>
+
+                {/* Secure Payment Badge */}
+                <div className="flex flex-col items-center text-center p-2 md:p-3 bg-neutral-50 rounded-xl border border-neutral-100">
+                  <div className="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center mb-2">
+                    <ShieldCheck className="h-5 w-5 text-rose-600" />
+                  </div>
+                  <h4 className="text-xs font-bold text-neutral-900 mb-0.5">Thanh toán an toàn</h4>
+                  <p className="text-[10px] text-neutral-500 leading-relaxed">Bảo mật tuyệt đối</p>
                 </div>
               </div>
 
@@ -512,7 +537,7 @@ export default function ProductDetailPage() {
                             key={color}
                             onClick={() => isAvailable && setSelectedColor(color)}
                             disabled={!isAvailable}
-                            className={`relative min-w-[2.5rem] h-10 px-2 rounded-md border-2 transition-all ${isSelected
+                            className={`relative min-w-[2.5rem] h-10 px-2 rounded-lg border-2 transition-all ${isSelected
                               ? 'ring-2 ring-black ring-offset-2'
                               : 'hover:scale-110'
                               } ${!isAvailable
@@ -673,7 +698,7 @@ export default function ProductDetailPage() {
           <div className="flex gap-8 border-b border-neutral-200 mb-8">
             <button
               onClick={() => setActiveTab('description')}
-              className={`pb-4 text-sm font-bold uppercase tracking-wider transition-colors relative ${activeTab === 'description'
+              className={`pb-4 text-sm font-semibold transition-colors relative ${activeTab === 'description'
                 ? 'text-neutral-900'
                 : 'text-neutral-500 hover:text-neutral-900'
                 }`}
@@ -685,7 +710,7 @@ export default function ProductDetailPage() {
             </button>
             <button
               onClick={() => setActiveTab('details')}
-              className={`pb-4 text-sm font-bold uppercase tracking-wider transition-colors relative ${activeTab === 'details'
+              className={`pb-4 text-sm font-semibold transition-colors relative ${activeTab === 'details'
                 ? 'text-neutral-900'
                 : 'text-neutral-500 hover:text-neutral-900'
                 }`}
@@ -697,7 +722,7 @@ export default function ProductDetailPage() {
             </button>
             <button
               onClick={() => setActiveTab('reviews')}
-              className={`pb-4 text-sm font-bold uppercase tracking-wider transition-colors relative ${activeTab === 'reviews'
+              className={`pb-4 text-sm font-semibold transition-colors relative ${activeTab === 'reviews'
                 ? 'text-neutral-900'
                 : 'text-neutral-500 hover:text-neutral-900'
                 }`}

@@ -55,7 +55,7 @@ export function OrderDetailDialog({
 }: OrderDetailDialogProps) {
     if (!order) return null;
 
-    const statusConfig = STATUS_CONFIG[order.status] || { label: order.status, className: 'bg-slate-100 text-slate-800' };
+    const statusConfig = STATUS_CONFIG[order.status] || { label: order.status, className: 'bg-neutral-100 text-neutral-800' };
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -63,13 +63,13 @@ export function OrderDetailDialog({
                 <DialogHeader className="p-6 pb-4 border-b">
                     <div className="flex items-center justify-between">
                         <DialogTitle className="flex items-center gap-2 text-xl">
-                            Đơn hàng <span className="font-mono text-slate-700 bg-slate-100 px-2 py-1 rounded">{order.orderCode}</span>
+                            Đơn hàng <span className="font-mono text-neutral-700 bg-neutral-100 px-2 py-1 rounded">{order.orderCode}</span>
                         </DialogTitle>
                         <Badge variant="outline" className={`${statusConfig.className} px-3 py-1`}>
                             {statusConfig.label}
                         </Badge>
                     </div>
-                    <div className="flex items-center gap-4 text-sm text-slate-500 mt-2">
+                    <div className="flex items-center gap-4 text-sm text-neutral-500 mt-2">
                         <div className="flex items-center gap-1">
                             <Calendar className="w-4 h-4" />
                             {formatDate(order.createdAt)}
@@ -81,21 +81,21 @@ export function OrderDetailDialog({
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                         {/* Customer Info */}
                         <div className="space-y-4">
-                            <h3 className="font-semibold text-slate-900 flex items-center gap-2">
+                            <h3 className="font-semibold text-neutral-900 flex items-center gap-2">
                                 <UserIcon className="w-4 h-4" />
                                 Thông tin khách hàng
                             </h3>
-                            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-3 text-sm">
+                            <div className="bg-neutral-50 p-4 rounded-lg border border-neutral-200 space-y-3 text-sm">
                                 <div className="flex justify-between">
-                                    <span className="text-slate-500">Họ tên:</span>
+                                    <span className="text-neutral-500">Họ tên:</span>
                                     <span className="font-medium">{order.customerName}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-slate-500 flex items-center gap-1"><Mail className="w-3 h-3" /> Email:</span>
+                                    <span className="text-neutral-500 flex items-center gap-1"><Mail className="w-3 h-3" /> Email:</span>
                                     <span className="font-medium">{order.customerEmail}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-slate-500 flex items-center gap-1"><Phone className="w-3 h-3" /> SĐT:</span>
+                                    <span className="text-neutral-500 flex items-center gap-1"><Phone className="w-3 h-3" /> SĐT:</span>
                                     <span className="font-medium">{order.phone}</span>
                                 </div>
                             </div>
@@ -103,21 +103,21 @@ export function OrderDetailDialog({
 
                         {/* Shipping Info */}
                         <div className="space-y-4">
-                            <h3 className="font-semibold text-slate-900 flex items-center gap-2">
+                            <h3 className="font-semibold text-neutral-900 flex items-center gap-2">
                                 <MapPin className="w-4 h-4" />
                                 Địa chỉ giao hàng & Ghi chú
                             </h3>
-                            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200 space-y-3 text-sm h-full">
+                            <div className="bg-neutral-50 p-4 rounded-lg border border-neutral-200 space-y-3 text-sm h-full">
                                 <div className="flex flex-col gap-1">
-                                    <span className="text-slate-500 text-xs uppercase tracking-wider">Địa chỉ:</span>
+                                    <span className="text-neutral-500 text-xs uppercase tracking-wider">Địa chỉ:</span>
                                     <p className="font-medium">{order.shippingAddress}</p>
                                 </div>
                                 {order.note && (
                                     <>
                                         <Separator className="my-2" />
                                         <div className="flex flex-col gap-1">
-                                            <span className="text-slate-500 text-xs uppercase tracking-wider">Ghi chú:</span>
-                                            <p className="italic text-slate-600">"{order.note}"</p>
+                                            <span className="text-neutral-500 text-xs uppercase tracking-wider">Ghi chú:</span>
+                                            <p className="italic text-neutral-600">"{order.note}"</p>
                                         </div>
                                     </>
                                 )}
@@ -127,14 +127,14 @@ export function OrderDetailDialog({
 
                     {/* Items */}
                     <div className="space-y-4 mb-6">
-                        <h3 className="font-semibold text-slate-900 flex items-center gap-2">
+                        <h3 className="font-semibold text-neutral-900 flex items-center gap-2">
                             <Package className="w-4 h-4" />
                             Danh sách sản phẩm ({order.totalItems})
                         </h3>
                         <div className="border rounded-lg overflow-hidden">
                             <Table>
                                 <TableHeader>
-                                    <TableRow className="bg-slate-50">
+                                    <TableRow className="bg-neutral-50">
                                         <TableHead>Sản phẩm</TableHead>
                                         <TableHead className="text-center">Đơn giá</TableHead>
                                         <TableHead className="text-center">Số lượng</TableHead>
@@ -146,7 +146,7 @@ export function OrderDetailDialog({
                                         <TableRow key={item.id}>
                                             <TableCell>
                                                 <div className="font-medium">{item.productNameSnapshot}</div>
-                                                <div className="text-sm text-slate-500">{item.variantInfoSnapshot}</div>
+                                                <div className="text-sm text-neutral-500">{item.variantInfoSnapshot}</div>
                                             </TableCell>
                                             <TableCell className="text-center">
                                                 {formatPrice(item.unitPrice)}
@@ -167,12 +167,12 @@ export function OrderDetailDialog({
                     {/* Summary */}
                     <div className="flex flex-col items-end gap-2 border-t pt-4">
                         <div className="flex items-center gap-8 text-sm">
-                            <span className="text-slate-500">Tạm tính:</span>
+                            <span className="text-neutral-500">Tạm tính:</span>
                             <span>{formatPrice(order.total)}</span>
                             {/* Assuming total is subtotal allowed for simplicty since no shipping fee field in DTO */}
                         </div>
                         {/* If we had shipping/discount fields they would go here */}
-                        <div className="flex items-center gap-8 text-lg font-bold text-slate-900 mt-2">
+                        <div className="flex items-center gap-8 text-lg font-bold text-neutral-900 mt-2">
                             <span>Tổng cộng:</span>
                             <span>{formatPrice(order.total)}</span>
                         </div>

@@ -154,11 +154,11 @@ export default function AdminUsersPage() {
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
                 <div>
-                    <h1 className="text-3xl font-black uppercase tracking-wider text-slate-800 flex items-center gap-3">
-                        <Users className="w-8 h-8 text-slate-800" />
+                    <h1 className="text-3xl font-bold tracking-tight text-neutral-800 flex items-center gap-3">
+                        <Users className="w-8 h-8 text-neutral-800" />
                         Quản lý người dùng
                     </h1>
-                    <p className="text-slate-500 mt-1">
+                    <p className="text-neutral-500 mt-1">
                         {isLoading
                             ? 'Đang tải...'
                             : `${filteredUsers.length} người dùng trong hệ thống`}
@@ -174,11 +174,11 @@ export default function AdminUsersPage() {
             </div>
 
             {/* Filters */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-6">
+            <div className="bg-white rounded-xl shadow-sm border border-neutral-200 p-4 mb-6">
                 <div className="flex flex-col md:flex-row gap-4">
                     {/* Search */}
                     <div className="flex-1 relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
                         <Input
                             placeholder="Tìm kiếm theo tên hoặc email..."
                             value={searchQuery}
@@ -200,7 +200,7 @@ export default function AdminUsersPage() {
                             }}
                         >
                             <SelectTrigger>
-                                <Shield className="w-4 h-4 mr-2 text-slate-400" />
+                                <Shield className="w-4 h-4 mr-2 text-neutral-400" />
                                 <SelectValue placeholder="Vai trò" />
                             </SelectTrigger>
                             <SelectContent>
@@ -226,7 +226,7 @@ export default function AdminUsersPage() {
             {/* Pagination */}
             {!isLoading && totalPages > 1 && (
                 <div className="mt-6 flex items-center justify-between">
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-neutral-500">
                         Trang {currentPage} / {totalPages}
                     </p>
                     <div className="flex items-center gap-2">
@@ -248,7 +248,7 @@ export default function AdminUsersPage() {
                                     variant={page === currentPage ? 'default' : 'outline'}
                                     size="sm"
                                     onClick={() => setCurrentPage(page)}
-                                    className={`min-w-[36px] ${page === currentPage ? '' : 'text-slate-600'}`}
+                                    className={`min-w-[36px] ${page === currentPage ? '' : 'text-neutral-600'}`}
                                 >
                                     {page}
                                 </Button>

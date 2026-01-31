@@ -41,12 +41,12 @@ export function DeleteUserDialog({
                     <AlertDialogTitle>Xác nhận xóa tài khoản</AlertDialogTitle>
                     <AlertDialogDescription className="space-y-3">
                         <p>
-                            Bạn chắc chắn muốn xóa tài khoản <span className="font-semibold text-slate-900">&quot;{userName}&quot;</span>?
+                            Bạn chắc chắn muốn xóa tài khoản <span className="font-semibold text-neutral-900">&quot;{userName}&quot;</span>?
                             Tài khoản sẽ bị khóa và không thể đăng nhập.
                         </p>
 
                         {!isLoadingOrders && orderCount > 0 && (
-                            <div className="bg-amber-50 border border-amber-200 rounded-md p-3 flex items-start gap-2 text-amber-800">
+                            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 flex items-start gap-2 text-amber-800">
                                 <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
                                 <div className="text-sm">
                                     <span className="font-semibold">Lưu ý:</span> User này đang có <span className="font-bold">{orderCount}</span> đơn hàng trong hệ thống.
@@ -55,7 +55,7 @@ export function DeleteUserDialog({
                             </div>
                         )}
 
-                        <span className="text-sm text-slate-500 block mt-2">
+                        <span className="text-sm text-neutral-500 block mt-2">
                             (Đây là thao tác soft delete - dữ liệu có thể được khôi phục bởi quản trị viên cấp cao)
                         </span>
                     </AlertDialogDescription>

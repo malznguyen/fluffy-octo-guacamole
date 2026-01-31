@@ -147,7 +147,7 @@ const DropdownMenuContent = ({
         zIndex: 9999,
       }}
       className={cn(
-        "min-w-[10rem] overflow-hidden rounded-md border border-slate-200 bg-white p-1 text-slate-950 shadow-lg",
+        "min-w-[10rem] overflow-hidden rounded-lg border border-neutral-200 bg-white p-1.5 text-neutral-950 shadow-lg",
         className
       )}
     >
@@ -168,7 +168,7 @@ const DropdownMenuItem = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "relative flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-slate-100 focus:bg-slate-100",
+        "relative flex cursor-pointer select-none items-center rounded-lg px-3 py-2 text-sm outline-none transition-colors hover:bg-neutral-100 focus:bg-neutral-100",
         inset && "pl-8",
         className
       )}
@@ -188,7 +188,7 @@ const DropdownMenuSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn("-mx-1 my-1 h-px bg-slate-100 dark:bg-slate-800", className)}
+    className={cn("-mx-1 my-1 h-px bg-neutral-100", className)}
     {...props}
   />
 ))

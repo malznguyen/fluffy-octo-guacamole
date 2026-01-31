@@ -6,9 +6,10 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuthStore } from '@/stores/auth-store';
+import { FloatingInput } from '@/components/ui/floating-input';
 import apiClient from '@/lib/axios';
 
 const loginSchema = z.object({
@@ -107,65 +108,50 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="bg-white border border-neutral-200 p-8">
-      <h1 className="text-3xl font-black uppercase tracking-tight text-center text-neutral-900 mb-8">
+    <div className="bg-white border border-neutral-200 rounded-xl shadow-sm p-8">
+      <h1 className="text-3xl font-bold tracking-tight text-center text-neutral-900 mb-8">
         Đăng nhập
       </h1>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         {/* Email */}
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-neutral-900 mb-2">
-            Email
-          </label>
-          <input
-            {...register('email')}
-            type="email"
-            id="email"
-            placeholder="email@example.com"
-            className="w-full px-4 py-3 border border-neutral-300 focus:border-neutral-900 focus:outline-none transition-colors"
-            disabled={isLoading}
-          />
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-          )}
-        </div>
+        <FloatingInput
+          {...register('email')}
+          type="email"
+          label="Email"
+          error={errors.email?.message}
+          icon={Mail}
+          disabled={isLoading}
+        />
 
         {/* Password */}
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-neutral-900 mb-2">
-            Mật khẩu
-          </label>
-          <div className="relative">
-            <input
-              {...register('password')}
-              type={showPassword ? 'text' : 'password'}
-              id="password"
-              placeholder="••••••"
-              className="w-full px-4 py-3 border border-neutral-300 focus:border-neutral-900 focus:outline-none transition-colors pr-12"
-              disabled={isLoading}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-neutral-100 rounded transition-colors"
-              tabIndex={-1}
-            >
-              {showPassword ? (
-                <EyeOff className="w-5 h-5 text-neutral-500" />
-              ) : (
-                <Eye className="w-5 h-5 text-neutral-500" />
-              )}
-            </button>
-          </div>
-          {errors.password && (
-            <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
-          )}
+        <div className="relative">
+          <FloatingInput
+            {...register('password')}
+            type={showPassword ? 'text' : 'password'}
+            label="Mật khẩu"
+            error={errors.password?.message}
+            icon={Lock}
+            disabled={isLoading}
+            className="pr-12"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 p-2 hover:bg-neutral-100 rounded-lg transition-colors z-10"
+            tabIndex={-1}
+          >
+            {showPassword ? (
+              <EyeOff className="w-5 h-5 text-neutral-500" />
+            ) : (
+              <Eye className="w-5 h-5 text-neutral-500" />
+            )}
+          </button>
         </div>
 
         {/* API Error */}
         {apiError && (
-          <div className="p-3 bg-red-50 border border-red-200 text-red-600 text-sm">
+          <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
             {apiError}
           </div>
         )}
@@ -174,17 +160,24 @@ export default function LoginPage() {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-neutral-900 text-white py-4 font-bold uppercase tracking-wider hover:bg-neutral-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full h-14 bg-neutral-900 text-white rounded-xl font-semibold hover:bg-neutral-800 hover:shadow-lg hover:shadow-neutral-900/20 hover:-translate-y-0.5 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
         >
-          {isLoading ? 'Đang xử lý...' : 'Đăng nhập'}
+          {isLoading ? (
+            <span className="flex items-center justify-center gap-2">
+              <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              Đang xử lý...
+            </span>
+          ) : (
+            'Đăng nhập'
+          )}
         </button>
       </form>
 
       {/* Footer Links */}
-      <div className="mt-6 text-center space-y-3">
+      <div className="mt-8 text-center space-y-4">
         <Link
           href="#"
-          className="block text-sm text-neutral-600 hover:text-neutral-900 transition-colors"
+          className="block text-sm text-neutral-600 hover:text-rose-600 transition-colors"
         >
           Quên mật khẩu?
         </Link>
@@ -192,7 +185,7 @@ export default function LoginPage() {
           Chưa có tài khoản?{' '}
           <Link
             href="/register"
-            className="font-bold text-neutral-900 hover:underline"
+            className="font-bold text-rose-600 hover:text-rose-700 transition-colors"
           >
             Đăng ký ngay
           </Link>

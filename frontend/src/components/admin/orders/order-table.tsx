@@ -68,10 +68,10 @@ export function OrderTable({
 
     if (isLoading) {
         return (
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden">
                 <Table>
                     <TableHeader>
-                        <TableRow className="bg-slate-50">
+                        <TableRow className="bg-neutral-50">
                             <TableHead className="w-[140px]">Mã đơn hàng</TableHead>
                             <TableHead>Khách hàng</TableHead>
                             <TableHead className="text-right">Tổng tiền</TableHead>
@@ -85,7 +85,7 @@ export function OrderTable({
                             <TableRow key={i}>
                                 {Array.from({ length: 6 }).map((_, j) => (
                                     <TableCell key={j}>
-                                        <div className="h-4 bg-slate-100 rounded animate-pulse" />
+                                        <div className="h-4 bg-neutral-100 rounded animate-pulse" />
                                     </TableCell>
                                 ))}
                             </TableRow>
@@ -98,12 +98,12 @@ export function OrderTable({
 
     if (orders.length === 0) {
         return (
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-16 text-center">
-                <ShoppingBag className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-slate-700 mb-2">
+            <div className="bg-white rounded-xl shadow-sm border border-neutral-200 p-16 text-center">
+                <ShoppingBag className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-neutral-700 mb-2">
                     Không tìm thấy đơn hàng nào
                 </h3>
-                <p className="text-slate-500">
+                <p className="text-neutral-500">
                     Hãy thử thay đổi bộ lọc hoặc tìm kiếm.
                 </p>
             </div>
@@ -111,10 +111,10 @@ export function OrderTable({
     }
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden">
             <Table>
                 <TableHeader>
-                    <TableRow className="bg-slate-50">
+                    <TableRow className="bg-neutral-50">
                         <TableHead className="w-[180px]">Mã đơn hàng</TableHead>
                         <TableHead>Khách hàng</TableHead>
                         <TableHead className="text-right">Tổng tiền</TableHead>
@@ -125,23 +125,23 @@ export function OrderTable({
                 </TableHeader>
                 <TableBody>
                     {orders.map((order) => {
-                        const statusStyle = STATUS_BADGES[order.status] || { label: order.status, className: 'bg-slate-100 text-slate-800' };
+                        const statusStyle = STATUS_BADGES[order.status] || { label: order.status, className: 'bg-neutral-100 text-neutral-800' };
                         const isFinalState = order.status === OrderStatus.COMPLETED || order.status === OrderStatus.CANCELLED;
 
                         return (
-                            <TableRow key={order.id} className="group hover:bg-slate-50">
+                            <TableRow key={order.id} className="group hover:bg-neutral-50">
                                 <TableCell>
-                                    <span className="font-mono font-medium text-slate-700 bg-slate-100 px-2 py-1 rounded">
+                                    <span className="font-mono font-medium text-neutral-700 bg-neutral-100 px-2 py-1 rounded">
                                         {order.orderCode}
                                     </span>
                                 </TableCell>
                                 <TableCell>
                                     <div className="flex flex-col">
-                                        <span className="font-medium text-slate-900">{order.customerName}</span>
-                                        <span className="text-xs text-slate-500">{order.customerEmail}</span>
+                                        <span className="font-medium text-neutral-900">{order.customerName}</span>
+                                        <span className="text-xs text-neutral-500">{order.customerEmail}</span>
                                     </div>
                                 </TableCell>
-                                <TableCell className="text-right font-medium text-slate-900">
+                                <TableCell className="text-right font-medium text-neutral-900">
                                     {formatPrice(order.total)}
                                 </TableCell>
                                 <TableCell className="text-center">
@@ -149,7 +149,7 @@ export function OrderTable({
                                         {statusStyle.label}
                                     </Badge>
                                 </TableCell>
-                                <TableCell className="text-sm text-slate-500">
+                                <TableCell className="text-sm text-neutral-500">
                                     {formatDate(order.createdAt)}
                                 </TableCell>
                                 <TableCell>

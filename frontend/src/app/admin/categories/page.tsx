@@ -162,10 +162,10 @@ export default function AdminCategoriesPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-black uppercase tracking-wider text-slate-800">
+          <h1 className="text-3xl font-bold tracking-tight text-neutral-800">
             Quản lý danh mục
           </h1>
-          <p className="text-slate-500 mt-1">
+          <p className="text-neutral-500 mt-1">
             {isLoading ? 'Đang tải...' : `${categories.length} danh mục`}
           </p>
         </div>
@@ -176,10 +176,10 @@ export default function AdminCategoriesPage() {
       </div>
 
       {/* Filters (Search only for now, can add status filter if needed) */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-6">
+      <div className="bg-white rounded-xl shadow-sm border border-neutral-200 p-4 mb-6">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
             <Input
               placeholder="Tìm kiếm danh mục..."
               value={searchQuery}

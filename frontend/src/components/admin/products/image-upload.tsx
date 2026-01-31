@@ -13,7 +13,7 @@ interface ImageUploadProps {
   onChange: (images: CreateImageRequest[]) => void;
 }
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
 export function ImageUpload({ images: rawImages, onChange }: ImageUploadProps) {
@@ -29,7 +29,7 @@ export function ImageUpload({ images: rawImages, onChange }: ImageUploadProps) {
       return false;
     }
     if (file.size > MAX_FILE_SIZE) {
-      toast.error('Kích thước file không được vượt quá 5MB');
+      toast.error('Kích thước file không được vượt quá 25MB');
       return false;
     }
     return true;
@@ -134,7 +134,7 @@ export function ImageUpload({ images: rawImages, onChange }: ImageUploadProps) {
           'border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors',
           dragActive
             ? 'border-blue-500 bg-blue-50'
-            : 'border-slate-300 hover:border-slate-400 hover:bg-slate-50'
+            : 'border-neutral-300 hover:border-neutral-400 hover:bg-neutral-50'
         )}
       >
         <input
@@ -148,16 +148,16 @@ export function ImageUpload({ images: rawImages, onChange }: ImageUploadProps) {
         {uploadMutation.isPending ? (
           <div className="flex flex-col items-center gap-2">
             <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
-            <p className="text-sm text-slate-600">Đang tải ảnh lên...</p>
+            <p className="text-sm text-neutral-600">Đang tải ảnh lên...</p>
           </div>
         ) : (
           <div className="flex flex-col items-center gap-2">
-            <Upload className="w-8 h-8 text-slate-400" />
-            <p className="text-sm font-medium text-slate-700">
+            <Upload className="w-8 h-8 text-neutral-400" />
+            <p className="text-sm font-medium text-neutral-700">
               Kéo thả ảnh vào đây hoặc click để chọn
             </p>
-            <p className="text-xs text-slate-500">
-              Hỗ trợ: JPEG, PNG, WebP, GIF (tối đa 5MB)
+            <p className="text-xs text-neutral-500">
+              Hỗ trợ: JPEG, PNG, WebP, GIF (tối đa 25MB)
             </p>
           </div>
         )}
@@ -166,7 +166,7 @@ export function ImageUpload({ images: rawImages, onChange }: ImageUploadProps) {
       {/* Image List */}
       {images.length > 0 && (
         <div className="space-y-2">
-          <p className="text-sm font-medium text-slate-700">
+          <p className="text-sm font-medium text-neutral-700">
             Ảnh sản phẩm ({images.length})
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
@@ -177,7 +177,7 @@ export function ImageUpload({ images: rawImages, onChange }: ImageUploadProps) {
                   'relative group border-2 rounded-lg overflow-hidden',
                   image.isPrimary
                     ? 'border-blue-500 ring-2 ring-blue-100'
-                    : 'border-slate-200'
+                    : 'border-neutral-200'
                 )}
               >
                 {/* Image */}
@@ -264,7 +264,7 @@ export function ImageUpload({ images: rawImages, onChange }: ImageUploadProps) {
                     onChange(newImages);
                   }}
                   placeholder="Mô tả ảnh"
-                  className="w-full px-2 py-1 text-xs border-t border-slate-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full px-2 py-1 text-xs border-t border-neutral-200 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   onClick={(e) => e.stopPropagation()}
                 />
               </div>

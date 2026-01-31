@@ -14,7 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -29,17 +30,14 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final UserRepository userRepository;
 
-    // Public endpoint - Lấy reviews của sản phẩm
+    // Public endpoint - Lấy reviews của sản phẩm (KHÔNG yêu cầu authentication)
     @GetMapping("/public/products/{productId}/reviews")
-    @Operation(summary = "Get product reviews", description = "Get all reviews for a product (public)")
+    @Operation(summary = "Get product reviews", description = "Get all reviews for a product (public - no authentication required)")
     public ResponseEntity<Map<String, Object>> getProductReviews(
-            @PathVariable Long productId,
-            @AuthenticationPrincipal String email) {
+            @PathVariable Long productId) {
         
-        Long currentUserId = null;
-        if (email != null && !email.isEmpty()) {
-            currentUserId = getUserIdFromEmail(email);
-        }
+        // Lấy currentUserId nếu user đã đăng nhập, null nếu chưa đăng nhập
+        Long currentUserId = getCurrentUserIdSafely();
         
         ProductReviewStats stats = reviewService.getProductReviews(productId, currentUserId);
         
@@ -56,7 +54,7 @@ public class ReviewController {
     @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Map<String, Object>> createReview(
-            @AuthenticationPrincipal String email,
+            @org.springframework.security.core.annotation.AuthenticationPrincipal String email,
             @Valid @RequestBody ReviewRequest request) {
         
         Long userId = getUserIdFromEmail(email);
@@ -76,7 +74,7 @@ public class ReviewController {
     @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Map<String, Object>> deleteReview(
-            @AuthenticationPrincipal String email,
+            @org.springframework.security.core.annotation.AuthenticationPrincipal String email,
             @PathVariable Long reviewId) {
         
         Long userId = getUserIdFromEmail(email);
@@ -89,7 +87,41 @@ public class ReviewController {
         return ResponseEntity.ok(response);
     }
 
-    // Helper method để lấy userId từ email
+    // Helper method để lấy userId an toàn (null nếu chưa đăng nhập)
+    private Long getCurrentUserIdSafely() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        
+        // Check nếu không có authentication hoặc là anonymous
+        if (authentication == null || 
+            !authentication.isAuthenticated() || 
+            "anonymousUser".equals(authentication.getPrincipal())) {
+            return null;
+        }
+        
+        // Lấy email từ principal
+        String email = null;
+        if (authentication.getPrincipal() instanceof String) {
+            email = (String) authentication.getPrincipal();
+        } else if (authentication.getPrincipal() instanceof org.springframework.security.core.userdetails.User) {
+            email = ((org.springframework.security.core.userdetails.User) authentication.getPrincipal()).getUsername();
+        }
+        
+        if (email == null || email.isEmpty()) {
+            return null;
+        }
+        
+        // Tìm user và trả về id
+        try {
+            return userRepository.findByEmail(email)
+                    .map(User::getId)
+                    .orElse(null);
+        } catch (Exception e) {
+            // Nếu có lỗi khi tìm user, trả về null (coi như chưa đăng nhập)
+            return null;
+        }
+    }
+
+    // Helper method để lấy userId từ email (chỉ dùng cho authenticated endpoints)
     private Long getUserIdFromEmail(String email) {
         if (email == null || email.isEmpty()) {
             throw new RuntimeException("Unauthorized - Please login");

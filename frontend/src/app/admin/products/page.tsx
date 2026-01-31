@@ -240,7 +240,7 @@ export default function AdminProductsPage() {
 
   const SortIcon = ({ field }: { field: SortField }) => {
     if (sortField !== field) {
-      return <ArrowUpDown className="w-4 h-4 text-slate-400" />;
+      return <ArrowUpDown className="w-4 h-4 text-neutral-400" />;
     }
     return sortOrder === 'asc' ? (
       <ArrowUp className="w-4 h-4 text-blue-500" />
@@ -271,10 +271,10 @@ export default function AdminProductsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-black uppercase tracking-wider text-slate-800">
+          <h1 className="text-3xl font-bold tracking-tight text-neutral-800">
             Quản lý sản phẩm
           </h1>
-          <p className="text-slate-500 mt-1">
+          <p className="text-neutral-500 mt-1">
             {isLoading
               ? 'Đang tải...'
               : `${filteredProducts.length} sản phẩm`}
@@ -287,11 +287,11 @@ export default function AdminProductsPage() {
       </div>
 
       {/* Filters */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-4 mb-6">
+      <div className="bg-white rounded-xl shadow-sm border border-neutral-200 p-4 mb-6">
         <div className="flex flex-col lg:flex-row gap-4">
           {/* Search */}
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-400" />
             <Input
               placeholder="Tìm kiếm theo tên, slug..."
               value={searchQuery}
@@ -313,7 +313,7 @@ export default function AdminProductsPage() {
               }}
             >
               <SelectTrigger>
-                <Filter className="w-4 h-4 mr-2 text-slate-400" />
+                <Filter className="w-4 h-4 mr-2 text-neutral-400" />
                 <SelectValue placeholder="Tất cả danh mục" />
               </SelectTrigger>
               <SelectContent>
@@ -337,7 +337,7 @@ export default function AdminProductsPage() {
               }}
             >
               <SelectTrigger>
-                <Eye className="w-4 h-4 mr-2 text-slate-400" />
+                <Eye className="w-4 h-4 mr-2 text-neutral-400" />
                 <SelectValue placeholder="Trạng thái" />
               </SelectTrigger>
               <SelectContent>
@@ -351,14 +351,14 @@ export default function AdminProductsPage() {
       </div>
 
       {/* Products Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+      <div className="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow className="bg-slate-50">
+              <TableRow className="bg-neutral-50">
                 <TableHead className="w-16">Ảnh</TableHead>
                 <TableHead
-                  className="cursor-pointer hover:bg-slate-100"
+                  className="cursor-pointer hover:bg-neutral-100"
                   onClick={() => handleSort('name')}
                 >
                   <div className="flex items-center gap-1">
@@ -368,7 +368,7 @@ export default function AdminProductsPage() {
                 </TableHead>
                 <TableHead>SKU</TableHead>
                 <TableHead
-                  className="cursor-pointer hover:bg-slate-100 text-right"
+                  className="cursor-pointer hover:bg-neutral-100 text-right"
                   onClick={() => handleSort('basePrice')}
                 >
                   <div className="flex items-center justify-end gap-1">
@@ -377,7 +377,7 @@ export default function AdminProductsPage() {
                   </div>
                 </TableHead>
                 <TableHead
-                  className="cursor-pointer hover:bg-slate-100"
+                  className="cursor-pointer hover:bg-neutral-100"
                   onClick={() => handleSort('categoryName')}
                 >
                   <div className="flex items-center gap-1">
@@ -387,7 +387,7 @@ export default function AdminProductsPage() {
                 </TableHead>
                 <TableHead className="text-center">Tồn kho</TableHead>
                 <TableHead
-                  className="cursor-pointer hover:bg-slate-100"
+                  className="cursor-pointer hover:bg-neutral-100"
                   onClick={() => handleSort('isVisible')}
                 >
                   <div className="flex items-center gap-1">
@@ -396,7 +396,7 @@ export default function AdminProductsPage() {
                   </div>
                 </TableHead>
                 <TableHead
-                  className="cursor-pointer hover:bg-slate-100 text-center"
+                  className="cursor-pointer hover:bg-neutral-100 text-center"
                   onClick={() => handleSort('soldCount')}
                 >
                   <div className="flex items-center justify-center gap-1">
@@ -414,7 +414,7 @@ export default function AdminProductsPage() {
                   <TableRow key={i}>
                     {Array.from({ length: 9 }).map((_, j) => (
                       <TableCell key={j}>
-                        <div className="h-4 bg-slate-200 rounded animate-pulse" />
+                        <div className="h-4 bg-neutral-200 rounded animate-pulse" />
                       </TableCell>
                     ))}
                   </TableRow>
@@ -422,11 +422,11 @@ export default function AdminProductsPage() {
               ) : paginatedProducts.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={9} className="py-16 text-center">
-                    <Package className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-slate-700 mb-2">
+                    <Package className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-neutral-700 mb-2">
                       Không tìm thấy sản phẩm nào
                     </h3>
-                    <p className="text-slate-500 mb-4">
+                    <p className="text-neutral-500 mb-4">
                       {searchQuery || categoryFilter !== 'all' || visibilityFilter !== 'all'
                         ? 'Thử thay đổi bộ lọc tìm kiếm'
                         : 'Bắt đầu bằng cách thêm sản phẩm mới'}
@@ -447,11 +447,11 @@ export default function AdminProductsPage() {
                   return (
                     <TableRow
                       key={product.id}
-                      className="group hover:bg-slate-50"
+                      className="group hover:bg-neutral-50"
                     >
                       {/* Image */}
                       <TableCell>
-                        <div className="w-12 h-12 rounded-lg border border-slate-200 overflow-hidden bg-slate-100">
+                        <div className="w-12 h-12 rounded-lg border border-neutral-200 overflow-hidden bg-neutral-100">
                           {primaryImage?.imageUrl ? (
                             <img
                               src={getImageUrl(primaryImage.imageUrl)}
@@ -462,7 +462,7 @@ export default function AdminProductsPage() {
                               }}
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center text-slate-400">
+                            <div className="w-full h-full flex items-center justify-center text-neutral-400">
                               <Package className="w-6 h-6" />
                             </div>
                           )}
@@ -475,11 +475,11 @@ export default function AdminProductsPage() {
                           <Link
                             href={`/products/${product.slug}`}
                             target="_blank"
-                            className="font-medium text-slate-900 hover:text-blue-600"
+                            className="font-medium text-neutral-900 hover:text-blue-600"
                           >
                             {product.name}
                           </Link>
-                          <p className="text-xs text-slate-500">{product.slug}</p>
+                          <p className="text-xs text-neutral-500">{product.slug}</p>
                         </div>
                       </TableCell>
 
@@ -493,16 +493,16 @@ export default function AdminProductsPage() {
 
                           // Kiểm tra SKU hợp lệ (phải là string không rỗng)
                           if (!firstSku || typeof firstSku !== 'string' || firstSku.trim() === '') {
-                            return <span className="text-slate-400 text-sm">Chưa có SKU</span>;
+                            return <span className="text-neutral-400 text-sm">Chưa có SKU</span>;
                           }
 
                           return (
                             <div className="font-mono text-xs">
-                              <span className="bg-slate-100 px-2 py-1 rounded">
+                              <span className="bg-neutral-100 px-2 py-1 rounded">
                                 {firstSku}
                               </span>
                               {hasMultiple && (
-                                <span className="text-slate-400 ml-1">(+{variants.length - 1})</span>
+                                <span className="text-neutral-400 ml-1">(+{variants.length - 1})</span>
                               )}
                             </div>
                           );
@@ -518,7 +518,7 @@ export default function AdminProductsPage() {
 
                       {/* Category */}
                       <TableCell>
-                        <span className="text-sm text-slate-600">
+                        <span className="text-sm text-neutral-600">
                           {product.categoryName}
                         </span>
                       </TableCell>
@@ -529,7 +529,7 @@ export default function AdminProductsPage() {
                           const variants = product.variants || [];
                           if (variants.length === 0) {
                             return (
-                              <span className="inline-flex items-center gap-1 text-sm text-slate-400">
+                              <span className="inline-flex items-center gap-1 text-sm text-neutral-400">
                                 <Package className="w-4 h-4" />
                                 Chưa có biến thể
                               </span>
@@ -568,7 +568,7 @@ export default function AdminProductsPage() {
                         ) : (
                           <Badge
                             variant="secondary"
-                            className="bg-slate-100 text-slate-600 hover:bg-slate-100"
+                            className="bg-neutral-100 text-neutral-600 hover:bg-neutral-100"
                           >
                             <EyeOff className="w-3 h-3 mr-1" />
                             Ẩn
@@ -637,8 +637,8 @@ export default function AdminProductsPage() {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="border-t border-slate-200 px-6 py-4 flex items-center justify-between">
-            <p className="text-sm text-slate-500">
+          <div className="border-t border-neutral-200 px-6 py-4 flex items-center justify-between">
+            <p className="text-sm text-neutral-500">
               Hiển thị {(currentPage - 1) * ITEMS_PER_PAGE + 1} -{' '}
               {Math.min(currentPage * ITEMS_PER_PAGE, filteredProducts.length)} trong{' '}
               {filteredProducts.length} sản phẩm

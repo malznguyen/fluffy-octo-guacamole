@@ -58,10 +58,10 @@ export function UserTable({
 
     if (isLoading) {
         return (
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden">
                 <Table>
                     <TableHeader>
-                        <TableRow className="bg-slate-50">
+                        <TableRow className="bg-neutral-50">
                             <TableHead className="w-16">Avatar</TableHead>
                             <TableHead>Thông tin</TableHead>
                             <TableHead>Điện thoại</TableHead>
@@ -75,7 +75,7 @@ export function UserTable({
                             <TableRow key={i}>
                                 {Array.from({ length: 6 }).map((_, j) => (
                                     <TableCell key={j}>
-                                        <div className="h-4 bg-slate-100 rounded animate-pulse" />
+                                        <div className="h-4 bg-neutral-100 rounded animate-pulse" />
                                     </TableCell>
                                 ))}
                             </TableRow>
@@ -88,12 +88,12 @@ export function UserTable({
 
     if (users.length === 0) {
         return (
-            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-16 text-center">
-                <User className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-slate-700 mb-2">
+            <div className="bg-white rounded-xl shadow-sm border border-neutral-200 p-16 text-center">
+                <User className="w-16 h-16 text-neutral-300 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold text-neutral-700 mb-2">
                     Không tìm thấy người dùng nào
                 </h3>
-                <p className="text-slate-500">
+                <p className="text-neutral-500">
                     Thử thay đổi bộ lọc tìm kiếm
                 </p>
             </div>
@@ -101,10 +101,10 @@ export function UserTable({
     }
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden">
             <Table>
                 <TableHeader>
-                    <TableRow className="bg-slate-50">
+                    <TableRow className="bg-neutral-50">
                         <TableHead className="w-16">Avatar</TableHead>
                         <TableHead>Thông tin</TableHead>
                         <TableHead>Điện thoại</TableHead>
@@ -118,12 +118,12 @@ export function UserTable({
                         const isDeleted = !!user.deletedAt;
 
                         return (
-                            <TableRow key={user.id} className={`group hover:bg-slate-50 ${isDeleted ? 'opacity-60 bg-slate-50' : ''}`}>
+                            <TableRow key={user.id} className={`group hover:bg-neutral-50 ${isDeleted ? 'opacity-60 bg-neutral-50' : ''}`}>
                                 {/* Avatar */}
                                 <TableCell>
-                                    <Avatar className="w-10 h-10 border border-slate-200">
+                                    <Avatar className="w-10 h-10 border border-neutral-200">
                                         <AvatarImage src={user.avatarUrl || ''} />
-                                        <AvatarFallback className="bg-slate-100 text-slate-400">
+                                        <AvatarFallback className="bg-neutral-100 text-neutral-400">
                                             <User className="w-5 h-5" />
                                         </AvatarFallback>
                                     </Avatar>
@@ -132,18 +132,18 @@ export function UserTable({
                                 {/* Info */}
                                 <TableCell>
                                     <div className="flex flex-col">
-                                        <span className="font-medium text-slate-900 flex items-center gap-2">
+                                        <span className="font-medium text-neutral-900 flex items-center gap-2">
                                             {user.fullName}
                                             {isDeleted && <Badge variant="destructive" className="text-[10px] px-1 h-4">Đã xóa</Badge>}
                                         </span>
-                                        <span className="text-xs text-slate-500">{user.email}</span>
+                                        <span className="text-xs text-neutral-500">{user.email}</span>
                                     </div>
                                 </TableCell>
 
                                 {/* Phone */}
                                 <TableCell>
-                                    <span className="text-sm text-slate-600">
-                                        {user.phone || <span className="text-slate-400 italic">Chưa cập nhật</span>}
+                                    <span className="text-sm text-neutral-600">
+                                        {user.phone || <span className="text-neutral-400 italic">Chưa cập nhật</span>}
                                     </span>
                                 </TableCell>
 
@@ -164,7 +164,7 @@ export function UserTable({
 
                                 {/* Date */}
                                 <TableCell>
-                                    <span className="text-sm text-slate-500">
+                                    <span className="text-sm text-neutral-500">
                                         {formatDate(user.createdAt)}
                                     </span>
                                 </TableCell>

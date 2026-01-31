@@ -212,7 +212,7 @@ export function ProductForm({
                 <Layers className="w-4 h-4" />
                 Biến thể
                 {formData.variants.length > 0 && (
-                  <span className="ml-1 text-xs bg-slate-200 px-1.5 py-0.5 rounded-full">
+                  <span className="ml-1 text-xs bg-neutral-200 px-1.5 py-0.5 rounded-full">
                     {formData.variants.length}
                   </span>
                 )}
@@ -221,7 +221,7 @@ export function ProductForm({
                 <Images className="w-4 h-4" />
                 Hình ảnh
                 {formData.images.length > 0 && (
-                  <span className="ml-1 text-xs bg-slate-200 px-1.5 py-0.5 rounded-full">
+                  <span className="ml-1 text-xs bg-neutral-200 px-1.5 py-0.5 rounded-full">
                     {formData.images.length}
                   </span>
                 )}
@@ -348,7 +348,7 @@ export function ProductForm({
                       </SelectItem>
                       <SelectItem value="false">
                         <span className="flex items-center gap-2">
-                          <EyeOff className="w-4 h-4 text-slate-400" />
+                          <EyeOff className="w-4 h-4 text-neutral-400" />
                           Ẩn (Riêng tư)
                         </span>
                       </SelectItem>
@@ -361,7 +361,7 @@ export function ProductForm({
             {/* Variants Tab */}
             <TabsContent value="variants" className="mt-4">
               {errors.variants && (
-                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md flex items-start gap-2">
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-start gap-2">
                   <Info className="w-4 h-4 text-red-500 mt-0.5" />
                   <p className="text-sm text-red-600">{errors.variants}</p>
                 </div>

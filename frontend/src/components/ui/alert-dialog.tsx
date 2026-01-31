@@ -57,7 +57,7 @@ const AlertDialogContent = React.forwardRef<
       <div
         ref={ref}
         className={cn(
-          "relative bg-white rounded-lg shadow-lg border border-slate-200 w-full max-w-lg p-6",
+          "relative bg-white rounded-xl shadow-lg border border-neutral-200 w-full max-w-lg p-6",
           className
         )}
         {...props}
@@ -113,7 +113,7 @@ const AlertDialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-slate-500", className)}
+    className={cn("text-sm text-neutral-500", className)}
     {...props}
   />
 ))
