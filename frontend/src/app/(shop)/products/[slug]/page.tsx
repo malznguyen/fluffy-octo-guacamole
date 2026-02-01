@@ -69,7 +69,7 @@ export default function ProductDetailPage() {
   const [activeTab, setActiveTab] = useState<'description' | 'details' | 'reviews'>('description');
   // Auth store
   const { isAuthenticated } = useAuthStore();
-  
+
   // Wishlist store
   const { isInWishlist, toggleWishlist, fetchWishlist } = useWishlistStore();
   const [isWishlistLoading, setIsWishlistLoading] = useState(false);
@@ -480,41 +480,49 @@ export default function ProductDetailPage() {
               </p>
 
               {/* Trust Badges - 2x2 Grid */}
-              <div className="grid grid-cols-2 gap-2 mb-8">
+              <div className="grid grid-cols-2 gap-4 mb-8">
                 {/* Authentic Badge */}
-                <div className="flex flex-col items-center text-center p-2 md:p-3 bg-neutral-50 rounded-xl border border-neutral-100">
-                  <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center mb-2">
+                <div className="flex items-start gap-3">
+                  <div className="p-2.5 bg-emerald-50 rounded-full shrink-0">
                     <BadgeCheck className="h-5 w-5 text-emerald-600" />
                   </div>
-                  <h4 className="text-xs font-bold text-neutral-900 mb-0.5">Chính hãng 100%</h4>
-                  <p className="text-[10px] text-neutral-500 leading-relaxed">Cam kết chất lượng</p>
+                  <div>
+                    <h4 className="text-sm font-bold text-neutral-900 leading-none mb-1 mt-1">Chính hãng 100%</h4>
+                    <p className="text-xs text-neutral-500">Cam kết chất lượng</p>
+                  </div>
                 </div>
 
                 {/* Free Shipping Badge */}
-                <div className="flex flex-col items-center text-center p-2 md:p-3 bg-neutral-50 rounded-xl border border-neutral-100">
-                  <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mb-2">
+                <div className="flex items-start gap-3">
+                  <div className="p-2.5 bg-blue-50 rounded-full shrink-0">
                     <Truck className="h-5 w-5 text-blue-600" />
                   </div>
-                  <h4 className="text-xs font-bold text-neutral-900 mb-0.5">Miễn phí vận chuyển</h4>
-                  <p className="text-[10px] text-neutral-500 leading-relaxed">Đơn từ 500K</p>
+                  <div>
+                    <h4 className="text-sm font-bold text-neutral-900 leading-none mb-1 mt-1">Miễn phí vận chuyển</h4>
+                    <p className="text-xs text-neutral-500">Cho đơn từ 500K</p>
+                  </div>
                 </div>
 
                 {/* Return Policy Badge */}
-                <div className="flex flex-col items-center text-center p-2 md:p-3 bg-neutral-50 rounded-xl border border-neutral-100">
-                  <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center mb-2">
+                <div className="flex items-start gap-3">
+                  <div className="p-2.5 bg-amber-50 rounded-full shrink-0">
                     <RotateCcw className="h-5 w-5 text-amber-600" />
                   </div>
-                  <h4 className="text-xs font-bold text-neutral-900 mb-0.5">Đổi trả 7 ngày</h4>
-                  <p className="text-[10px] text-neutral-500 leading-relaxed">Nhanh chóng, dễ dàng</p>
+                  <div>
+                    <h4 className="text-sm font-bold text-neutral-900 leading-none mb-1 mt-1">Đổi trả 7 ngày</h4>
+                    <p className="text-xs text-neutral-500">Nhanh chóng, dễ dàng</p>
+                  </div>
                 </div>
 
                 {/* Secure Payment Badge */}
-                <div className="flex flex-col items-center text-center p-2 md:p-3 bg-neutral-50 rounded-xl border border-neutral-100">
-                  <div className="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center mb-2">
+                <div className="flex items-start gap-3">
+                  <div className="p-2.5 bg-rose-50 rounded-full shrink-0">
                     <ShieldCheck className="h-5 w-5 text-rose-600" />
                   </div>
-                  <h4 className="text-xs font-bold text-neutral-900 mb-0.5">Thanh toán an toàn</h4>
-                  <p className="text-[10px] text-neutral-500 leading-relaxed">Bảo mật tuyệt đối</p>
+                  <div>
+                    <h4 className="text-sm font-bold text-neutral-900 leading-none mb-1 mt-1">Thanh toán an toàn</h4>
+                    <p className="text-xs text-neutral-500">Bảo mật tuyệt đối</p>
+                  </div>
                 </div>
               </div>
 
@@ -537,23 +545,21 @@ export default function ProductDetailPage() {
                             key={color}
                             onClick={() => isAvailable && setSelectedColor(color)}
                             disabled={!isAvailable}
-                            className={`relative min-w-[2.5rem] h-10 px-2 rounded-lg border-2 transition-all ${isSelected
-                              ? 'ring-2 ring-black ring-offset-2'
-                              : 'hover:scale-110'
-                              } ${!isAvailable
-                                ? 'opacity-50 cursor-not-allowed'
+                            className={`relative min-w-[2.5rem] h-9 px-3 rounded-md text-sm font-medium transition-all duration-200 border flex items-center justify-center ${!isAvailable
+                                ? 'opacity-50 cursor-not-allowed bg-neutral-50 text-neutral-300 border-neutral-100 decoration-slice line-through'
                                 : 'cursor-pointer'
+                              } ${isSelected
+                                ? isColorHex
+                                  ? 'ring-1 ring-neutral-900 ring-offset-2 border-neutral-200'
+                                  : 'bg-neutral-900 text-white border-neutral-900 shadow-sm transform scale-105'
+                                : isColorHex
+                                  ? 'border-neutral-200 hover:border-neutral-400'
+                                  : 'bg-white text-neutral-700 border-neutral-200 hover:border-neutral-900 hover:text-neutral-900'
                               }`}
-                            style={
-                              isColorHex
-                                ? { backgroundColor: color, borderColor: isSelected ? 'black' : '#e5e5e5' }
-                                : { borderColor: isSelected ? 'black' : '#e5e5e5' }
-                            }
-                            title={color}
+                            style={isColorHex ? { backgroundColor: color } : undefined}
+                            title={isColorHex ? color : undefined}
                           >
-                            {!isColorHex && (
-                              <span className="text-xs font-medium">{color}</span>
-                            )}
+                            {!isColorHex && color}
                           </button>
                         );
                       })}
@@ -664,16 +670,14 @@ export default function ProductDetailPage() {
                   <button
                     onClick={handleWishlistToggle}
                     disabled={isWishlistLoading}
-                    className={`flex items-center gap-2 text-sm transition-colors ${
-                      product && isInWishlist(product.id) 
-                        ? 'text-red-600' 
-                        : 'text-neutral-600 hover:text-neutral-900'
-                    } disabled:opacity-50`}
+                    className={`flex items-center gap-2 text-sm transition-colors ${product && isInWishlist(product.id)
+                      ? 'text-red-600'
+                      : 'text-neutral-600 hover:text-neutral-900'
+                      } disabled:opacity-50`}
                   >
-                    <Heart 
-                      className={`w-5 h-5 transition-transform ${
-                        product && isInWishlist(product.id) ? 'fill-current' : ''
-                      } ${isWishlistLoading ? 'animate-pulse' : ''}`} 
+                    <Heart
+                      className={`w-5 h-5 transition-transform ${product && isInWishlist(product.id) ? 'fill-current' : ''
+                        } ${isWishlistLoading ? 'animate-pulse' : ''}`}
                     />
                     {product && isInWishlist(product.id) ? 'Đã yêu thích' : 'Yêu thích'}
                   </button>

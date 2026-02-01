@@ -95,7 +95,7 @@ export default function DashboardPage() {
   const { user, isAuthenticated, logout, setUser } = useAuthStore();
   const [activeTab, setActiveTab] = useState<TabType>('profile');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   // Orders state
   const [orders, setOrders] = useState<OrderDTO[]>([]);
   const [isLoadingOrders, setIsLoadingOrders] = useState(false);
@@ -148,7 +148,7 @@ export default function DashboardPage() {
         params: { page: 0, size: 5 }, // Get latest 5 orders
       });
       console.log('[Dashboard] Orders response:', response.data);
-      
+
       if (response.data.success) {
         setOrders(response.data.data.content);
       }
@@ -256,30 +256,26 @@ export default function DashboardPage() {
                 {/* Profile Tab */}
                 <button
                   onClick={() => setActiveTab('profile')}
-                  className={`w-full flex items-center gap-3 px-6 py-4 text-sm font-medium transition-all duration-200 ease-in-out relative ${
-                    activeTab === 'profile'
+                  className={`w-full flex items-center gap-3 px-6 py-4 text-sm font-medium transition-all duration-200 ease-in-out relative ${activeTab === 'profile'
                       ? 'border-l-4 border-l-rose-600 bg-rose-50 text-rose-900 font-semibold'
                       : 'border-l-4 border-l-transparent text-neutral-500 hover:bg-rose-50/50 hover:text-rose-700'
-                  }`}
+                    }`}
                 >
-                  <User className={`w-5 h-5 transition-colors duration-200 ${
-                    activeTab === 'profile' ? 'text-rose-600' : 'text-neutral-400'
-                  }`} />
+                  <User className={`w-5 h-5 transition-colors duration-200 ${activeTab === 'profile' ? 'text-rose-600' : 'text-neutral-400'
+                    }`} />
                   <span>Thông tin cá nhân</span>
                 </button>
 
                 {/* Orders Tab */}
                 <button
                   onClick={() => setActiveTab('orders')}
-                  className={`w-full flex items-center gap-3 px-6 py-4 text-sm font-medium transition-all duration-200 ease-in-out relative ${
-                    activeTab === 'orders'
+                  className={`w-full flex items-center gap-3 px-6 py-4 text-sm font-medium transition-all duration-200 ease-in-out relative ${activeTab === 'orders'
                       ? 'border-l-4 border-l-rose-600 bg-rose-50 text-rose-900 font-semibold'
                       : 'border-l-4 border-l-transparent text-neutral-500 hover:bg-rose-50/50 hover:text-rose-700'
-                  }`}
+                    }`}
                 >
-                  <ShoppingBag className={`w-5 h-5 transition-colors duration-200 ${
-                    activeTab === 'orders' ? 'text-rose-600' : 'text-neutral-400'
-                  }`} />
+                  <ShoppingBag className={`w-5 h-5 transition-colors duration-200 ${activeTab === 'orders' ? 'text-rose-600' : 'text-neutral-400'
+                    }`} />
                   <span>Lịch sử đơn hàng</span>
                 </button>
 
@@ -313,14 +309,16 @@ export default function DashboardPage() {
                     />
 
                     {/* Email - Disabled with icon */}
-                    <div className="relative">
-                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-400 pointer-events-none z-10" />
-                      <Input
-                        type="email"
-                        value={user.email}
-                        disabled
-                        className="pl-12 bg-neutral-50 text-neutral-500 cursor-not-allowed"
-                      />
+                    <div>
+                      <div className="relative">
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-400 pointer-events-none z-10" />
+                        <Input
+                          type="email"
+                          value={user.email}
+                          disabled
+                          className="pl-12 bg-neutral-50 text-neutral-500 cursor-not-allowed"
+                        />
+                      </div>
                       <p className="mt-2 text-xs text-neutral-500 ml-1">
                         Email không thể thay đổi
                       </p>
@@ -404,9 +402,8 @@ export default function DashboardPage() {
                             </div>
                             <div className="flex items-center gap-4">
                               <span
-                                className={`px-3 py-1 text-xs font-bold uppercase tracking-wider ${
-                                  statusBadgeStyles[order.status]
-                                }`}
+                                className={`px-3 py-1 text-xs font-bold uppercase tracking-wider ${statusBadgeStyles[order.status]
+                                  }`}
                               >
                                 {statusDisplayText[order.status]}
                               </span>

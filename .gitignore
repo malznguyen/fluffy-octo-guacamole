@@ -2,6 +2,8 @@
 node_modules/
 .pnp
 .pnp.js
+AGENTS.md
+
 
 # Build outputs
 dist/
@@ -31,7 +33,8 @@ Thumbs.db
 
 # Excluded directories
 .kilocode/
-.agent/
+.agents/
+docs/
 
 # Database (local only)
 *.mdf

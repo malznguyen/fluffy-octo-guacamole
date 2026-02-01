@@ -68,6 +68,7 @@ com.fashon/
 │   └── service/              # Business logic services
 ├── infrastructure/            # Infrastructure layer
 │   ├── config/               # Configuration classes (Security, JWT, OpenAPI, Audit, Static Resources)
+│   ├── converter/            # JPA AttributeConverters (RoleConverter, OrderStatusConverter)
 │   ├── repository/           # Spring Data JPA repositories
 │   └── security/             # JWT authentication (JwtUtil, JwtAuthenticationFilter)
 └── interfaces/rest/          # REST API controllers
@@ -77,10 +78,13 @@ com.fashon/
     ├── PaymentController.java
     ├── PublicProductController.java
     ├── UserController.java
+    ├── WishlistController.java
+    ├── ReviewController.java
     ├── AdminCategoryController.java
     ├── AdminOrderController.java
     ├── AdminPaymentController.java
     ├── AdminProductController.java
+    ├── AdminUserController.java
     └── GlobalExceptionHandler.java
 ```
 
@@ -95,39 +99,76 @@ frontend/src/
 │   │   └── layout.tsx
 │   ├── (shop)/              # Route group for shop pages
 │   │   ├── page.tsx         # Homepage
-│   │   ├── layout.tsx       # Shop layout
-│   │   └── products/        # Product listing & details
+│   │   ├── layout.tsx       # Shop layout with Header/Footer
+│   │   ├── loading.tsx      # Loading UI
+│   │   ├── products/        # Product listing & details
+│   │   ├── about/           # About page
+│   │   ├── contact/         # Contact page
+│   │   ├── guide/           # Shopping guide
+│   │   ├── shipping/        # Shipping policy
+│   │   ├── return-policy/   # Return policy
+│   │   ├── careers/         # Careers page
+│   │   └── wishlist/        # Wishlist page
 │   ├── admin/               # Admin dashboard pages
-│   │   ├── page.tsx
+│   │   ├── page.tsx         # Admin dashboard
 │   │   ├── categories/page.tsx
 │   │   ├── orders/page.tsx
 │   │   ├── payments/page.tsx
-│   │   └── products/page.tsx
+│   │   ├── products/page.tsx
+│   │   └── users/page.tsx
 │   ├── cart/page.tsx        # Shopping cart
 │   ├── checkout/            # Checkout flow
+│   │   ├── page.tsx
+│   │   └── success/page.tsx
 │   ├── dashboard/page.tsx   # User dashboard
 │   ├── orders/              # Order history
 │   ├── layout.tsx           # Root layout
 │   └── globals.css          # Global styles (Tailwind v4)
 ├── components/              # React components
-│   ├── home/               # Homepage components (HeroSlider)
+│   ├── admin/              # Admin-specific components
+│   │   ├── categories/
+│   │   ├── orders/
+│   │   ├── products/
+│   │   └── users/
+│   ├── home/               # Homepage components (HeroSlider, CategoryCard)
 │   ├── layout/             # Layout components (Header, Footer)
 │   ├── product/            # Product-related components (ProductCard, ProductFilters)
+│   │   └── reviews/        # Review components
 │   ├── providers/          # Context providers (ClientProvider)
 │   └── ui/                 # shadcn/ui components
+├── hooks/                  # Custom React hooks
+│   ├── use-admin-orders.ts
+│   ├── use-admin-users.ts
+│   ├── use-categories.ts
+│   └── use-products.ts
 ├── lib/                    # Utilities and API clients
-│   ├── api.ts              # Public API functions
+│   ├── api/                # API functions organized by feature
+│   │   ├── admin/          # Admin API functions
+│   │   ├── auth.ts
+│   │   ├── cart.ts
+│   │   ├── client.ts
+│   │   ├── order.ts
+│   │   ├── public.ts
+│   │   ├── reviews.ts
+│   │   └── wishlist.ts
+│   ├── api.ts              # Legacy API functions
 │   ├── axios.ts            # Axios instance configuration
 │   └── utils.ts            # Utility functions (cn helper)
 ├── stores/                 # Zustand stores
 │   ├── auth-store.ts       # Authentication state
-│   └── cart-store.ts       # Cart state
+│   ├── cart-store.ts       # Cart state
+│   └── wishlist-store.ts   # Wishlist state
 ├── types/                  # TypeScript type definitions
 │   ├── auth.ts
 │   ├── cart.ts
+│   ├── category.ts
 │   ├── enums.ts
 │   ├── order.ts
-│   └── product.ts
+│   ├── product.ts
+│   ├── review.ts
+│   └── user.ts
+├── utils/                  # Utility functions
+│   └── tree-utils.ts       # Tree data structure utilities
 └── middleware.ts           # Next.js middleware for auth protection
 ```
 
@@ -152,8 +193,8 @@ spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.SQLServerDialect
 spring.flyway.enabled: false
 
 # File Upload
-spring.servlet.multipart.max-file-size: 5MB
-spring.servlet.multipart.max-request-size: 10MB
+spring.servlet.multipart.max-file-size: 25MB
+spring.servlet.multipart.max-request-size: 50MB
 
 # JWT Configuration
 jwt.secret: ${JWT_SECRET:fashon-super-secret-key-that-should-be-very-long-for-security}
@@ -174,6 +215,7 @@ app.upload.dir: backend/uploads
 ```typescript
 // Key configurations:
 // - API proxy: /api/spring/* → http://localhost:8080/api/v1/*
+// - Uploads proxy: /uploads/* → http://localhost:8080/uploads/*
 // - Remote images: images.unsplash.com and localhost:8080 allowed
 ```
 
@@ -259,7 +301,7 @@ sqlcmd -S localhost -U sa -P "123456" -i database/02_seed_data.sql
 |----------|--------------|---------------|
 | Authentication | `/api/v1/auth/**` | No |
 | Public Products | `/api/v1/public/**` | No |
-| User Operations | `/api/v1/users/**`, `/api/v1/cart/**`, `/api/v1/orders/**` | Yes (JWT) |
+| User Operations | `/api/v1/users/**`, `/api/v1/cart/**`, `/api/v1/orders/**`, `/api/v1/wishlist/**`, `/api/v1/reviews/**` | Yes (JWT) |
 | Admin Operations | `/api/v1/admin/**` | Yes (ADMIN role) |
 
 ### Key API Endpoints
@@ -288,6 +330,17 @@ sqlcmd -S localhost -U sa -P "123456" -i database/02_seed_data.sql
 - `GET /api/v1/orders/{orderCode}` - Get order details
 - `POST /api/v1/orders/{orderCode}/cancel` - Cancel order
 
+**Reviews**:
+- `GET /api/v1/public/products/{slug}/reviews` - Get product reviews
+- `POST /api/v1/products/{productId}/reviews` - Add review (verified purchase required)
+- `PUT /api/v1/reviews/{reviewId}` - Update own review
+- `DELETE /api/v1/reviews/{reviewId}` - Delete own review
+
+**Wishlist**:
+- `GET /api/v1/wishlist` - Get user's wishlist
+- `POST /api/v1/wishlist` - Add product to wishlist
+- `DELETE /api/v1/wishlist/{productId}` - Remove from wishlist
+
 **Admin**:
 - `GET /api/v1/admin/products` - List all products (admin)
 - `POST /api/v1/admin/products` - Create product
@@ -295,6 +348,9 @@ sqlcmd -S localhost -U sa -P "123456" -i database/02_seed_data.sql
 - `DELETE /api/v1/admin/products/{id}` - Delete product
 - `GET /api/v1/admin/orders` - Manage orders
 - `PUT /api/v1/admin/orders/{code}/status` - Update order status
+- `GET /api/v1/admin/users` - List all users
+- `PUT /api/v1/admin/users/{id}` - Update user
+- `DELETE /api/v1/admin/users/{id}` - Soft delete user
 
 ### API Documentation
 
@@ -356,7 +412,7 @@ export async function fetchNewestProducts(limit: number = 4): Promise<ProductDTO
 ## Testing Strategy
 
 ### Backend Testing
-- Unit tests: `src/test/java` (JUnit 5 + Mockito)
+- Unit tests: `src/test/java` (JUnit 5 + Mockito) - **Not currently implemented**
 - Run tests: `mvn test`
 - Integration tests use `@SpringBootTest`
 
@@ -387,9 +443,10 @@ export async function fetchNewestProducts(limit: number = 4): Promise<ProductDTO
 ### Password Security
 - BCrypt password encoder (strength 10)
 - Passwords hashed before storage
+- Default password for test accounts: `123456`
 
 ### File Upload Security
-- Max file size: 5MB
+- Max file size: 25MB per file, 50MB per request
 - Allowed types: Images only (server-side validation)
 - Upload directory: `backend/uploads/`
 
@@ -480,6 +537,8 @@ All tables have `deleted_at` column. Records are soft-deleted by setting this ti
 - Admin: `admin@fashon.vn` / password: `123456`
 - Customer: `nguyenvana@gmail.com` / password: `123456`
 - Customer: `tranthib@gmail.com` / password: `123456`
+- Customer: `lethic@gmail.com` / password: `123456`
+- Customer: `phamvand@gmail.com` / password: `123456`
 
 ---
 
